@@ -1,0 +1,850 @@
+//DESC BACK littlec-promotion
+syntax = "proto3";
+package boss.promotion;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.promotion";
+option java_outer_classname = "Promotion";
+
+//功能放在 promotion 服务中, 需请求promotion 服务
+
+//促销管理
+message PromotionProductInfo {
+    string promotion_product_type = 1; // 营销商品绑定类型
+    repeated string binds_id = 2; // 绑定ID
+}
+
+message PromotionRuleInfo {
+    int32 level = 1; //优惠级别
+    string conditions_reached = 2; //达成条件
+    string favoured_policy = 3; //优惠策略
+    repeated string state_code=4; //包邮地区
+    string free_shipping_type=5; //包邮达成条件的单位，件或元
+//    int32 logistics_mode = 6;//物流模式 0：无意义(给非包邮类型的工具使用)，1：仅普通物流模式，3：仅经济物流模式，4：不限
+}
+
+message PromotionInfo {
+    string promotion_id = 1; // 营销ID
+    string promotion_name = 2; //营销活动名称（中文）	全局唯一
+    repeated common.base.NameAndCode promotion_label = 3; //营销标签
+    string country_code = 4; //国家码
+    int64 start_time = 5; //开始时间
+    int64 end_time = 6; //结束时间
+    string preheat = 7; // 是否预热	0-不预热，1-预热
+    int64 preheat_time = 8; //预热开始时间
+    repeated PromotionProductInfo promotion_product_info = 9; //营销商品信息
+    string promotion_type = 10; // 营销类型
+    repeated PromotionRuleInfo promotion_rule_info = 11; //促销优惠规则
+    repeated common.enum.PromotionEnum.DiscountMutexType discount_mutex_type = 12; //互斥规则，用英文逗号分隔
+    repeated common.base.NameAndCode promotion_rule_desc = 13; //营销规则
+}
+
+message PromotionInsertReq {
+    PromotionInfo promotionInfo = 1; //营销信息
+}
+
+message PromotionInsertResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message PromotionUpdateReq {
+    PromotionInfo promotionInfo = 1; //营销信息
+}
+
+message PromotionUpdateResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message PromotionListInfo {
+    string promotion_id = 1; // 营销ID
+    string promotion_name = 2; //营销活动名称（中文）	全局唯一
+    string promotion_label = 3; //营销标签
+    string country_code = 4; //国家码
+    int64 start_time = 5; //开始时间
+    int64 end_time = 6; //结束时间
+    string promotion_type = 7; // 营销类型
+    string operation_name = 8; //更新人名称
+    int64 update_time = 9; //更新时间
+}
+
+message PromotionListReq {
+    string product_id = 1; // 商品ID
+    string promotion_id = 2; //促销ID
+    string promotion_name = 3; //活动名称（中文）	全局唯一
+    string country_code = 4; //国家码
+    int64 start_time = 5; //活动开始时间
+    int64 end_time = 6; //活动结束时间
+    string promotion_type = 7; // 促销类型
+    string promotion_label = 8; //促销标签
+    common.base.Pagination page = 9; //分页信息
+    string promotion_status_type = 10;//促销状态
+}
+
+message PromotionListResp {
+    repeated PromotionListInfo promotionListInfo = 1; //返回列表信息
+    uint32 total = 2; //商品结果总数
+    common.base.ErrorMessage ret = 3; // 返回值
+}
+
+message GetPromotionInfoReq {
+    string promotion_id = 1; //促销ID
+}
+
+message GetPromotionInfoResp {
+    PromotionInfo promotionInfo = 1; //返回信息
+    common.base.ErrorMessage ret = 2; // 返回值
+}
+
+service PromotionService {
+    //添加营销活动
+    rpc InsertPromotion (PromotionInsertReq) returns (PromotionInsertResp);
+
+    //修改营销活动
+    rpc UpdatePromotion (PromotionUpdateReq) returns (PromotionUpdateResp);
+
+    //管理后台条件查询接口（分页）
+    rpc ListPromotion (PromotionListReq) returns (PromotionListResp);
+
+    //管理后台条件查询接口（分页）
+    rpc GetPromotionById (GetPromotionInfoReq) returns (GetPromotionInfoResp);
+}
+
+//添加热词
+message AddHotWordReq{
+    repeated string country_code = 1; //国家码列表
+    repeated common.base.NameAndCode hot_word = 2; //带语言信息的热词
+    repeated common.base.NameAndCode icon = 3; //角标
+    int32 url_type = 4; //热词跳转类型，1为跳转h5，2为应用内，3-普通搜索
+    string url = 5; //热词跳转地址
+    int64 start_time = 6; //开始时间
+    int64 end_time = 7; //结束时间
+}
+
+
+message AddHotWordResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+//更新热词
+message UpdateHotWordReq{
+    string hot_word_id = 1; //热词id
+    repeated string country_code = 2; //国家码列表
+    repeated common.base.NameAndCode hot_word = 3; //带语言信息的热词
+    repeated common.base.NameAndCode icon = 4; //角标
+    int32 url_type = 5; //热词跳转类型，1为跳转h5，2为应用内，3-普通搜索
+    string url = 6; //热词跳转地址
+    int64 start_time = 7; //开始时间
+    int64 end_time = 8; //结束时间
+}
+
+message UpdateHotWordResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+//删除热词
+message DeleteHotWordReq{
+    string hot_word_id = 1; //热词id
+}
+
+message DeleteHotWordResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+//分页获取热词
+message GetHotWordListReq{
+    common.base.Pagination page = 1; //分页信息
+    string keyword = 2;//搜索关键词
+}
+
+message GetHotWordListResp{
+    message HotWordUnit{
+        string hot_word_id = 1; //热词id
+        repeated string country_code = 2; //国家码列表
+        repeated common.base.NameAndCode hot_word = 3; //带语言信息的热词
+        uint32 sort = 4; // 排序值
+        repeated common.base.NameAndCode icon = 5; //角标
+        int32 url_type = 6; //热词跳转类型，1为跳转h5，2为应用内，3-普通搜索
+        string url = 7; //热词跳转地址
+        int64 start_time = 8; //开始时间
+        int64 end_time = 9; //结束时间
+    }
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated HotWordUnit hot_word  = 2; //列表数据
+    uint32 total = 3; //总数
+}
+
+//热词设置排序
+message SetHotWordSortReq{
+    string hot_word_id = 1; //热词id
+    uint32 sort = 2; //目标排序值
+}
+
+message SetHotWordSortResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+//热词服务
+service HotWordService{
+
+    //添加热词
+    rpc AddHotWord (AddHotWordReq) returns (AddHotWordResp);
+    //编辑热词
+    rpc UpdateHotWord (UpdateHotWordReq) returns (UpdateHotWordResp);
+    //删除热词
+    rpc DeleteHotWord (DeleteHotWordReq) returns (DeleteHotWordResp);
+    //热词设置排序
+    rpc SetHotWordSort (SetHotWordSortReq) returns (SetHotWordSortResp);
+    //获取热词列表
+    rpc GetHotWordList (GetHotWordListReq) returns (GetHotWordListResp);
+
+}
+
+
+
+//添加商品直播配置
+message AddProductLiveConfigReq{
+    string product_id = 1; // 商品id
+    string country_code = 2; //国家码
+    string live_link = 3;//直播链接
+    string live_master_commission = 4; //直播主返佣
+    string live_superior_commission = 5; //直播主上级返佣
+    int64 start_time = 6; //有效期开始时间
+    int64 end_time = 7; //有效期结束时间
+}
+
+message AddProductLiveConfigResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message ProductLiveConfigUnit{
+    string product_live_id = 1; //商品直播id
+    string product_id = 2; // 商品id
+    string cover = 3; //封面
+    string title = 4; //标题
+    string country_code = 5; //国家码
+    string live_link = 6 ;//直播链接
+    string live_master_commission = 7; //直播主返佣
+    string live_superior_commission = 8; //直播主上级返佣
+    int64 start_time = 9; //有效期开始时间
+    int64 end_time = 10; //有效期结束时间
+    string operation_name = 11;//操作者名
+    string operator_id = 12; //操作者id
+}
+
+//获取商品直播配置
+message ListProductLiveConfigReq{
+    common.base.Pagination page = 1; //分页信息
+    string product_id_key = 2; //商品id
+    string standard_attr_id_key = 3; //商品规格id
+    string title_key = 4; //商品标题
+    string country_code = 5; //国家码
+}
+
+message ListProductLiveConfigResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated ProductLiveConfigUnit product_live_config = 2; //商品直播配置
+    uint32 total = 3;//总数
+}
+
+//删除商品直播配置
+message DeleteProductLiveConfigReq{
+    string product_live_id = 1; //商品直播id
+}
+
+message DeleteProductLiveConfigResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+//更新商品直播配置
+message UpdateProductLiveConfigReq{
+    string product_live_id = 1; //商品直播id
+    string product_id = 2; // 商品id
+    string country_code = 3; //国家码
+    string live_link = 4;//直播链接
+    string live_master_commission = 5; //直播主返佣
+    string live_superior_commission = 6; //直播主上级返佣
+    int64 start_time = 7; //有效期开始时间
+    int64 end_time = 8; //有效期结束时间
+}
+
+message UpdateProductLiveConfigResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+
+//商品直播
+service ProductLiveService{
+    //添加商品直播配置
+    rpc AddProductLiveConfig (AddProductLiveConfigReq) returns (AddProductLiveConfigResp);
+    //获取商品直播配置
+    rpc ListProductLiveConfig (ListProductLiveConfigReq) returns (ListProductLiveConfigResp);
+    //删除商品直播配置
+    rpc DeleteProductLiveConfig (DeleteProductLiveConfigReq) returns (DeleteProductLiveConfigResp);
+    //更新商品直播配置
+    rpc UpdateProductLiveConfig (UpdateProductLiveConfigReq) returns (UpdateProductLiveConfigResp);
+}
+
+
+//添加商品限购请求
+message AddPurchaseLimitConfigReq{
+    string limit_name = 1; //限购名称
+    GroupType group_type = 2; //人群类型
+    string country_code = 3; //限购国家
+    int64 start_time = 4; //限购开始时间
+    int64 end_time = 5; //限购结束时间
+    PurchaseLimitRuleType purchase_limit_rule_type = 8;//限购规则类型
+    uint32 limit_quantity = 6; //限购数量
+    repeated string product_id  = 7; //限购商品id 列表
+    repeated string cate_id = 9;//限购商品后台类目 列表
+}
+
+//添加商品限购响应
+message AddPurchaseLimitConfigResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+enum GroupType{
+    TYPE_NULL = 0;//不使用
+    ALL = 1; //所有人群
+}
+
+enum PurchaseLimitRuleType {
+    PURCHASE_LIMIT_RULE_TYPE_NULL = 0;//不使用
+    PURCHASE_LIMIT_RULE_MAX_BUY = 1;//指定人群在限购期间累计最多购买
+    PURCHASE_LIMIT_RULE_MIN_BUY = 2;//指定人群在限购期间每单最小购买
+    PURCHASE_LIMIT_RULE_ONE_ORDER_MAX_BUY = 3;//指定人群在限购期间每单最多购买件数（按SPU计）
+}
+
+message PurchaseLimitConfigUnit{
+    string limit_id = 1;//限购id
+    string limit_name = 2; //限购名称
+    GroupType group_type = 3; //人群类型
+    string country_code = 4; //限购国家
+    int64 start_time = 5; //限购开始时间
+    int64 end_time = 6; //限购结束时间
+    uint32 limit_quantity = 7; //限购数量
+    PurchaseLimitRuleType purchase_limit_rule_type = 12;//限购规则类型
+    repeated string product_id  = 8; //限购商品id 列表
+    repeated common.base.IdAndName category_unit = 13;//限购商品后台三级类目 列表
+    int64 update_time = 9; //更新时间
+    string operation_name = 10; //更新人
+    enum ActiveType {
+        ACTIVE_NULL = 0;
+        NOT_STARTED = 1; //未开始
+        IN_PROGRESS = 2; //进行中
+        FINISHED = 3; //已结束
+    }
+    ActiveType active_type = 11; //限购状态
+}
+
+//获取商品限购列表
+message ListPurchaseLimitConfigReq{
+    common.base.Pagination page = 1;
+    string type = 2; //状态 1未开始, 2进行中, 3已结束
+    string product_id = 3; //商品id
+
+}
+//获取商品限购列表响应
+message ListPurchaseLimitConfigResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated  PurchaseLimitConfigUnit purchase_limit_config = 2;//返回数据
+    uint32 total = 3;//总数
+}
+
+//更新商品限购请求
+message UpdatePurchaseLimitConfigReq{
+    string limit_id = 1;//限购id
+    string limit_name = 2; //限购名称
+    GroupType group_type = 3; //人群类型
+    string country_code = 4; //限购国家
+    int64 start_time = 5; //限购开始时间
+    int64 end_time = 6; //限购结束时间
+    PurchaseLimitRuleType purchase_limit_rule_type = 9;//限购规则类型
+    uint32 limit_quantity = 7; //限购数量
+    repeated string product_id  = 8; //限购商品id 列表
+    repeated string cate_id = 10;//限购商品后台类目 列表
+}
+//更新商品限购响应
+message UpdatePurchaseLimitConfigResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+//删除商品限购
+message DeletePurchaseLimitConfigReq{
+    string limit_id = 1;//限购id
+    //string country_code = 2; //限购国家
+
+}
+//删除商品限购
+message DeletePurchaseLimitConfigResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+//限购服务
+service PurchaseLimitService{
+
+    //添加商品限购
+    rpc AddPurchaseLimitConfig (AddPurchaseLimitConfigReq) returns (AddPurchaseLimitConfigResp);
+
+    //获取商品限购
+    rpc ListPurchaseLimitConfig (ListPurchaseLimitConfigReq) returns (ListPurchaseLimitConfigResp);
+
+    //更新商品限购
+    rpc UpdatePurchaseLimitConfig (UpdatePurchaseLimitConfigReq) returns (UpdatePurchaseLimitConfigResp);
+
+    //删除商品限购
+    rpc DeletePurchaseLimitConfig (DeletePurchaseLimitConfigReq) returns (DeletePurchaseLimitConfigResp);
+}
+
+
+
+//服务文案
+message InsertCopyWriteReq {
+    string country_code = 1; //国家码
+    repeated common.base.NameAndCode service_desc = 2; //多语言文案内容
+    string color = 3; //文案色值
+}
+message InsertCopyWriteResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message DeleteCopyWriteReq {
+    repeated uint32 id = 1; //ID
+    string country_code = 2; //国家码
+}
+
+message DeleteCopyWriteResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message UpdateCopyWriteReq {
+     uint32 id = 1; //文案ID
+     string country_code = 2; //国家码
+     repeated common.base.NameAndCode service_desc = 3; //多语言文案内容
+     string color = 4; //文案色值
+}
+message UpdateCopyWriteResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message ListCopyWriteReq {
+    string country_code = 1; //国家码
+    common.base.Pagination page = 2;
+}
+message CopyWriteInfo {
+    uint32 id = 1; //文案ID
+    string country_code = 2; //国家码
+    repeated common.base.NameAndCode service_desc = 3; //多语言文案内容
+    string color = 4; //文案色值
+    uint32 sort = 5; //排序
+    int64 create_time = 6; //创建时间
+    int64 update_time = 7; //更新时间
+}
+
+message ListCopyWriteResp {
+    common.base.ErrorMessage ret = 1;
+    repeated CopyWriteInfo copy_write_info = 2; //服务文案数据
+    uint32 total = 3;//总数
+}
+
+message ChangeCopyWriteSortReq {
+    uint32 id = 1; //文案ID
+    uint32 sort = 2; //排序
+}
+message ChangeCopyWriteSortResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+service ServiceCopyWriteService {
+
+    //添加
+    rpc InsertCopyWrite(InsertCopyWriteReq) returns (InsertCopyWriteResp);
+
+    //删除-支持批量
+    rpc DeleteCopyWrite(DeleteCopyWriteReq) returns (DeleteCopyWriteResp);
+
+    //更新
+    rpc UpdateCopyWrite(UpdateCopyWriteReq) returns (UpdateCopyWriteResp);
+
+    //列表
+    rpc ListCopyWrite(ListCopyWriteReq) returns (ListCopyWriteResp);
+
+    //改变排序
+    rpc ChangeCopyWriteSort(ChangeCopyWriteSortReq) returns (ChangeCopyWriteSortResp);
+}
+
+//背景图或背景颜色 ========== 接口定义 开始 ======
+message BackGroundInfo {
+    string country_code = 2;//国家码
+    string bind_id = 3;//关联ID
+    common.enum.PromotionEnum.PromotionFunctionType type = 4;//类型
+    int64 update_time = 5;//更新时间
+    int64 start_time = 6;//开始时间
+    int64 end_time = 7;//结束时间
+    repeated common.base.NameAndCode background_cover = 8;//背景图
+    string background_color = 9;//背景色
+}
+
+message GetBackGroundInfoReq {
+    string country_code = 2;//国家码
+    string bind_id = 3;//关联ID
+    common.enum.PromotionEnum.PromotionFunctionType type = 4;//类型
+}
+
+message GetBackGroundInfoResp {
+    BackGroundInfo back_ground_info = 1;//背景图或者背景色
+    common.base.ErrorMessage ret = 2;
+}
+
+message UpdateBackGroundInfoReq {
+    BackGroundInfo back_ground_info = 1;
+}
+
+message UpdateBackGroundInfoResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+service BackGroundInfoBossService {
+    //获取背景图或者背景颜色
+    rpc GetBackGroundInfo (GetBackGroundInfoReq) returns (GetBackGroundInfoResp);
+    //新增背景图或者背景颜色
+    rpc UpdateBackGroundInfo (UpdateBackGroundInfoReq) returns (UpdateBackGroundInfoResp);
+}
+//背景图或背景颜色 ========== 接口定义 结束 ======
+
+
+//功能区 ========== 接口定义 开始 ======
+message FunctionAreaInfo {
+    int32 id = 1;//主键ID
+    repeated common.base.NameAndCode title = 2;//标题
+    repeated common.base.NameAndCode cover = 3;//图标
+    common.enum.PromotionEnum.PromotionAppUrlType url_type = 5; //跳转类型
+    string url = 6;//跳转地址
+    int64 update_time = 7;//修改时间戳 北京时间
+    int64 start_time = 8;//开始时间戳 国家时间
+    int64 end_time = 9;//结束时间戳 国家时间
+    int32 sort = 10;//排序值
+    string country_code = 11;//国家码
+    common.enum.PromotionEnum.PromotionFunctionCanDeleteType can_delete = 12;//1代表能删除。2代表不能删除，直接置灰
+}
+
+message InsertFunctionAreaReq {
+    FunctionAreaInfo function_area_info = 1;
+}
+
+message InsertFunctionAreaResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message UpdateFunctionAreaReq {
+    FunctionAreaInfo function_area_info = 1;
+}
+
+message UpdateFunctionAreaResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message DeleteFunctionAreaReq {
+    repeated int32 id = 1;
+}
+
+message DeleteFunctionAreaResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message ListFunctionAreaReq {
+    common.base.Pagination page = 1;//分页信息
+    string country_code = 2;//国家码
+}
+
+message ListFunctionAreaResp {
+    repeated FunctionAreaInfo function_area_info = 1;
+    int32 total = 2;
+    common.base.ErrorMessage ret = 3;
+}
+
+message SortFunctionAreaReq {
+    int32 id = 1;//MarketingGrid的id
+    int32 sort = 2;//排序值
+}
+
+message SortFunctionAreaResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+service FunctionAreaBossService {
+    //新增功能区
+    rpc InsertFunctionArea(InsertFunctionAreaReq) returns (InsertFunctionAreaResp);
+    //更新功能区
+    rpc UpdateFunctionArea(UpdateFunctionAreaReq) returns (UpdateFunctionAreaResp);
+    //批量删除功能区
+    rpc DeleteFunctionArea(DeleteFunctionAreaReq) returns (DeleteFunctionAreaResp);
+    //分页展示功能区
+    rpc ListFunctionArea(ListFunctionAreaReq) returns (ListFunctionAreaResp);
+    //排序功能区
+    rpc SortFunctionArea(SortFunctionAreaReq) returns (SortFunctionAreaResp);
+}
+//功能区 ========== 接口定义 结束 ======
+
+//宫格区 ========== 接口定义 开始 ======
+
+message MarketingGrid {
+    int32 id = 1;//主键ID
+    repeated common.base.NameAndCode title = 2;//标题
+    repeated common.base.NameAndCode sub_title = 3;//副标题
+    repeated common.base.NameAndCode cover = 14;//新人专属的图片
+    common.enum.PromotionEnum.PromotionMarketingGridType marketing_grid_type = 15;//类型：1-限时特价 2-其他
+    common.enum.PromotionEnum.PromotionAppUrlType url_type = 5; //跳转类型
+    string url = 6;//跳转地址
+    repeated string spu_id = 7;//展示商品id数组
+    int64 update_time = 8;//修改时间戳 北京时间
+    int64 start_time = 9;//开始时间戳 国家时间
+    int64 end_time = 10;//结束时间戳 国家时间
+    int32 sort = 11;//排序值
+    string country_code = 12;//国家码
+    common.enum.PromotionEnum.PromotionFunctionCanDeleteType can_delete = 13;//1代表能删除。2代表不能删除，直接置灰
+    string compatibility_url = 16;//兼容性链接
+}
+
+message InsertMarketingGridReq {
+    MarketingGrid marketing_grid = 1;
+}
+
+message InsertMarketingGridResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message UpdateMarketingGridReq {
+    MarketingGrid marketing_grid = 1;
+}
+
+message UpdateMarketingGridResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message DeleteMarketingGridReq {
+    repeated int32 id = 1;
+}
+
+message DeleteMarketingGridResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message ListMarketingGridReq {
+    common.base.Pagination page = 1;//分页信息
+    string country_code = 2;//国家码
+}
+
+message ListMarketingGridResp {
+    repeated MarketingGrid marketing_grid = 1;
+    int32 total = 2;
+    common.base.ErrorMessage ret = 3;
+}
+
+message SortMarketingGridReq {
+    int32 id = 1;//MarketingGrid的id
+    int32 sort = 2;//排序值
+}
+
+message SortMarketingGridResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+service MarketingGridBossService {
+    //新增宫格区
+    rpc InsertMarketingGrid(InsertMarketingGridReq) returns (InsertMarketingGridResp);
+    //更新宫格区
+    rpc UpdateMarketingGrid(UpdateMarketingGridReq) returns (UpdateMarketingGridResp);
+    //批量删除宫格区
+    rpc DeleteMarketingGrid(DeleteMarketingGridReq) returns (DeleteMarketingGridResp);
+    //分页展示宫格区
+    rpc ListMarketingGrid(ListMarketingGridReq) returns (ListMarketingGridResp);
+    //排序宫格区
+    rpc SortMarketingGrid(SortMarketingGridReq) returns (SortMarketingGridResp);
+}
+
+//宫格区 ========== 接口定义 结束 ======
+
+
+//类目运营 ========== 接口定义 开始 ======
+message CategoryBanner {
+    int32 id = 1;
+    string title = 6;
+    string country_code = 2;
+    string cate_id = 3;//关联类目ID
+    int32 url_type = 4;//跳转类型：1-H5,2-应用内
+    string url = 5;//链接
+    repeated common.base.NameAndCode cover = 14;//类目Banner
+    int64 create_time = 8;//创建时间戳 北京时间
+    int64 start_time = 9;//开始时间戳 国家时间
+    int64 end_time = 10;//结束时间戳 国家时间
+    int32 click_num = 11; //点击次数
+    string background_color = 12;//背景色
+}
+
+message InsertCategoryBannerReq {
+    CategoryBanner category_banner = 1;
+}
+
+message InsertCategoryBannerResp {
+    common.base.ErrorMessage ret = 1;
+    int32 id = 2;
+}
+
+message UpdateCategoryBannerReq {
+    CategoryBanner category_banner = 1;
+}
+
+message UpdateCategoryBannerResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message DeleteCategoryBannerReq {
+    repeated int32 id = 1;
+}
+
+message DeleteCategoryBannerResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message ListCategoryBannerReq {
+    common.base.Pagination page = 1;//分页信息
+    string country_code = 2;//国家码
+}
+
+message ListCategoryBannerResp {
+    repeated CategoryBanner category_banner = 1;
+    int32 total = 2;
+    common.base.ErrorMessage ret = 3;
+}
+
+service CategoryBannerBossService {
+    //新增类目运营
+    rpc InsertCategoryBanner(InsertCategoryBannerReq) returns (InsertCategoryBannerResp);
+    //更新类目运营
+    rpc UpdateCategoryBanner(UpdateCategoryBannerReq) returns (UpdateCategoryBannerResp);
+    //批量删除类目运营
+    rpc DeleteCategoryBanner(DeleteCategoryBannerReq) returns (DeleteCategoryBannerResp);
+    //分页展示类目运营
+    rpc ListCategoryBanner(ListCategoryBannerReq) returns (ListCategoryBannerResp);
+}
+//类目运营 ========== 接口定义 结束 ======
+
+
+
+//app icon ========== 接口定义 开始 ======
+message AppIconInfo {
+
+    message AppIconValue {
+        common.enum.PromotionEnum.AppIconType  app_icon_type = 1; //类型
+        string unselected = 2; //未选中
+        string selected = 3;   //选中
+    }
+
+    int32 id = 1;
+    string country_code = 2;
+    string name = 3; //名称
+    int64 start_time = 4;//开始时间戳 国家时间
+    int64 end_time = 5;//结束时间戳 国家时间
+    repeated AppIconValue app_icon_value = 6; //app icon 图片信息
+    int64 create_time = 7;//创建时间
+    int64 update_time = 8;//更新时间
+    string operation_name = 9; //更新人
+}
+
+message InsertAppIconInfoReq {
+    AppIconInfo app_icon_info = 1;
+}
+
+message InsertAppIconInfoResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message UpdateAppIconInfoReq {
+    AppIconInfo app_icon_info = 1;
+}
+
+message UpdateAppIconInfoResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message DeleteAppIconInfoReq {
+    repeated int32 id = 1;
+}
+
+message DeleteAppIconInfoResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message ListAppIconInfoReq {
+    common.base.Pagination page = 1;//分页信息
+    string country_code = 2;//国家码 必填
+    string name = 3;//名称 可空
+    int32 status = 4; //0-全部，1-生效中，2-已结束，3-未开始  可空
+}
+
+message ListAppIconInfoResp {
+    repeated  AppIconInfo app_icon_info = 1;
+    int32 total = 2;
+    common.base.ErrorMessage ret = 3;
+}
+
+message BatchCopyAppIconInfoReq {
+    repeated int32 id = 1; //app icon 信息ID集合
+    repeated string country_code = 2; //国家码
+}
+
+message BatchCopyAppIconInfoResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+service AppIconBossService {
+    //新增app icon信息
+    rpc InsertAppIcon(InsertAppIconInfoReq) returns (InsertAppIconInfoResp);
+    //更新app icon信息
+    rpc UpdateAppIcon(UpdateAppIconInfoReq) returns (UpdateAppIconInfoResp);
+    //批量删除app icon信息
+    rpc DeleteAppIcon(DeleteAppIconInfoReq) returns (DeleteAppIconInfoResp);
+    //分页展示app icon信息
+    rpc ListAppIcon(ListAppIconInfoReq) returns (ListAppIconInfoResp);
+
+    //批量复制到其他国家
+    rpc BatchCopyAppIcon(BatchCopyAppIconInfoReq) returns (BatchCopyAppIconInfoResp);
+}
+//app icon ========== 接口定义 结束 ======
+
+service HomePageBossService {
+    //新增或修改homepagesort
+    rpc SaveHomePage(SaveHomePageReq) returns (SaveHomePageResp);
+
+    //展示新增或修改homepagesort
+    rpc ListHomePage(ListHomePageReq) returns (ListHomePageResp);
+}
+
+message HomePageSort {
+    int32 type = 1;//模版类型
+    int32 sort = 2;//排序值
+}
+
+message SaveHomePageReq{
+    repeated HomePageSort homePageSort = 1;
+    string country_code = 2;//国家码
+    int32 active_crowd_type = 3;//人群类型 1->新用户,2->老用户
+}
+
+message SaveHomePageResp{
+    common.base.ErrorMessage ret = 1;
+}
+
+message ListHomePageReq{
+    string country_code = 2;
+    int32 active_crowd_type = 3;
+}
+
+message ListHomePageResp{
+    common.base.ErrorMessage ret = 1;
+    repeated HomePageSort homePageSort = 2;//顺序从小到到排列
+}

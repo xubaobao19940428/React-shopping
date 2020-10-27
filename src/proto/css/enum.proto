@@ -1,0 +1,82 @@
+syntax = "proto3";
+package css.enum;
+
+option java_multiple_files = false;
+option java_package = "com.fingo.littlec.proto.css";
+option java_outer_classname = "Enum";
+
+enum EEnable
+{
+	DISABLED = 0;
+	ENABLED = 1;
+}
+
+// 鸡毛信是否已读
+enum EReaded
+{
+   UNREADED = 0;
+   READED = 1;
+   SENDED = 2;
+}
+
+enum EClientType
+{
+	UNKNOWN = 0;
+	IOS = 1;
+	ANDROID = 2;
+	WEB = 3;
+    // 系统发的notify
+    SYSTEM = 4;
+}
+
+enum ENetworkType
+{
+	WIFI = 0;
+	M4G = 1;
+	M2G = 2;
+}
+
+enum ELanguageType
+{
+	EN=0;
+	CN=1;
+}
+
+enum CrewType
+{
+    OWNER=0;
+    ADMIN=1;
+    MEMBER=2;
+}
+
+// 呼叫消息类型
+enum ECallMsgType
+{
+	INVITE = 0;
+	CONNECT = 1;
+	BUSY = 2;
+	CANCEL = 3;
+	REFUSE = 4;
+	BYE = 5;
+	REINVITE = 6;
+}
+
+
+// 群类型
+enum EGroupType
+{
+    NORMAL = 0; //普通群聊
+    FAMILY_NETWORK = 1; //亲情网群聊
+    AND_FAMILY_GROUP = 2; //和家群组群聊
+}
+
+// 内容类型
+enum ContentType {
+    DEFAULT = 0;
+    PIC = 1;
+    AUDIO = 2;
+    VIDEO = 3;
+    FILE = 4;
+    URL = 5;
+    TEXT = 6;
+}

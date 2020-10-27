@@ -1,0 +1,172 @@
+syntax = "proto3";
+package boss.luckdraw;
+
+import "common/base.proto";
+import "common/enum.proto";
+import "common/errcode.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.luckDraw";
+option java_outer_classname = "LuckDraw";
+
+//promotion 应用服务使用
+
+message LuckPrizeInfo {
+    int32 id = 1;    //主键ID
+    string luck_draw_id = 2;    //抽奖活动ID
+    string luck_prize_id = 3;    //奖品ID
+    common.enum.PromotionEnum.PromotionLuckDrawType luck_prize_type = 4;    //奖品类型：1-优惠券，2-自定义奖品，3-非奖品，4-保险栓 5-积分
+    repeated common.base.NameAndCode luck_prize_name = 5;    //奖品名称
+    string coupon_list = 6;     //优惠券类型时的优惠券ID和数量，放入map中，key：优惠券ID，value：数量，然后使用Json转化成string类型
+    int32 once_number = 7;    //单次投放量
+    string winning_probability = 8;    //中奖概率
+    common.enum.PromotionEnum.PromotionTipsType winning_tips_type = 9;    //中奖提示类型：1-弹窗，2-文案
+    repeated common.base.NameAndCode winning_tips_desc = 10;    //弹窗图片或文案
+    string winning_tips_url = 11;    //弹窗链接
+    string points_min = 12;//积分最小值
+    string points_max = 13;//积分最大值
+    string image = 14;//奖品图
+    int32 sort = 15;//排序值
+}
+
+message LuckDrawInfo {
+    int32 id = 1;    //主键ID
+    string luck_draw_id = 2;    //抽奖活动ID
+    string luck_draw_name = 3;    //抽奖活动名称
+    string country_code = 4;    //国家
+    int64 start_time = 5;    //开始时间
+    int64 end_time = 6;    //结束时间
+    common.enum.PromotionEnum.PromotionIncreaseFrequencyType increase_frequency = 7;    //投放频率：1-定时投放，2-循环投放
+    common.enum.PromotionEnum.PromotionIncreaseType increase_type = 8;    //投放类型：1-增量投放，2-清空投放
+    string increase_value = 9;    //投放时间值,精确值分钟，将时间使用字符串放入list，list使用json转成字符串
+    int32 free_number = 10;    //无条件抽奖次数
+    common.enum.PromotionEnum.PromotionFreeType free_type = 11;    //无条件抽奖类型：1-N次/自然日，2-N次/活动全程
+    common.enum.PromotionEnum.PromotionTipsType zero_num_tips_type = 12;    //机会用光提示类型：1-弹窗，2-文案
+    repeated common.base.NameAndCode tips_desc = 13;    //弹窗图片或文案
+    string tips_url = 14;    //弹窗链接
+    int32 status = 15;    //状态
+    int32 is_delete = 16;    //删除状态
+    string operation_id = 17;    //操作人
+    int64 create_time = 18;    //创建时间
+    int64 update_time = 19;    //修改时间
+    repeated LuckPrizeInfo luck_prize_info = 20; //奖池信息
+    string operation_name = 21; //更新人名称
+    string luck_draw_password = 22; //抽奖活动口令
+    
+}
+
+message LuckDrawTemplateAddReq {
+    LuckDrawInfo luckDrawTemplate = 1;
+
+}
+
+message LuckDrawTemplateAddResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+
+}
+
+message LuckDrawTemplateUpdateReq {
+    LuckDrawInfo luckDrawTemplate = 1; //入参
+}
+
+message LuckDrawTemplateUpdateResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+
+}
+
+message LuckDrawTemplateListReq {
+    common.base.Pagination page = 1; //分页信息
+    string luck_draw_id = 2;    //抽奖活动ID
+    string luck_draw_name = 3;    //抽奖活动名称
+    string country_code = 4;    //国家
+    int64 start_time = 5;    //开始时间
+    int64 end_time = 6;    //结束时间
+    common.enum.PromotionEnum.LuckDrawActiveStatus luck_draw_status = 7; // 活动进行中状态
+    string luck_draw_password = 8;    //抽奖活动口令
+    bool filter_ended = 9; //是否需要过滤结束的活动
+}
+
+message LuckDrawTemplateListResp {
+    repeated LuckDrawInfo luckDrawInfo = 1; //返回列表信息
+    uint32 total = 2; //商品结果总数
+    common.base.ErrorMessage ret = 3; // 返回值
+    string message = 4;
+}
+
+message GetLuckDrawTemplateReq {
+    string luck_draw_id = 1;    //抽奖活动ID
+}
+
+message GetLuckDrawTemplateResp {
+    LuckDrawInfo luckDrawInfo = 1; //返回信息
+    common.base.ErrorMessage ret = 2; // 返回值
+    string message = 3;
+}
+
+message UpdateLuckPrizeQuantityReq {
+    string luck_draw_id = 1;    //抽奖活动ID
+    string luck_prize_id = 2;    //抽奖奖品ID
+    int32 quantity = 3;    //更改的数量，加减法，可正可负
+}
+
+message UpdateLuckPrizeQuantityResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message QueryLuckPrizeInfoReq {
+    string luck_draw_id = 1;    //抽奖活动ID
+}
+
+message QueryLuckPrizeInfo {
+    string luck_prize_id = 1; //奖品ID
+    string luck_prize_name = 2;    //奖品名称
+    string winning_rate = 3; //中奖率
+    int32 winning_total = 4; //中奖数量
+    int32 put_total = 5; //当前累计投放总量
+    int32 feature_put_total = 6; //预计投放总量
+}
+
+message QueryLuckPrizeInfoResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    repeated QueryLuckPrizeInfo query_luck_prize_info = 3; //奖池信息
+    string luck_draw_id = 4;    //抽奖活动ID
+}
+
+message DownloadWinningUserInfoReq {
+    string luck_draw_id = 1;    //抽奖活动ID
+    repeated string luck_prize_id = 2; //奖品ID
+    int32 type = 3; //1-通过抽奖活动ID下载，会返回当前活动所有中奖者信息。2-根据奖品ID下载，会现在传入的奖品ID的数据
+}
+
+message DownloadWinningUserInfoResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    string url = 3;    //文件路径
+}
+    
+service LuckDrawTemplateBossService {
+    //添加活动
+    rpc InsertLuckDrawTemplate (LuckDrawTemplateAddReq) returns (LuckDrawTemplateAddResp);
+
+    //修改活动
+    rpc UpdateLuckDrawTemplate (LuckDrawTemplateUpdateReq) returns (LuckDrawTemplateUpdateResp);
+
+    //管理后台条件查询接口（分页）
+    rpc ListLuckDrawTemplate (LuckDrawTemplateListReq) returns (LuckDrawTemplateListResp);
+
+    //管理后台通过抽奖ID获取抽奖信息
+    rpc GetLuckDrawTemplate (GetLuckDrawTemplateReq) returns (GetLuckDrawTemplateResp);
+
+    //修改奖池奖品数量
+    rpc UpdateLuckPrizeQuantity (UpdateLuckPrizeQuantityReq) returns (UpdateLuckPrizeQuantityResp);
+
+    //查询奖池数据
+    rpc QueryLuckPrizeInfo (QueryLuckPrizeInfoReq) returns (QueryLuckPrizeInfoResp);
+
+    //下载中奖者信息
+    rpc DownloadWinningUserInfo (DownloadWinningUserInfoReq) returns (DownloadWinningUserInfoResp);
+}

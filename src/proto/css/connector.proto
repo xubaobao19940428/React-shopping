@@ -1,0 +1,165 @@
+syntax = "proto3";
+package css.connector;
+
+import "css/errcode.proto";
+import "css/base.proto";
+
+option java_multiple_files = false;
+option java_package = "com.fingo.littlec.proto.css";
+option java_outer_classname = "Connector";
+
+// 一对一请求
+message UnaryRequest {
+	string service_name = 1; // 服务名称
+	string method_name = 2; // 调用的方法名
+	bytes data = 3; // 请求信息，由各服务定义
+    string request_id = 4; // 请求id
+}
+
+// 一对一请求回复
+message UnaryResponse {
+	string service_name = 1; // 服务名称
+	string method_name = 2; // 调用的方法名
+	bytes data = 3; // 回复信息，由各服务定义
+	css.errcode.ErrorCode ret = 4;
+    string request_id = 5; // 对应的请求id，用于客户端去重和异步处理
+}
+
+// 多对一请求
+message ClientStreamRequest {
+	string service_name = 1; // 服务名称
+	string method_name = 2; // 调用的方法名
+	bytes data = 3; // 请求信息，由各服务定义
+}
+
+// 多对一回复
+message ClientStreamResponse {
+	string service_name = 1; // 服务名称
+	string method_name = 2; // 调用的方法名
+	bytes data = 3; // 请求信息，由各服务定义
+}
+
+// 一对多请求
+message ServerStreamRequest {
+	string service_name = 1; // 服务名称
+	string method_name = 2; // 调用的方法名
+	bytes data = 3; // 请求信息，由各服务定义
+}
+
+// 一对多回复
+message ServerStreamResponse {
+	string service_name = 1; // 服务名称
+	string method_name = 2; // 调用的方法名
+	bytes data = 3; // 请求信息，由各服务定义
+}
+
+// 多对多请求
+message BidiStreamRequest {
+	string service_name = 1; // 服务名称
+	string method_name = 2; // 调用的方法名
+	bytes data = 3; // 请求信息，由各服务定义
+}
+
+// 多对多回复
+message BidiStreamResponse {
+	string service_name = 1; // 服务名称
+	string method_name = 2; // 调用的方法名
+	bytes data = 3; // 请求信息，由各服务定义
+}
+
+// session相关操作
+message SessionRequest {
+	enum ESessionRequestType {
+		LOGIN = 0; // 登陆请求
+		LOGOUT = 1; // 登出请求
+        PING = 2;   // Ping包
+        LOGIN_BY_AUTO = 3;	// 自动登录(重连)
+        LOGIN_BY_TOKEN = 4; // token认证
+	}
+
+	ESessionRequestType type = 1;
+	css.base.MobileBase base_info = 2;
+	bytes data = 3;
+    string request_id = 4; // 请求id
+}
+
+// 通知消息
+message SessionNotify {
+	string to_username = 1; // 接收方username
+	string appkey = 2; // appkey
+	uint32 type = 3; // 通知类型 根据common/ntf.proto解析
+	bytes data = 4; // 通知信息
+    string request_id = 5; // 对应的请求id
+}
+
+// ping包
+message PingRequest {
+    string msg_id = 1; // ping包msgid
+}
+
+// ping包响应
+message PingResponse {
+    string msg_id = 2;
+}
+
+message LoginRequest {
+	string username = 1;
+	string appkey = 2;
+	string password = 3;
+	string appkey_password = 4;
+	bool SHA256 = 5;	// 默认false，若传递SHA256密文密码，需设置为true
+	string token = 6;
+    string phone = 7;
+    string nickname = 8;
+}
+
+message LoginResponse {
+	css.errcode.ErrorCode ret = 1;
+	css.base.UserInfo user_infos = 2;
+}
+
+// 退出登陆
+message LogoutRequest {
+}
+
+// 退出登陆回复
+message LogoutResponse {
+	css.errcode.ErrorCode ret = 1;
+}
+
+// 流初始化回复
+message StreamInitResponse {
+}
+
+// Health检测请求
+message HealthCheckRequest {
+	string service = 1; // 探测的服务名称
+}
+
+// Health检测回复
+message HealthCheckResponse {
+	// 服务状态列表
+	enum ServingStatus {
+		UNKNOWN = 0; // 服务未注册
+		SERVING = 1; // 服务正常
+		NOT_SERVING = 2; // 服务异常
+	}
+	ServingStatus status = 1; // 服务状态
+}
+
+
+message NotifyRequest{
+	string sid = 1; // 接受者sid，由route模块从redis中获取
+	uint32 type = 3; // 通知类型: 根据common/ntf.proto解析
+	bytes data = 4; // 通知信息
+}
+
+message NotifyResponse {
+	css.errcode.ErrorCode ret = 1; // 返回错误码
+}
+
+// Connector Service for pushing notify to client
+service ConnectorService {
+	// send notify request
+	rpc SendNotify(NotifyRequest) returns(NotifyResponse);
+}

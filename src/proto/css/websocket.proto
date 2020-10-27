@@ -1,0 +1,92 @@
+syntax = "proto3";
+package css.websocket;
+
+import "css/errcode.proto";
+import "css/base.proto";
+
+option java_multiple_files = false;
+option java_package = "com.fingo.littlec.proto.css";
+option java_outer_classname = "Websocket";
+
+
+// 服务代理请求
+message ProxyRequest {
+	string service_name = 1; // 服务名称
+	string method_name = 2; // 调用的方法名
+	bytes data = 3; // 请求信息，由各服务定义
+	string request_id = 4;	// 请求ID
+}
+// 服务代理回复
+message ProxyResponse {
+	string service_name = 1; // 服务名称
+	string method_name = 2; // 调用的方法名
+	bytes data = 3; // 回复信息，由各服务定义
+	css.errcode.ErrorCode ret = 4;
+	string request_id = 5;	// 请求ID
+}
+
+// 登录请求: service_name=littlec-websocket, method_name=login
+message LoginRequest {
+	string appkey = 1;	// appkey
+	string username = 2;	// 用户名
+	string password = 3;	// 密码
+	string appkey_password = 4;
+	bool SHA256 = 5;	// 默认false，若传递SHA256密文密码，需设置为true
+    string token = 6;
+	string nickname = 7;
+    string phone = 8;
+}
+// 登录回复
+message LoginResponse {
+	css.errcode.ErrorCode ret = 1;
+	css.base.UserInfo user_info = 2; //登录用户信息
+}
+
+// 登出请求: service_name=littlec-websocket, method_name=logout
+message LogoutRequest {
+	string appkey = 1;	// appkey
+	string username = 2;	// 用户名
+	string msg_id = 3;
+}
+// 登出回复
+message LogoutResponse {
+	css.errcode.ErrorCode ret = 1;
+	string msg_id = 2;
+}
+
+// 通知消息
+message SessionNotify {
+	string to_username = 1; // 接收方username
+	string appkey = 2; // appkey
+	uint32 type = 3; // 通知类型 根据common/ntf.proto解析
+	bytes data = 4; // 通知信息
+}
+
+// 下行类型
+enum EDownStreamType
+{
+	PROXY_RESPONSE = 0;
+	SESSION_NOTIFY = 1;
+}
+
+// 下行结构，web终端在onMessage中接收
+message DownStream
+{
+	EDownStreamType down_stream_type = 1;
+	bytes stream = 2;	// 根据down_stream_type解析
+}
+message NotifyRequest{
+	string sid = 1; // 接受者sid，由route模块从redis中获取
+	uint32 type = 3; // 通知类型: 根据common/ntf.proto解析
+	bytes data = 4; // 通知信息
+}
+
+message NotifyResponse {
+	css.errcode.ErrorCode ret = 1; // 返回错误码
+}
+
+// Websocket Service for pushing notify to client
+service WebsocketService {
+	// send notify request
+	rpc SendNotify(NotifyRequest) returns(NotifyResponse);
+}

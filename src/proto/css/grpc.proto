@@ -1,0 +1,18 @@
+syntax = "proto3";
+package css.grpc;
+
+import "css/connector.proto";
+
+option java_multiple_files = false;
+option java_package = "com.fingo.littlec.connector.service.css";
+option java_outer_classname = "Grpc";
+
+// 通知服务，用于服务端推送通知至客户端
+service ConnectorService {
+	// 一对一服务请求
+	rpc SendUnaryRequest(css.connector.UnaryRequest) returns(css.connector.UnaryResponse);
+	// Session相关操作
+	rpc SendSessionRequest(stream css.connector.SessionRequest) returns(stream css.connector.SessionNotify);
+	// health检测
+	rpc HealthCheck(css.connector.HealthCheckRequest) returns(css.connector.HealthCheckResponse);
+}

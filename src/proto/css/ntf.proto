@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package css.ntf;
+
+import "css/enum.proto";
+import "css/msg.proto";
+
+option java_multiple_files = false;
+option java_package = "com.fingo.littlec.proto.css";
+option java_outer_classname = "Ntf";
+
+// 通知类型
+enum ENtfType
+{
+	// Session相关通知消息
+	LOGIN_RESPONSE = 0; // 登陆响应
+	LOGOUT_RESPONSE = 1; // 登陆响应
+	KICK_NOTIFICATION = 2;		// 踢出通知
+    STREAM_INIT_RESPONSE = 3; // stream流初始化回复
+    PING_RESPONSE = 4; // Ping包响应
+
+	// 其他业务通知消息
+	NEW_MSG = 10;
+	FRIEND_UPDATE_NOTIFICATION = 11;	// 好友变更通知
+	RETRACT_NOTIFICATION = 12;	// 消息撤回通知
+	CARBON_MSG = 13;	// 伙伴终端消息通知
+	CALL_MSG = 14;	// 呼叫通知
+    GROUP_LIST_UPDATE_NOTIFICATION = 15; // 群列表变更通知
+	CUSTOM_MSG = 16;	//自定义消息通知
+}
+
+
+// 新消息通知
+message NewMsgNotification
+{
+	string content = 1;
+}
+
+// 伙伴终端消息通知
+message CarbonMsgNotification
+{
+	string content = 1;
+	string appkey = 2;
+	string sender_username = 3;
+	css.enum.EClientType sender_client_type = 4;	// 消息发送终端类型
+}
+
+// 呼叫通知
+message CallMsgNotification
+{
+	css.enum.ECallMsgType call_msg_type = 1;
+	string content = 2;
+}
+
+// 踢出通知
+message KickNotification {
+	css.enum.EClientType login_client_type = 1;	// 新登录终端类型
+}
+
+// 好友变更通知
+message FriendUpdateNotification
+{
+	string content = 1;
+}
+
+// 消息撤回通知
+message RetractNotification
+{
+	string appkey = 1;
+	css.msg.EMsgType msg_type = 2;	// 单聊 or群聊
+	string from_username = 3;	// 撤回者
+	string uri = 4;				// 群聊uri
+	uint64 retract_guid = 5;	// 被撤回消息guid
+}

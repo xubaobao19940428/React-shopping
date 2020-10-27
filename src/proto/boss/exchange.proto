@@ -1,0 +1,138 @@
+//DESC BACK littlec-i18n
+syntax = "proto3";
+package boss.exchange;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.exchange";
+option java_outer_classname = "Exchange";
+
+//功能放在 i18n 服务中, 需请求i18n 服务
+
+// message start i18nExchangeService
+message ExchangeRate{
+    string currency_code =1; //货币代码
+    string rate = 2; //兑换汇率
+    string base_currency_code = 3; //基准货币代码
+    string name_cn = 4; //货币中文描述
+    string template_code = 5; //模板代码
+    string snap_code = 6; // exchange_rate_save_id 对应审核的id
+}
+
+//保存汇率模板
+message ExchangeSaveRateReq{
+    repeated ExchangeRate exchange_rate = 1; //货币汇率列表
+}
+
+message ExchangeSaveRateResp{
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+//审核编辑记录
+message ExchangeReviewReq{
+    string exchange_rate_save_id = 1; //保存的汇率编辑记录id
+    uint32 review_code = 2; // 审核结果
+}
+
+message ExchangeReviewResp{
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+message RateHistoryUnit{
+    string exchange_rate_save_id = 1;// 保存的汇率编辑记录id
+    string template_code = 2; //模板代码
+    repeated ExchangeRate exchange_rate = 3; //汇率模板记录内容
+    uint32 review_state = 4; //审核状态 0 待审核, 1 不通过, 2 通过
+    string update_time = 5; //更新时间
+    string create_time = 6; //创建时间
+}
+
+//获取汇率模板编辑记录
+message ExchangeGetRateSaveHistoryReq{
+    common.base.Pagination page = 1;
+}
+
+message ExchangeGetRateSaveHistoryResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated RateHistoryUnit rate_history = 2; //获取汇率模板编辑记录
+    uint32 total = 3; //总数
+}
+
+//获取当前使用汇率模板
+message ExchangeGetRecentRateTemplateReq{
+    string template_code = 1;//汇率模板代码
+}
+
+message ExchangeGetRecentRateTemplateResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    string template_code = 2;//汇率模板代码
+    string update_time = 3;//更新时间
+    repeated ExchangeRate exchange_rate = 4; //汇率模板记录内容
+}
+
+//获取可配置货币汇率列表
+message ExchangeGetReadyConfigTemplateReq{
+
+}
+
+message ExchangeGetReadyConfigTemplateResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated ExchangeRate exchange_rate = 2; //可配置的汇率列表
+}
+
+//获取货币间转换汇率 例如 传入USD CNY, 则返回 1美元兑换人民币的汇率值7.18
+message ExchangeGetRateReq{
+    string from_currency_code = 1; // 基准货币
+    string to_currency_code = 2; // 目标货币
+    string template_code = 3; // 汇率模板
+}
+
+message ExchangeGetRateResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    string rate = 2; //转换汇率
+}
+
+//根据当前配置汇率获得转换后价格
+message ExchangeConvertReq{
+    string from_currency_code = 1; // 基准货币
+    string to_currency_code = 2; // 目标货币
+    string template_code = 3; // 汇率模板
+    string from_price = 4;  //待转换价格
+
+}
+
+message ExchangeConvertResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    string from_currency_code = 2; // 基准货币
+    string to_currency_code = 3; // 目标货币
+    string template_code = 4; // 汇率模板
+    string from_price = 5; // 待转换价格
+    string to_price = 6; // 转换后价格
+    string rate = 7; //转换汇率
+}
+
+service ExchangeService{
+    //保存汇率模板
+    rpc ExchangeSaveRate(ExchangeSaveRateReq) returns(ExchangeSaveRateResp);
+
+    //审核编辑记录
+    rpc ExchangeReview(ExchangeReviewReq) returns(ExchangeReviewResp);
+
+    //获取汇率模板编辑记录
+    rpc ExchangeGetRateSaveHistory(ExchangeGetRateSaveHistoryReq) returns (ExchangeGetRateSaveHistoryResp);
+
+    //获取当前使用汇率模板
+    rpc ExchangeGetRecentRateTemplate(ExchangeGetRecentRateTemplateReq) returns (ExchangeGetRecentRateTemplateResp);
+
+    //获取可配置货币汇率列表
+    rpc ExchangeGetReadyConfigTemplate(ExchangeGetReadyConfigTemplateReq) returns(ExchangeGetReadyConfigTemplateResp);
+
+    //获取货币间转换汇率
+    rpc ExchangeGetRate(ExchangeGetRateReq) returns (ExchangeGetRateResp);
+
+    //根据当前配置汇率获得转换后价格
+    rpc ExchangeConvert(ExchangeConvertReq) returns (ExchangeConvertResp);
+}

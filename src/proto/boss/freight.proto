@@ -1,0 +1,96 @@
+//DESC BACK littlec-product
+syntax = "proto3";
+package boss.freight;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.freight";
+option java_outer_classname = "Freight";
+
+//功能放在 product 服务中, 需请求product 服务
+
+message FreightTemplateUnit {
+    string template_id = 1; //运费模板id
+    string template_name = 2; //运费模板名称
+    uint32 template_type = 3; //模版类型(1按重计费，2按件计费)
+    string first_amount = 4; //首件/首重
+    string first_price = 5; // 首件/首重的价格(单位是分)
+    string continue_amount = 6; //续件/续重
+    string continue_price = 7; // 续件/续重的价格(单位是分)
+    uint32 status = 8; //运费模板状态 0 废弃, 1 可用
+    string country_code = 9; // 国家码
+    string create_time = 10; //创建时间
+    string update_time = 11; //更新时间
+    repeated FreightTemplateItemUnit item = 12; //运费模板条目
+}
+
+//物流条目
+message FreightTemplateItemUnit {
+    string item_id = 1; //条目id
+    string template_id = 2; //运费模板id
+    string state_code = 3; //州对应编码
+    string state_name = 4; //州名
+    uint32 item_type = 5; //运费模板条目类型 (1可配送-非经济物流，2不可配送, 3可配送-经济物流, 4包邮)
+    string first_amount = 6; //首件/首重 (单位:件/kg)
+    string first_price = 7; // 首件/首重的价格(单位是分)
+    string continue_amount = 8; //续件/续重 (单位:件/kg)
+    string continue_price = 9; // 续件/续重的价格(单位是分)
+    string create_time = 10; //创建时间
+    string update_time = 11; //更新时间
+}
+
+//添加运费模板
+message FreightTemplateAddReq {
+    FreightTemplateUnit freight_template = 1; // 添加的运费模板
+}
+
+
+message FreightTemplateAddResp {
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+//修改运费模板
+message FreightTemplateUpdateReq {
+    FreightTemplateUnit freight_template = 1; // 修改的运费模板
+}
+
+message FreightTemplateUpdateResp {
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+//分页获取运费模板信息
+message FreightTemplateListPageReq {
+    common.base.Pagination page = 1; //分页信息
+    string country_code = 2; // 国家码
+}
+
+message FreightTemplateListPageResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated FreightTemplateUnit freight_template_unit = 2; //返回结果
+    uint32 total = 3; //记录总数
+}
+
+//获取所有运费模板
+message FreightTemplateGetReq {
+    string template_id = 1; //运费模板id
+}
+
+message FreightTemplateGetResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    FreightTemplateUnit freight_template_unit = 2; //返回结果
+}
+
+
+service FreightTemplateService {
+    //添加运费模板
+    rpc FreightTemplateAdd (FreightTemplateAddReq) returns (FreightTemplateAddResp);
+    //修改运费模板
+    rpc FreightTemplateUpdate (FreightTemplateUpdateReq) returns (FreightTemplateUpdateResp);
+    //分页获取运费模板
+    rpc FreightTemplateListPage (FreightTemplateListPageReq) returns (FreightTemplateListPageResp);
+    //获取单个运费模板详情
+    rpc FreightTemplateGet (FreightTemplateGetReq) returns (FreightTemplateGetResp);
+}

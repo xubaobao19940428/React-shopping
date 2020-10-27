@@ -1,0 +1,347 @@
+syntax = "proto3";
+package css.push;
+
+import "css/errcode.proto";
+import "css/ntf.proto";
+import "css/msg.proto";
+import "common/enum.proto";
+import "common/base.proto";
+import "common/errcode.proto";
+import "css/enum.proto";
+import "css/base.proto";
+
+option java_multiple_files = false;
+option java_package = "com.fingo.littlec.proto.css";
+option java_outer_classname = "Push";
+
+// 原route接口---------------------
+enum ECHANNELTYPE {
+    DEAULT = 0; //默认推送信道
+    IM = 1; //im推送信道
+}
+
+// route请求
+message RouteRequest {
+    repeated string to_username = 1; // 接收方username
+    string appkey = 2;
+    string noti_content = 3; // 通知给终端的内容
+    css.ntf.ENtfType ntf_type = 4; // 通知类型
+    PushModule only_online_ntf = 5; // 是否只推送在线通知
+    css.msg.EMsgType msg_type = 6; // 单聊消息需要推送伙伴终端通知
+    string from_username = 7; // 发送者用户名
+    css.enum.EClientType from_client_type = 8; // 发送者终端类型
+    string hide_param = 9; // 用于apns隐藏字段推送
+    bool old_sdk_skip_push = 10; //老版本sdk过滤推送(单聊,群聊)
+    ECHANNELTYPE channel_type = 11; //推送信道
+}
+enum PushModule {
+    DEFAULT = 0; // 默认都推
+    ONLY_ONLINE = 1; // 只推在线
+    ONLY_OFF_LINE = 2; // 只推离线
+}
+// route响应
+message RouteResponse {
+    css.errcode.ErrorCode ret = 1; // 返回码 参见ErrorCode
+    uint64 srv_time = 2; // 服务器返回响应时间
+}
+
+// 路由踢出信令请求
+message RouteKickNotificationRequest {
+    string sid = 1; // 被踢者 session ID
+    css.ntf.KickNotification kick_notification = 2;
+}
+// 路由踢出信令响应
+message RouteKickNotificationResponse {
+    css.errcode.ErrorCode ret = 1; // 返回码 参见ErrorCode
+}
+
+// 路由撤回消息通知请求
+message RouteRetractNotificationRequest {
+    repeated string to_username = 1; // 接收方username
+    string appkey = 2;
+    css.ntf.RetractNotification retract_notification = 3;
+    string from_username = 7; // 发送者用户名
+    css.enum.EClientType from_client_type = 8; // 发送者终端类型
+}
+// 路由撤回消息通知响应
+message RouteRetractNotificationResponse {
+    css.errcode.ErrorCode ret = 1; // 返回码 参见ErrorCode
+}
+
+//同个账号多终端同步
+message RoutePartnerClientRequest {
+    string to_username = 1; // 接收方username
+    string appkey = 2;
+    string noti_content = 3; // 通知给终端的内容
+    css.ntf.ENtfType ntf_type = 4; // 通知类型
+    css.msg.EMsgType msg_type = 5; // 单聊消息需要推送伙伴终端通知
+    string from_username = 6; // 发送者用户名
+    css.enum.EClientType from_client_type = 7; // 发送者终端类型
+}
+//消息回复
+message RoutePartnerClientResponse {
+    css.errcode.ErrorCode ret = 1; // 返回码 参见ErrorCode
+}
+
+// 原route接口---------------------
+
+// push请求
+message PushRequest {
+    repeated string uid = 1; //接收方uid
+    string message = 2; //消息内容
+    string hideparam = 3; //用于apns隐藏字段推送
+}
+
+// push short message
+message PushShortMessageRequest {
+    repeated string uid = 1; //接收方uid
+    string message = 2; //消息内容
+    string hideparam = 3; //用于apns隐藏字段推送
+    string country = 4; //国家
+    string app_key = 5; // appKey
+}
+
+message PushEmailRequest{
+    repeated string uid = 1; //接收方uid
+    string message = 2; //消息内容
+    string hideparam = 3; //用于apns隐藏字段推送
+    string country = 4; //国家
+}
+
+// push响应
+message PushResponse {
+    css.errcode.ErrorCode ret = 1; // 返回码 参见ErrorCode
+    uint64 srv_time = 2; // 服务器返回响应时间
+}
+
+message SendEmailForTestReq {
+    string emailAddress = 1;
+    string templateId = 2;
+}
+
+message SendEmailForTestResp {
+    css.errcode.ErrorCode ret = 1;
+    string text = 2;
+}
+
+// 推送请求回复
+message CommonResponse {
+    css.errcode.ErrorCode ret = 1; // 返回码 参见ErrorCode
+}
+
+// 推送环境类型
+enum EPushType {
+    IOS_DEVELOP = 0; // ios 开发环境
+    IOS_PRODUCT = 1; // ios 生产环境
+    XIAO_MI = 2; // 小米推送
+    HUA_WEI = 3; //华为推送
+}
+
+// 设置ios token
+message SetTokenRequest {
+    EPushType crt_type = 1;
+    string ios_token = 2;
+    string uid = 3; //username#appkey
+    string android_token = 4; // regID 由小米接口返回
+    string android_appsecret = 5; //注册后拿到的appsecret
+    string android_package_name = 6; //包名字
+    css.base.MobileBase base_info = 7;
+}
+
+// 清除token
+message ClearTokenRequest {
+    string uid = 1;
+}
+
+
+message CreateCertRequest {
+    string ios_develop_crt_name = 1;
+    string appkey = 2;
+    bytes ios_develop_crt = 3;
+    string ios_develop_crt_pwd = 4;
+    string ios_product_crt_name = 5;
+    bytes ios_product_crt = 6;
+    string ios_product_crt_pwd = 7;
+}
+
+
+message OperateCertRequest {
+    string appkey = 1;
+}
+
+message QueryCertResponse {
+    string ios_develop_crt_name = 1;
+    string appkey = 2;
+    bytes ios_develop_crt = 3;
+    string ios_develop_crt_pwd = 4;
+    string ios_product_crt_name = 5;
+    bytes ios_product_crt = 6;
+    string ios_product_crt_pwd = 7;
+    string certid = 8;
+    string pro_bundle_id = 9;
+    string dev_bundle_id = 10;
+    uint64 created = 11;
+    uint64 modified = 12;
+}
+
+message SetBadgeRequest {
+    string uid = 1;
+    uint32 badge = 2;
+}
+
+// 设备信息请求类
+message ReportDeviceInfoReq {
+    // 用户id
+    string user_id = 1;
+    // 设备id
+    string client_id = 2;
+    // 设备语言，cn:中文，en:英文
+    string device_language = 3;
+    // 设备类型：1——安卓 ,2-ios
+    common.enum.MsggwEnum.DeviceType device_type = 4;
+}
+
+// 添加设备信息的响应类
+message ReportDeviceInfoResp {
+    css.errcode.ErrorCode ret = 1;
+}
+
+// 删除设备信息的请求类
+message DeleteReportDeviceInfoReq {
+    // 用户id
+    string user_id = 1;
+    // 设备id
+    string client_id = 2;
+}
+
+// 删除设备信息的响应累
+message DeleteReportDeviceInfoResp {
+    css.errcode.ErrorCode ret = 1;
+}
+
+message MessageQueryReq {
+    // 业务类型
+    string biz_code = 1;
+    // 用户id
+    string user_id = 2;
+    // 业务消息阅读状态
+    common.enum.MsggwEnum.ReadStatus read_status = 3;
+    // 分页
+    css.base.Pagination page = 4;
+}
+
+message MessageQueryResp {
+    css.errcode.ErrorCode ret = 1;
+    uint32 total = 2;
+    uint32 pages = 3;
+    repeated MessageListItem message_list = 4;
+}
+
+message MessageListItem {
+    // id
+    uint32 id = 1;
+    // 同id，给ios用
+    uint32 message_id = 2;
+    // 用户id
+    string user_id = 3;
+    // 推送时间
+    string push_time = 4;
+    // 消息标题-中文
+    string message_title_cn = 5;
+    // 消息标题-英文
+    string message_title_en = 6;
+    // 消息内容，中文
+    string message_body_cn = 7;
+    // 消息内容，英文
+    string message_body_en = 8;
+    // 消息数据，中文
+    string message_data_cn = 9;
+    // 消息数据，英文
+    string message_data_en = 10;
+    // 消息类型 如：活动通知
+    string message_type = 11;
+    // 阅读状态
+    common.enum.MsggwEnum.ReadStatus read_status = 12;
+}
+
+message QueryMessageStatusReq {
+    // 业务类型
+    string biz_code = 1;
+    // 用户id
+    string user_id = 2;
+    // 业务消息阅读状态
+    common.enum.MsggwEnum.ReadStatus read_status = 3;
+    // 分页
+    css.base.Pagination page = 4;
+}
+
+message QueryMessageStatusResp {
+    css.errcode.ErrorCode ret = 1;
+    uint32 count = 2;
+}
+
+message AckMessageReq {
+    int32 message_id = 1;
+    string user_id = 2;
+}
+
+message AckMessageResp {
+    css.errcode.ErrorCode ret = 1;
+}
+
+service PushService {
+    //原route接口--------------
+    // 路由普通消息
+    rpc Route (RouteRequest) returns (RouteResponse);
+    // 路由伙伴终端通知
+    rpc RoutePartnerClient (RoutePartnerClientRequest) returns (RoutePartnerClientResponse);
+    // 路由踢人通知
+    rpc RouteKickNotification (RouteKickNotificationRequest) returns (RouteKickNotificationResponse);
+    // 路由撤回消息
+    rpc RouteRetractNotification (RouteRetractNotificationRequest) returns (RouteRetractNotificationResponse);
+    //原route接口--------------
+
+    rpc PushMessage (PushRequest) returns (PushResponse);
+    // 设置 token服务
+    rpc SetToken (SetTokenRequest) returns (CommonResponse);
+
+    // 清除token服务
+    rpc ClearToken (ClearTokenRequest) returns (CommonResponse);
+
+    // 创建证书服务
+    rpc CreateCertificate (CreateCertRequest) returns (CommonResponse);
+
+    // 删除证书服务
+    rpc DeleteCertificate (OperateCertRequest) returns (CommonResponse);
+
+    // 查询证书服务
+    rpc QueryCertificate (OperateCertRequest) returns (QueryCertResponse);
+
+    // 设置badge服务
+    rpc SetBadge (SetBadgeRequest) returns (CommonResponse);
+
+    // 短信推送
+    rpc PushShortMessage (PushShortMessageRequest) returns (PushResponse);
+
+    // 短信推送
+    rpc PushEmail (PushEmailRequest) returns (PushResponse);
+
+    // 测试邮件功能
+    rpc SendEmailForTest(SendEmailForTestReq)  returns (SendEmailForTestResp);
+}
+
+service DeviceInfoService {
+    // 设备信息上报
+    rpc ReportDeviceInfo (ReportDeviceInfoReq) returns (ReportDeviceInfoResp);
+    // 删除设备信息
+    rpc DeleteReportDeviceInfo (DeleteReportDeviceInfoReq) returns (DeleteReportDeviceInfoResp);
+}
+
+service MessageService {
+    // 查询消息
+    rpc QueryMessage (MessageQueryReq) returns (MessageQueryResp);
+    // 通过userId，ReadStatus和bizCode找到消息，返回数量
+    rpc QueryMessageStatus (QueryMessageStatusReq) returns (QueryMessageStatusResp);
+    // 阅读消息反馈
+    rpc AckMessage (AckMessageReq) returns (AckMessageResp);
+}

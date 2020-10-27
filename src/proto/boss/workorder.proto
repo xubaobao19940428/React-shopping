@@ -1,0 +1,782 @@
+//DESC BACK littlec-workorder
+syntax = "proto3";
+package boss.ticket;
+
+import "common/base.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.workorder";
+option java_outer_classname = "Workorder";
+
+// ---------------------- 工单标签 ------
+
+//创建工单请求
+message WorkOrderCreateReq {
+    //标签id
+    int64 tagId = 1;
+    //工单来源
+    common.base.WorkOrderSourceEnumPb workOrderSource = 2;
+    //工单描述 500字以内
+    string workOrderDescribe = 3;
+    //附属图片 逗号分隔
+    string workOrderPic = 4;
+    //紧急程度 紧急:1 一般:10
+    int32 emergencyLevel = 5;
+    //是否分派 分派:1 不分派:2
+    int32 doDispatch = 6;
+    //分派处理人
+    int64 dispatchDealManagerId = 7;
+    //抄送人
+    int64 ccManagerId = 8;
+    //备注事项 200字以内
+    string workOrderContent = 9;
+    //用户id
+    int64 userId = 10;
+    //用户昵称
+    string userNickName = 11;
+    //用户手机号
+    string userMobile = 12;
+    //订单编号
+    string orderNo = 13;
+    //创建人id
+    int64 createId = 14;
+    // 子订单，可以为空
+    string sub_order_no = 15;
+    // 用户类型 注册用户 未注册用户
+    UserType user_type = 16;
+}
+
+enum UserType {
+    // 已注册
+    REGISTERED = 0;
+    // 未注册
+    UNREGISTERED = 1;
+}
+
+//创建工单响应
+message WorkOrderCreateResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//工单详情请求
+message WorkOrderViewReq {
+    //工单编号
+    string workOrderNo = 1;
+}
+
+//工单详情响应
+message WorkOrderViewResp {
+    common.base.ErrorMessage ret = 1;
+    //工单详情
+    WorkOrderView workOrderView = 2;
+}
+
+message WorkOrderView {
+    //工单编号
+    string workOrderNo = 2;
+    //工单来源
+    common.base.WorkOrderSourceEnumPb workOrderSource = 3;
+    //工单描述 500字以内
+    string workOrderDescribe = 4;
+    //附属图片 逗号分隔
+    string workOrderPic = 5;
+    //紧急程度 紧急:1 一般:10
+    int32 emergencyLevel = 6;
+    //是否分派 分派:1 不分派:2
+    int32 doDispatch = 7;
+    //创建人名称
+    string createManagerName = 8;
+    //备注事项 200字以内
+    string workOrderContent = 9;
+    //用户id
+    string userId = 10;
+    //用户昵称
+    string userNickName = 11;
+    //用户手机号
+    string userMobile = 12;
+    //订单编号
+    string orderNo = 13;
+    //标签
+    string tagName = 14;
+    //创建日期
+    string createDate = 17;
+    //工单状态
+    common.base.WorkOrderStatusEnumPb workOrderStatus = 15;
+    //工单处理记录
+    repeated WorkOrderProcessingRecord processRecords = 16;
+    // 用户类型
+    UserType user_type = 18;
+    // 自订单no
+    string sub_order_no = 19;
+}
+
+//工单处理记录
+message WorkOrderProcessingRecord {
+    //工单编号
+    string workOrderNo = 2;
+    //处理人
+    string dealManagerId = 3;
+    //处理人名称
+    string dealManagerName = 4;
+    //处理类型
+    common.base.WorkOrderDealTypeEnumPb dealType = 5;
+    //处理说明 500字以内
+    string dealContent = 6;
+    //附属图片
+    string dealPic = 7;
+    //工单评价
+    repeated common.base.WorkOrderEvaluationEnumPb dealEvaluation = 8;
+    //创建日期
+    string createDate = 10;
+    //处理日期
+    string dealDate = 11;
+    //处理状态
+    common.base.WorkOrderDealStatus dealStatus = 12;
+    //处理编号
+    string processNo = 13;
+}
+
+// ---------------------- 工单标签 ------
+
+//有效标签列表查询请求
+message WorkOrderValidTagListReq {
+
+}
+
+//有效标签列表查询响应
+message WorkOrderValidTagListResp {
+    common.base.ErrorMessage ret = 1;
+    //标签信息
+    repeated WorkOrderTag data = 2;
+
+}
+
+//标签信息
+message WorkOrderTag {
+    //标签id
+    string id = 1;
+    //标签名称
+    string tagName = 2;
+    //标签等级
+    int32 tagLevel = 3;
+    //小组id
+    string groupId = 4;
+    //上级标签id
+    string superiorTagId = 5;
+    //状态 0:失效，1:有效
+    int32 status = 6;
+    //子标签集合
+    repeated WorkOrderTag subTags = 7;
+}
+
+//分页查询标签请求
+message WorkOrderTagPageReq {
+    common.base.Pagination page = 1;
+    //标签等级
+    int32 tagLevel = 2;
+
+    //上级标签id
+    int64 superiorTagId = 3;
+}
+
+//分页查询标签响应
+message WorkOrderTagPageResp {
+    common.base.ErrorMessage ret = 1;
+    int32 total = 2;
+    common.base.Pagination page = 3;
+    //标签信息
+    repeated WorkOrderTag data = 4;
+}
+
+//添加标签请求
+message WorkOrderAddTagReq {
+    //标签名称
+    string tagName = 1;
+    //小组id  一级标签为null，二级标签必填
+    int64 groupId = 2;
+    //上级标签id 一级标签为null
+    int64 superiorTagId = 3;
+    //标签级别
+    int32 tagLevel = 4;
+}
+
+//添加标签响应
+message WorkOrderAddTagResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//编辑标签请求
+message WorkOrderUpdateTagReq {
+    //标签id
+    int64 id = 1;
+    //标签名称
+    string tagName = 2;
+    //小组id  一级标签为null，二级标签必填
+    int64 groupId = 3;
+}
+
+//编辑标签响应
+message WorkOrderUpdateTagResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//修改标签状态请求
+message WorkOrderChangeTagStatusReq {
+    //标签id
+    int64 id = 1;
+    //状态 0:失效，1:有效
+    int32 status = 2;
+}
+
+//修改标签状态请求
+message WorkOrderChangeTagStatusResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+// ---------------------- 小组配置 ------
+
+//添加小组请求
+message WorkOrderAddGroupReq {
+    //小组名称
+    string groupName = 1;
+    //小组类型
+    common.base.WorkOrderGroupTypeEnumPb groupType = 2;
+    //组员id集合
+    repeated int64 managerIds = 3;
+    //状态 0:失效，1:有效
+    int32 status = 4;
+}
+
+//添加小组响应
+message WorkOrderAddGroupResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//编辑小组请求
+message WorkOrderUpdateGroupReq {
+    //小组id
+    int64 id = 1;
+    //小组名称
+    string groupName = 2;
+    //组员id集合
+    repeated int64 managerIds = 3;
+    //状态 0:失效，1:有效
+    int32 status = 4;
+}
+
+//编辑小组响应
+message WorkOrderUpdateGroupResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//分页查询小组请求
+message WorkOrderPageGroupReq {
+    common.base.Pagination page = 1;
+    //小组类型
+    common.base.WorkOrderGroupTypeEnumPb groupType = 2;
+}
+
+//分页查询小组响应
+message WorkOrderPageGroupResp {
+    common.base.ErrorMessage ret = 1;
+    int32 total = 2;
+    common.base.Pagination page = 3;
+    //小组信息
+    repeated WorkOrderGroup data = 4;
+}
+
+//小组详情信息
+message WorkOrderGroup {
+    //小组id
+    string id = 1;
+    //小组名称
+    string groupName = 2;
+    //小组类型
+    common.base.WorkOrderGroupTypeEnumPb groupType = 3;
+    //组员用户集合
+    repeated ManagerUser managerUsers = 4;
+    //标签信息
+    repeated WorkOrderTag tags = 5;
+    //状态 0:失效，1:有效
+    int32 status = 6;
+}
+
+//后台用户信息
+message ManagerUser {
+    //后台用户id
+    string managerId = 1;
+    //后台用户名称
+    string managerName = 2;
+}
+
+//工单小组列表查询请求
+message WorkOrderListGroupReq {
+    //小组ID
+    int64 groupId = 1;
+    //模糊查询参数
+    string selectParam = 2;
+}
+
+message WorkOrderListGroupResp {
+    common.base.ErrorMessage ret = 1;
+    //小组信息
+    repeated WorkOrderGroup data = 2;
+}
+
+//工单处理请求
+message WorkOrderDealReq {
+    //工单编号
+    string workOrderNo = 1;
+    //处理方式 转派/退单/已解决
+    common.base.WorkOrderDealTypeEnumPb dealType = 2;
+    //处理人ID
+    int64 dealManagerId = 3;
+    //处理说明
+    string dealConetent = 4;
+    //附属图片
+    string dealPic = 5;
+    //抄送人
+    int64 ccManagerId = 6;
+    //转派方式 按人转派:0 按标签转派:1
+    int32 turnSendType = 7;
+    //工单评价
+    repeated common.base.WorkOrderEvaluationEnumPb dealEvaluation = 8;
+}
+
+//工单处理响应
+message WorkOrderDealResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//工单跟进补充请求
+message WorkOrderFllowUpReq {
+    //工单编号
+    string workOrderNo = 1;
+    //关闭备注
+    string dealConetent = 2;
+    //附属图片
+    string dealPic = 3;
+}
+
+//工单跟进补充响应
+message WorkOrderFllowUpResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//工单关闭请求
+message WorkOrderCloseReq {
+    //工单编号
+    string workOrderNo = 1;
+    //关闭备注
+    string dealConetent = 2;
+    //附属图片
+    string dealPic = 3;
+    //抄送人
+    int64 ccManagerId = 4;
+}
+
+//工单关闭响应
+message WorkOrderCloseResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//全局搜索请求
+message WorkOrderGlobalSearchReq {
+    //关键字
+    string selectParam = 1;
+    //用户ID
+    int64 userId = 2;
+    //用户手机号
+    string userMobile = 3;
+    //开始日期 时间戳
+    int64 startDate = 4;
+    //结束日期 时间戳
+    int64 endDate = 5;
+    //时间搜索类型
+    common.base.WorkOrderSelectDateEnumPb selectDateType = 6;
+    //时间排序倒序
+    common.base.WorkOrderSelectDateOrderEnumPb orderDateType = 7;
+    //紧急程度 紧急:1 一般:10
+    int32 emergencyLevel = 8;
+    //是否分派 分派:1 不分派:2
+    int32 doDispatch = 9;
+    //创建人ID
+    int64 createManagerId = 10;
+    //当前处理人ID
+    int64 currentDealManagerId = 11;
+    //抄送人ID
+    int64 ccManagerId = 12;
+    //工单来源
+    common.base.WorkOrderSourceEnumPb workOrderSource = 13;
+    //历史处理人ID
+    int64 historyDealManagerId = 14;
+    //标签ID
+    int64 tagId = 15;
+    //工单状态
+    common.base.WorkOrderStatusEnumPb workOrderStatus = 16;
+    //分页信息
+    common.base.Pagination page = 17;
+    //订单号
+    string orderNo = 18;
+
+}
+
+//全局搜索响应
+message WorkOrderGlobalSearchResp {
+    common.base.ErrorMessage ret = 1;
+    int32 total = 2;
+    common.base.Pagination page = 3;
+    //工单数据
+    repeated WorkOrderListView data = 4;
+}
+
+message ExportByTimeSectionReq {
+    //关键字
+    string selectParam = 1;
+    //用户ID
+    int64 userId = 2;
+    //用户手机号
+    string userMobile = 3;
+    //开始日期 时间戳
+    int64 startDate = 4;
+    //结束日期 时间戳
+    int64 endDate = 5;
+    //时间搜索类型
+    common.base.WorkOrderSelectDateEnumPb selectDateType = 6;
+    //时间排序倒序
+    common.base.WorkOrderSelectDateOrderEnumPb orderDateType = 7;
+    //紧急程度 紧急:1 一般:10
+    int32 emergencyLevel = 8;
+    //是否分派 分派:1 不分派:2
+    int32 doDispatch = 9;
+    //创建人ID
+    int64 createManagerId = 10;
+    //当前处理人ID
+    int64 currentDealManagerId = 11;
+    //抄送人ID
+    int64 ccManagerId = 12;
+    //工单来源
+    common.base.WorkOrderSourceEnumPb workOrderSource = 13;
+    //历史处理人ID
+    int64 historyDealManagerId = 14;
+    //标签ID
+    int64 tagId = 15;
+    //工单状态
+    common.base.WorkOrderStatusEnumPb workOrderStatus = 16;
+    //订单号
+    string orderNo = 17;
+}
+
+message ExportByTimeSectionResp {
+    common.base.ErrorMessage ret = 1;
+    string file_url = 2;
+}
+
+message WorkOrderListView {
+    //工单编号
+    string workOrderNo = 2;
+    //紧急程度 紧急:1 一般:10
+    int32 emergencyLevel = 6;
+    //是否分派 分派:1 不分派:2
+    int32 doDispatch = 7;
+    //创建人名称
+    string createManagerName = 8;
+    //用户id
+    string userId = 10;
+    //用户昵称
+    string userNickName = 11;
+    //用户手机号
+    string userMobile = 12;
+    //订单编号
+    string orderNo = 13;
+    //标签
+    string tagName = 14;
+    //工单状态
+    common.base.WorkOrderStatusEnumPb workOrderStatus = 15;
+    //创建时间
+    string createDate = 16;
+    //当前处理人ID
+    string currentDealManagerId = 17;
+    //当前处理人名称
+    string currentDealManagerName = 18;
+}
+
+// ----------------------工单常见问题知识库------
+//添加常见问题请求
+message WorkOrderCreateSOPReq {
+
+    //问题名称
+    string sopName = 1;
+
+    //标签Id
+    repeated string tagId = 2;
+
+    //祥细描述
+    string sopDesc = 3;
+
+    //回答
+    repeated WorkOrderSOPReply reply = 4;
+
+    //附属图片 逗号分隔
+    string sopPic = 5;
+
+    //啓用状态 0:失效，1:有效
+    SopStatusEnum status = 6;
+
+    //点击量
+    int64 browseNumber = 7;
+
+}
+
+enum SopStatusEnum {
+
+    //0:失效
+    Offline = 0;
+    //1:有效
+    Online = 1;
+
+}
+
+message WorkOrderSOPReply {
+
+    //问题编号
+    string sopId = 1;
+
+    //回答内容 1000字以内
+    string sopReply = 2;
+
+    //回答语言
+    string replyLanguage = 3;
+
+}
+
+
+//添加常见问题响应
+message WorkOrderCreateSOPResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//編輯常见问题请求
+message WorkOrderEditSOPReq {
+
+    //问题编号
+    string sopId = 1;
+
+    //问题名称
+    string sopName = 2;
+
+    //标签Id
+    repeated string tagId = 3;
+
+    //祥细描述
+    string sopDesc = 4;
+
+    //回答
+    repeated WorkOrderSOPReply reply = 5;
+
+    //附属图片 逗号分隔
+    string sopPic = 6;
+
+    //啓用状态 0:失效，1:有效
+    SopStatusEnum status = 7;
+
+    //点击量
+    int64 browseNumber = 8;
+}
+
+//編輯常见问题响应
+message WorkOrderEditSOPResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//搜索常见问题请求
+message WorkOrderSearchSOPReq {
+
+    //问题名称
+    string sopName = 1;
+
+    //详细描述
+    string sopDesc = 2;
+
+    repeated string tagId = 3;
+
+    //啓用状态
+    SopStatusEnum status = 4;
+
+    common.base.Pagination page = 5;
+
+}
+
+//搜索常见问题响应
+message WorkOrderSearchSOPResp {
+    common.base.ErrorMessage ret = 1;
+    int32 total = 2;
+    common.base.Pagination page = 3;
+    //常见问题信息
+    repeated WorkOrderSOPView workOrderSOPView = 4;
+}
+
+//常见问题信息
+message WorkOrderSOPView {
+
+    //问题编号
+    string sopId = 1;
+
+    //问题名称
+    string sopName = 2;
+
+    //标签信息
+    repeated WorkOrderTag data = 3;
+
+    //祥细描述
+    string sopDesc =4;
+
+    //回答
+    repeated WorkOrderSOPReply reply = 5;
+
+    //附属图片 逗号分隔
+    string sopPic = 6;
+
+    //啓用状态 0:失效，1:有效
+    SopStatusEnum status = 7;
+
+    //点击量
+    int64 browseNumber = 8;
+
+    //更新日期
+    string lastUpdated = 9;
+}
+
+//增加常见问题点击数请求
+message WorkOrderSOPAddBrowseNumberReq {
+
+    //问题编号
+    string sopId = 1;
+
+}
+
+//增加常见问题点击数响应
+message WorkOrderSOPAddBrowseNumberResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//删除常见问题请求
+message WorkOrderDeleteSOPReq {
+
+    //问题编号
+    string sopId = 1;
+
+}
+
+message WorkOrderDeleteSOPResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message WorkOrderSearchTop15Req {}
+
+//------------------------message service 分隔线----------------------------
+
+//工单业务
+service WorkOrderService {
+
+    //创建工单
+    //判断标签是否有效，是否是二级标签，是否有有效处理小组
+    //若此工单选择了「分派」，但未指定具体分派，原则上是系统会根据标签对应处理组，在处理组中随机分配，若此时，该标签没有对应的处理组，
+    //则toast提示“该标签没有对应处理组，请联系管理员处理”
+    //选定指派人时，根据此人来分派工单，若不输入指定分派人员，则系统自动按照选择的标签对应的处理组成员随机分派
+    //选择不分派，创建者创建后，系统自动关闭，仅作为记录，不流转
+    rpc AddWorkOrder (WorkOrderCreateReq) returns (WorkOrderCreateResp);
+
+    //工单详情
+    rpc ViewWorkOrder (WorkOrderViewReq) returns (WorkOrderViewResp);
+
+    //工单处理
+    rpc DealWorkOrder (WorkOrderDealReq) returns (WorkOrderDealResp);
+
+    //工单跟进补充
+    rpc FllowUpWorkOrder (WorkOrderFllowUpReq) returns (WorkOrderFllowUpResp);
+
+    //工单关闭
+    rpc CloseWorkOrder (WorkOrderCloseReq) returns (WorkOrderCloseResp);
+
+    //全局搜索
+    rpc GlobalSearch (WorkOrderGlobalSearchReq) returns (WorkOrderGlobalSearchResp);
+
+    // 全局导出-根据时间
+    rpc ExportByTimeSection (ExportByTimeSectionReq) returns (ExportByTimeSectionResp);
+
+}
+
+//工单小组业务
+service WorkOrderGroupService {
+
+    //添加小组
+    //检查小组名称是否已存在
+    //选择的后台用户数量大于0
+    rpc AddWorkOrderGroup (WorkOrderAddGroupReq) returns (WorkOrderAddGroupResp);
+
+    //编辑小组
+    //检查小组名称是否已存在
+    //选择的后台用户数量大于0
+    //*小组失效：若失效小组为处理小组,检查该小组是否有生效的二级标签，若有，则在勾选框下红字提示“暂时无法失效，有对应的标签
+    rpc UpdateWorkOrderGroup (WorkOrderUpdateGroupReq) returns (WorkOrderUpdateGroupResp);
+
+    //分页查询
+    //区分创建小组/处理小组类型
+    //处理小组，显示关联标签信息
+    rpc WorkOrderGroupPageList (WorkOrderPageGroupReq) returns (WorkOrderPageGroupResp);
+
+    //处理小组列表查询  使用场景: 添加二级标签，指定处理小组
+    //小组名称模糊查询
+    rpc ProcessTeamList (WorkOrderListGroupReq) returns (WorkOrderListGroupResp);
+
+}
+
+//工单标签业务
+service WorkOrderTagService {
+
+    //有效标签列表查询  只查询所有生效状态的标签，一级标签没有生效的二级标签的，也不返回
+    //使用场景：创建工单/全局搜索
+    rpc ValidTagList (WorkOrderValidTagListReq) returns (WorkOrderValidTagListResp);
+
+    //分页查询标签
+    rpc WorkOrderTagPageList (WorkOrderTagPageReq) returns (WorkOrderTagPageResp);
+
+    //添加标签
+    //校验名称是否有重复，一二级标签之间均不能重复
+    //二级标签需指定一个生效状态的处理小组
+    rpc AddWorkOrderTag (WorkOrderAddTagReq) returns (WorkOrderAddTagResp);
+
+    //修改标签
+    //校验名称是否有重复，一二级标签之间均不能重复
+    //二级标签需指定一个生效状态的处理小组
+    rpc UpdateTag (WorkOrderUpdateTagReq) returns (WorkOrderUpdateTagResp);
+
+    //标签状态修改
+    //一级标签失效后对应的二级标签全部失效
+    //一个子级标签标签重新生效，则其失效的父标签也生效
+    rpc ChangeTagStatus (WorkOrderChangeTagStatusReq) returns (WorkOrderChangeTagStatusResp);
+
+}
+
+//工单常见问题业务
+service WorkOrderSOPService {
+    //添加问答
+    //检查所有数据不为空
+    rpc AddSOP (WorkOrderCreateSOPReq) returns (WorkOrderCreateSOPResp);
+
+    //編輯问答
+    rpc EditSOP (WorkOrderEditSOPReq) returns (WorkOrderEditSOPResp);
+
+    ////搜索常见问题
+    rpc SearchSOP (WorkOrderSearchSOPReq) returns (WorkOrderSearchSOPResp);
+
+    //增加常见问题点击数
+    rpc AddSOPBrowseNumber (WorkOrderSOPAddBrowseNumberReq) returns (WorkOrderSOPAddBrowseNumberResp);
+
+    //删除常见问题
+    rpc DeleteSOP (WorkOrderDeleteSOPReq) returns (WorkOrderDeleteSOPResp);
+
+    //頭十五点击数的常見問題
+    rpc SearchMostBrowsedSOP (WorkOrderSearchTop15Req) returns (WorkOrderSearchSOPResp);
+}

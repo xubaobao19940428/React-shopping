@@ -1,0 +1,678 @@
+//DESC BACK littlec-marketing
+syntax = "proto3";
+package boss.active.product;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.active.product";
+option java_outer_classname = "Product";
+
+//功能放在 marketing 服务中, 需请求marketing 服务
+
+
+//活动商品管理
+
+message ActiveProductSkuInfo {
+  string product_id = 1; // 商品ID
+  string sku_id = 2; //skuId
+  string values = 3; //规格
+  string price_vip = 4; // 活动类型
+  string advise_active_price = 5; //建议活动价
+  string active_price = 6; //活动价
+  string commission_rate = 7; // 返利
+  string active_commission_rate = 8; //活动返利
+  uint32 stock = 9; //库存
+  uint32 active_stock = 10; // 活动库存
+  string sku_code = 11; //sku code
+  string specified_price = 12; //专享价
+}
+
+message ActiveProductInfo {
+  string active_id = 1; // 活动ID
+  string product_id = 2; //商品ID
+  string country_code = 3; //国家码
+  uint32 active_type = 4; // 活动类型
+  int64 start_time = 5; //活动开始时间
+  int64 end_time = 6; //活动结束时间
+  repeated common.base.NameAndCode group_label = 7; // 分组标签
+  repeated ActiveProductSkuInfo sku_info = 8; //sku信息
+  repeated common.base.NameAndCode product_corner = 9; //商品角标
+  repeated common.base.NameAndCode promotion_desc = 10; //营销文案
+  repeated common.base.NameAndCode promotion_cover = 11; //营销底图
+  bool  home_display = 12; // 是否展示在首页
+  uint32 group_label_id = 13; // 活动分组标签ID
+  uint32 spu_preheat = 14; // 商品预热类型
+  int64 spu_preheat_time = 15; //商品预热时间
+  string id = 16; // 主键ID
+}
+
+
+message ActiveProductAddReq {
+  ActiveProductInfo active_product_info = 1; //活动商品信息
+}
+
+message ActiveProductAddResp {
+  common.base.ErrorMessage ret = 1; // 返回值
+  string message = 2; //错误信息
+}
+
+message ActiveProductUpdateReq {
+  ActiveProductInfo active_product_info = 1; //活动商品信息
+}
+
+message ActiveProductUpdateResp {
+  common.base.ErrorMessage ret = 1; // 返回值
+  string message = 2; //错误信息
+}
+
+message ActiveProductListInfo {
+  string product_id = 1; //商品ID
+  string product_name = 2; //商品名称
+  string product_cover = 3; //商品图片
+  string country_code = 4; // 国家码
+  string active_price = 5; // 活动价格
+  string active_stock = 6; // 活动库存
+  int64 start_time = 7; // 开始时间ActiveProductConvertUtil.java
+  int64 end_time = 8; //结束时间
+  string active_id = 9; // 活动ID
+  string active_name = 10; // 活动名称
+  string promotion_id = 11; //促销ID
+  string promotion_name = 12; //促销名称
+  repeated common.base.NameAndCode group_label = 13; //分组标签
+  repeated common.base.NameAndCode product_corner = 14; //商品角标
+  repeated common.base.NameAndCode promotion_desc = 15; //营销文案
+  repeated common.base.NameAndCode promotion_cover = 16; //营销底图
+  string operation_name = 17; //更新人名称
+  int64 update_time = 18; //更新时间
+  bool  home_display = 19; // 是否展示在首页
+  int32 id = 20; //主键ID。前端更新使用，但是后端不使用
+  uint32 group_label_id = 21; //分组标签ID
+  uint32 sort = 22; //排序序号
+  uint32 spu_preheat = 23; // 商品预热类型 1-跟随活动，2-自定义
+  int64 spu_preheat_time = 24; //商品预热时间
+  string specified_price = 25; //专享价
+}
+
+message ActiveProductListReq {
+  string active_id = 1; // 活动ID
+  string product_id = 2; //商品ID
+  string product_corner = 3; //商品角标
+  string product_name = 4; // 商品名称
+  string promotion_id = 5; //促销ID
+  string group_label = 6; //分组标签
+  string country_code = 7; // 国家码
+  int64 start_time = 10; // 开始时间
+  int64 end_time = 11; //结束时间
+  uint32 status = 12; // 活动商品状态
+  common.base.Pagination page = 13; //分页信息
+  uint32 group_label_id = 14; //分组标签ID
+  repeated string product_id_list = 15; //商品ID 数组
+}
+
+message ActiveProductListResp {
+  repeated ActiveProductListInfo active_product_info = 1; //返回列表信息
+  uint32 total = 2; //商品结果总数
+  common.base.ErrorMessage ret = 3; // 返回值
+  string message = 4; //错误信息
+}
+
+
+message ActiveProductSkuReq {
+  string active_id = 1; // 活动ID
+  string product_id = 2; // 商品ID
+}
+
+message ActiveProductSkuResp {
+  repeated ActiveProductSkuInfo active_product_sku_info = 1; //返回列表信息
+  common.base.ErrorMessage ret = 2; // 返回值
+  string message = 3; //错误信息
+}
+
+message BatchInsertActiveProductReq {
+  string url = 1; // 文件路径
+}
+
+message BatchInsertActiveProductResp {
+  common.base.ErrorMessage ret = 1; // 返回值
+  string message = 2; //错误信息
+}
+
+message ActiveProductTemplateReq {
+
+}
+
+message ActiveProductTemplateResp {
+  string url = 1; // 文件路径
+  common.base.ErrorMessage ret = 2; // 返回值
+  string message = 3; //错误信息
+}
+
+message UploadActiveProductReq {
+  string url = 1; // 文件路径
+}
+
+message UploadActiveProductResp {
+  common.base.ErrorMessage ret = 1; // 返回值
+  string message = 2; //错误信息
+}
+
+message ChangeHomeDisplayStatusReq {
+  string active_id = 1; // 活动ID
+  string product_id = 2; // 商品ID
+  bool home_display_status = 3; // 显示在首页的状态
+}
+
+message ChangeHomeDisplayStatusResp {
+  common.base.ErrorMessage ret = 1; // 返回值
+  string message = 2; //错误信息
+}
+
+message ActiveAllProductListReq {
+  string active_id = 1; // 活动ID
+}
+
+message ActiveAllProductInfo {
+  string product_id = 1; //商品ID
+  string product_name = 2; //商品名称
+  string product_cover = 3; //商品图片
+  string active_id = 4; // 活动ID
+  bool  home_display = 5; // 是否展示在首页
+  uint32 sort = 6; //排序序号
+}
+
+message ActiveProductGroupLabel {
+  string group_label_name = 1; //分组标签名称
+  uint32 group_label_id = 2; //分组标签ID
+  uint32 group_label_sort = 3; //排序序号
+  repeated ActiveAllProductInfo active_all_product_info = 4; //活动商品信息
+}
+
+message ActiveAllProductListResp {
+  repeated ActiveProductGroupLabel active_product_group_label = 1; //活动商品信息
+  common.base.ErrorMessage ret = 2; // 返回值
+}
+
+message ChangeActiveAllProductSortReq {
+  string active_id = 1; // 活动ID
+  repeated ActiveAllProductInfo active_all_product_info = 4; //活动商品信息
+}
+
+message ChangeActiveAllProductSortResp {
+  common.base.ErrorMessage ret = 1; // 返回值
+}
+
+service ActiveProductService {
+  //添加活动
+  rpc InsertActiveProduct (ActiveProductAddReq) returns (ActiveProductAddResp);
+
+  //修改活动
+  rpc UpdateActiveProduct (ActiveProductUpdateReq) returns (ActiveProductUpdateResp);
+
+  //管理后台条件查询（活动报名）
+  rpc ListActiveProductForSignUp(ListActiveProductForSignUpReq) returns (ListActiveProductForSignUpResp);
+
+  //管理后台条件查询接口（分页）
+  rpc ListActiveProduct (ActiveProductListReq) returns (ActiveProductListResp);
+
+  //管理后台条件查询接口（分页）
+  rpc ListActiveProductSku (ActiveProductSkuReq) returns (ActiveProductSkuResp);
+
+  //管理后台查询页面接口
+  rpc BatchInsertActiveProduct (BatchInsertActiveProductReq) returns (BatchInsertActiveProductResp);
+
+  //复制活动接口
+  rpc DownloadActiveProductTemplate (ActiveProductTemplateReq) returns (ActiveProductTemplateResp);
+
+  //通过上传活动接口
+  rpc UploadActiveProduct (UploadActiveProductReq) returns (UploadActiveProductResp);
+
+  //通过上传活动接口
+  rpc ChangeHomeDisplayStatus (ChangeHomeDisplayStatusReq) returns (ChangeHomeDisplayStatusResp);
+
+  //通过活动ID查询所有活动商品
+  rpc ListActiveAllProduct (ActiveAllProductListReq) returns (ActiveAllProductListResp);
+
+  //改变活动商品排序
+  rpc ChangeActiveAllProductSort (ChangeActiveAllProductSortReq) returns (ChangeActiveAllProductSortResp);
+
+  //查询操作人(采集人)信息
+  rpc ListGatherUser(ListGatherUserReq) returns (ListGatherUserResp);
+}
+
+//查询提报人 请求体
+message ListGatherUserReq {
+  string active_id = 1; // 活动ID
+}
+
+//查询提报人 响应体
+message ListGatherUserResp {
+  message OperationUserInfo {
+    //userId
+    int32 sys_user_id = 1;
+    // 昵称
+    string nick_name = 2;
+    // 真实姓名
+    string real_name = 3;
+  }
+  repeated OperationUserInfo operation_user_info = 1;
+  common.base.ErrorMessage ret = 2; // 返回值
+}
+
+message MarketingProductList {
+  string product_id = 2; //商品ID
+  string product_name = 3; //商品名称
+  string price = 6; // 产品价格
+  string price_vip = 7; // 产品VIP价格
+  string product_label = 9; // 商品标签
+  string product_cover = 10; //商品图片
+  string active_price = 12; // 活动价格
+  // 副标题  --> sub title
+  string sub_name = 13;
+  // 自购节省 - 国家
+  string commission_self = 14;
+  // 分享返利
+  string commission = 15;
+  string product_corner = 16; //商品角标
+  string promotion_desc = 17; //营销文案
+  string active_id = 18; //活动ID
+  string start_time = 19; //开始时间
+  string end_time = 20; //结束时间
+  string active_status = 21; //活动状态
+  string preheat_time = 22; //预热时间
+  string active_commission = 23;// 分享返利
+  string active_commission_self = 24;// 自购节省
+  int32 sale_count = 25;// 销量
+  int32 cart_count = 26;// 加购量
+}
+
+message MarketingProductLabelList {
+  string group_label = 1; // 分组标签
+  repeated MarketingProductList marketing_product = 2;
+  int32 group_label_id = 3; // 分组标签ID
+}
+
+message GetActiveByIdOrLabelIdReq {
+  string active_id = 1; // 活动ID
+  repeated int32 group_label_id = 2; // 分组标签ID
+  int32 type = 3; //1-通过活动ID请求，2-通过分组标签请求
+  repeated int32 product_status = 4; // 1-未开始，2-进行中，3-已结束，有几个状态就传几个值
+  string country_code = 5; //国家码
+  string language_code = 6; //语言
+  int32 sort_type = 7;//1-销量排序 3-加购排序 4-活动默认排序
+}
+
+message GetActiveByIdOrLabelIdResp {
+  common.base.ErrorMessage ret = 1;
+  repeated MarketingProductLabelList label = 2;
+  string active_cover = 3; // 活动主图
+}
+
+message GetActiveProductByProductIdReq {
+  repeated string product_id = 1; // 商品ID
+  repeated int32 product_status = 2; // 1-未开始，2-进行中，3-已结束，有几个状态就传几个值
+  string country_code = 3; //国家码
+  string language_code = 4; //语言
+  int32 sort_type = 5;//1-销量排序 3-加购排序 4-活动默认排序
+}
+
+message GetActiveProductByProductIdResp {
+  common.base.ErrorMessage ret = 1;
+  repeated MarketingProductList marketing_product_info = 2; //活动商品信息
+}
+
+service ActiveProductBossSimulationMallService {
+  // 根据活动ID和活动标签获取活动商品
+  rpc GetActiveByIdOrLabelId (GetActiveByIdOrLabelIdReq) returns (GetActiveByIdOrLabelIdResp);
+
+  // 根据活动ID和活动标签获取活动商品
+  rpc GetActiveProductByProductId (GetActiveProductByProductIdReq) returns (GetActiveProductByProductIdResp);
+}
+
+//类目信息
+message CategoryUnit {
+  string back_cate_first_id = 1;
+  string back_cate_first_name = 2;
+  string back_cate_second_id = 3;
+  string back_cate_second_name = 4;
+  string back_cate_third_id = 5;
+  string back_cate_third_name = 6;
+}
+
+//活动报名专用sku
+message EnterActiveProductSkuInfo {
+  string product_id = 1; // 商品ID
+  string sku_id = 2; //skuId
+  string values = 3; //规格
+  string price_vip = 4; // vip价格
+  string advise_active_price = 5; //建议活动价
+  string active_price = 6; //活动价
+  string commission_rate = 7; // 返利
+  string active_commission_rate = 8; //活动返利
+  uint32 active_stock = 10; // 活动库存
+  string sku_code = 11;
+}
+
+//通用的删除
+message DeleteProductReq {
+  repeated string product_enter_serial_id = 1;
+}
+
+message DeleteProductResp {
+  common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message ActiveProductEnterSimpleInfo {
+  string product_enter_serial_id = 1;//唯一ID
+  string product_id = 2;
+}
+
+message BatchUpdateSignedProductReq {
+  repeated ActiveProductEnterSimpleInfo active_spu_info= 1;
+  string active_id = 2; //活动id
+  uint32 spu_preheat = 3; //0:未选择 1：跟随活动，2：自定义
+  string spu_preheat_time = 4; //商品预热时间
+
+  string start_time = 5; //活动开始时间
+  string end_time = 6; //活动结束时间
+
+  uint32 group_label_id = 7; //分组标签ID
+  repeated common.base.NameAndCode group_label = 8;//分组标签
+  repeated common.base.NameAndCode product_corner = 9; //商品角标
+  repeated common.base.NameAndCode promotion_desc = 10; //营销文案
+//  repeated common.base.NameAndCode promotion_cover = 12; //营销底图
+}
+
+message BatchUpdateSignedProductResp {
+  common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message AcceptSignedProductReq {
+  repeated string product_enter_serial_id = 1;//唯一ID
+  string active_id = 2;//活动
+  string country_code = 3; //国家码
+}
+
+message AcceptSignedProductResp {
+  string msg = 1;//提醒消息
+  common.base.ErrorMessage ret = 2; // 返回值
+  repeated string package_spu = 3; // 礼包spu list
+  repeated string invalid_spu = 4; // 无效spu list
+}
+
+
+//活动报名-新增商品请求体
+message InsertNoSignedProductReq {
+  string active_id = 1;//活动id
+  repeated string product_id = 2;//spuID 数组
+  string country_code = 3;//国家码
+  string group_label_id = 4; //分组标签ID
+  repeated common.base.NameAndCode group_label = 5;//分组标签
+}
+//活动报名-新增商品请求体
+message InsertNoSignedProductResp {
+  common.base.ErrorMessage ret = 1; // 返回值
+  repeated string package_spu = 2; // 礼包spu list
+  repeated string invalid_spu = 3; // 无效spu list
+}
+
+message ListActiveProductEnterReq {
+  string active_id = 1;//活动id 必传
+  string country_code = 2; //国家码 必传
+  uint32 type = 3; //商品审核状态 0:待报名，1：已报名，2：已录用 必传
+  repeated string product_id = 4;// 多个商品ID
+  string product_name = 5; //商品名称
+  string back_cate_id = 6; //后台类目id 最后一级的一个即可，参考ListProduct
+  string group_label_id = 7; //分组标签ID
+  int32 look_switch = 8; // 0-不检查 1-检查价格校验不通过 2-活动冲突
+  string active_price_min = 10;//活动价最小值
+  string active_price_max = 11;//活动价最大值
+  //0-预热时间为空 1-开始时间为空 2-结束时间为空 3-分组为空 4-活动价为空 5-活动佣金率为空 6-活动库存为空
+  repeated int32 select_switch = 12;//非空挑选按钮 参考ListProductEnterFilterNullType
+  string sign_up_operator_id = 13;//提报人人id
+  string gather_operator_id = 14;//采集人id
+  common.base.Pagination page = 15; //分页信息
+}
+
+message ListActiveProductForSignUpReq {
+  string active_id = 1;//活动id 必传
+  string country_code = 2; //国家码 必传
+  repeated string product_id = 3;// 多个商品ID
+  string product_name = 4; //商品名称
+  string back_cate_id = 5; //后台类目id 最后一级的一个即可，参考ListProduct
+  string group_label_id = 6; //分组标签ID
+  string sign_up_operator_id = 7;//提报人人id
+  string gather_operator_id = 8;//采集人id
+  common.base.Pagination page = 9; //分页信息
+}
+
+//活动报名-商品基础信息
+message SignUpBaseProduct {
+  string product_enter_serial_id = 1; //唯一ID
+  string product_id = 2;//商品ID
+  string product_cover = 3;//商品主图
+  string product_title = 4;//商品title
+  CategoryUnit category_unit = 5;//类目信息
+  common.enum.ProductEnum.ShelveStatus shelve_status = 6;
+  string start_time = 7; //活动开始时间
+  string end_time = 8; //活动结束时间
+  uint32 spu_preheat = 9; //商品预热类型 1：跟随活动，2：自定义
+  string spu_preheat_time = 10; //预热时间
+  string group_label_id = 11; // 分组标签
+  repeated common.base.NameAndCode group_label = 13; //分组标签
+  repeated common.base.NameAndCode product_corner = 14; //商品角标
+  repeated common.base.NameAndCode promotion_desc = 15; //营销文案
+  repeated common.base.NameAndCode promotion_cover = 16; //营销底图
+}
+
+//待报名的商品
+message ActiveProductEnter {
+  SignUpBaseProduct sign_up_base_product = 1;
+
+  string supply_price_min = 2;//spu成本价中的最小值 已经转换为对应站点的值
+  string supply_price_max = 3;//spu成本价中的最大值 已经转换为对应站点的值
+
+  string price_vip_min = 4; // spu的vip价格的最小值
+  string price_vip_max = 5; // spu的vip价格的最大值
+
+  string advise_active_price_min = 6; //建议活动价
+  string advise_active_price_max = 7; //建议活动价
+
+  string active_price_min = 8; //活动价
+  string active_price_max = 9; //活动价
+
+  string active_commission_rate_min = 10; //活动返利 0.004 -> 0.004(后端提供)
+  string active_commission_rate_max = 11; //活动返利 0.004 -> 0.004(后端提供)
+
+  //    string rate_of_margin_min = 21;//毛利率 30.23% -> 0.3023(后端提供)
+  //    string rate_of_margin_max = 22;//毛利率 30.23% -> 0.3023(后端提供)
+
+  uint32 active_stock_min = 12; // 活动库存
+  uint32 active_stock_max = 13; // 活动库存
+
+  string sign_up_operator_name = 14;//提报人
+  string sign_up_time = 15;//提报时间
+  string gather_operator_name = 16;//采集人
+  string gather_time = 17;//采集人时间
+
+  int32 price_conflict = 18;//活动价格冲突 0-安全,1-提醒,2-禁止
+  bool time_conflict = 19;//活动时间是否冲突
+}
+
+message ListActiveProductEnterResp {
+  repeated ActiveProductEnter active_product_enter = 1;
+  string currency_symbol = 2;//货币符号
+  uint32 total = 3; //商品结果总数
+  common.base.ErrorMessage ret = 4; // 返回值
+}
+
+message ActiveProductForSignUp {
+  SignUpBaseProduct sign_up_base_product = 1;
+  string sign_up_operator_name = 2;//提报人
+  string sign_up_time = 3;//提报时间
+  string gather_operator_name = 4;//采集人
+  string gather_time = 5;//采集人时间
+}
+
+message ListActiveProductForSignUpResp {
+  repeated ActiveProductForSignUp active_product_sign_up_info = 1;
+  uint32 total = 2; //商品结果总数
+  common.base.ErrorMessage ret = 3; // 返回值
+}
+
+message SubmitNoSignedProductReq {
+  message ActiveProductEnterSimpleInfo {
+    string product_enter_serial_id = 1;//唯一ID
+    string product_id = 2;
+  }
+  repeated ActiveProductEnterSimpleInfo active_product_enter_simple_info = 1;
+  string country_code = 2; //国家码
+  string active_id = 3; //活动id
+}
+
+message SubmitNoSignedProductResp {
+  common.base.ErrorMessage ret = 1; // 返回值
+  repeated string package_spu = 2; // 礼包spu list
+  repeated string invalid_spu = 3; // 无效spu list
+}
+
+message GetActiveProductEnterSkuDetailReq {
+  string product_enter_serial_id = 1;//唯一ID
+  string product_id = 2; //商品id
+  string active_id = 3; //活动id
+  string country_code = 4;//国家码
+}
+
+message GetActiveProductEnterSkuDetailResp {
+  repeated EnterActiveProductSkuInfo sku_info = 1; //sku信息
+  common.base.ErrorMessage ret = 2; //返回值
+}
+
+message SaveActiveProductEnterDetailReq {
+  string product_enter_serial_id = 1;//唯一ID
+  string active_id = 2;//活动id
+  string product_id = 3;//商品id
+  string country_code = 4;//国家码
+  uint32 spu_preheat = 5; //0:未选择 1：跟随活动，2：自定义
+  string spu_preheat_time = 6;//商品预热时间
+  string start_time = 7; //活动开始时间
+  string end_time = 8; //活动结束时间
+  string group_label_id = 9; //分组标签ID
+  repeated common.base.NameAndCode product_corner = 10; //商品角标
+  repeated common.base.NameAndCode promotion_desc = 11; //营销文案
+  repeated common.base.NameAndCode promotion_cover = 12; //营销底图
+  repeated common.base.NameAndCode group_label = 13; // 分组标签
+
+  repeated EnterActiveProductSkuInfo sku_info = 14; //sku信息
+  uint32 active_product_approval_status = 15;//活动商品审批状态 0-待报名 1-待录用 2-已录用
+}
+
+message SaveActiveProductEnterDetailResp {
+  common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message BatchUpdateNoSignedProductReq {
+  repeated ActiveProductEnterSimpleInfo active_spu_info = 1;
+  string active_id = 2;//活动id
+  string country_code = 3;//国家码
+
+  uint32 spu_preheat = 4; //0：未选择 1：跟随活动，2：自定义
+  string spu_preheat_time = 5; //商品预热时间
+  string start_time = 6; //活动开始时间
+  string end_time = 7; //活动结束时间
+  uint32 group_label_id = 8; //分组标签ID
+  repeated common.base.NameAndCode group_label = 9;//分组标签
+
+  //设置活动价
+  int32 switch_price = 10;//-1:未选择 0:建议活动价 1:按建议活动价打折 2:按vip价打折 3:自定义
+  string price_variable = 11;
+  //设置活动佣金率
+  int32 switch_rate = 12;//-1：未选择 0:按日常佣金率 1:按日常佣金率换算 2:自定义
+  string rate_variable = 13;
+  //设置活动库存
+  string stock = 14;
+}
+
+message BatchUpdateNoSignedProductResp {
+  common.base.ErrorMessage ret = 3; // 返回值
+}
+//查询提报人 请求体
+message GetListOperationUserReq {
+  string active_id = 1; // 活动ID
+  string type = 2;//审核状态0-待报名 1-已报名 3-已录用
+}
+
+//查询提报人 响应体
+message GetListOperationUserResp {
+  message OperationUserInfo {
+    //userId
+    int32 sys_user_id = 1;
+    // 昵称
+    string nick_name = 2;
+    // 真实姓名
+    string real_name = 3;
+
+  }
+  repeated OperationUserInfo operation_user_info = 1;
+  common.base.ErrorMessage ret = 2; // 返回值
+}
+
+message RecheckForTimeConflictReq {
+  string active_id = 1; // 活动ID
+  string country_code = 2; //国家码
+}
+
+message RecheckForTimeConflictResp {
+  common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message RecheckForPriceConflictReq {
+  string active_id = 1; // 活动ID
+  string country_code = 2; //国家码
+}
+
+message RecheckForPriceConflictResp {
+  common.base.ErrorMessage ret = 1; // 返回值
+}
+
+//活动报名
+service ActiveProductSignUpBossService {
+
+  //查询提报人
+  rpc ListOperationUser(GetListOperationUserReq) returns (GetListOperationUserResp);
+
+  //查询操作人(采集人)信息
+  rpc ListGatherUser(ListGatherUserReq) returns (ListGatherUserResp);
+
+  //批量删除
+  rpc DeleteProduct (DeleteProductReq) returns (DeleteProductResp);
+
+  //重新校准活动冲突
+  rpc RecheckForTimeConflict (RecheckForTimeConflictReq) returns (RecheckForTimeConflictResp);
+
+  //重新校准价格冲突
+  rpc RecheckForPriceConflict (RecheckForPriceConflictReq) returns (RecheckForPriceConflictResp);
+
+  //待报名
+  //新增商品(防重复提交、合理性校验)
+  rpc InsertNoSignedProduct (InsertNoSignedProductReq) returns (InsertNoSignedProductResp);
+  //list查询待报名/已报名待录用
+  rpc ListActiveProductEnter(ListActiveProductEnterReq) returns (ListActiveProductEnterResp);
+  //提交报名（防重复提交、合理性校验、价格安全校验）
+  rpc SubmitNoSignedProduct (SubmitNoSignedProductReq) returns (SubmitNoSignedProductResp);
+  //单个查询
+  rpc GetActiveProductEnterSkuDetail (GetActiveProductEnterSkuDetailReq) returns (GetActiveProductEnterSkuDetailResp);
+  //编辑时，保存商品（价格安全校验）
+  rpc SaveActiveProductEnterDetail (SaveActiveProductEnterDetailReq) returns (SaveActiveProductEnterDetailResp);
+  //批量编辑（不做校验，等待提交时校验）
+  rpc BatchUpdateNoSignedProduct (BatchUpdateNoSignedProductReq) returns (BatchUpdateNoSignedProductResp);
+
+  //已报名待录用
+  //批量编辑
+  rpc BatchUpdateSignedProduct (BatchUpdateSignedProductReq) returns (BatchUpdateSignedProductResp);
+  //录用（合理性校验、价格安全校验、活动冲突校验）
+  rpc AcceptSignedProduct(AcceptSignedProductReq) returns(AcceptSignedProductResp);
+
+}

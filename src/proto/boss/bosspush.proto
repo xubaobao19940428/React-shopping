@@ -1,0 +1,92 @@
+syntax = "proto3";
+package boss.bosspush;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.bosspush";
+option java_outer_classname = "BossPush";
+
+message EditTriggerTemplateReq {
+    string title_en = 1; //标题（英文）
+    string content_en = 2; //内容（英文）
+    repeated TriggerTemplateContentLang content_lang = 3; //多语言信息
+    string cover = 4; //消息cover
+    string template_code = 5; // 模版编号
+}
+message EditTriggerTemplateResp {
+    common.base.ErrorMessage ret = 1; //错误码
+}
+message EventInfo {
+    string event_code = 1; //事件编号
+    string event_name = 2; //事件名字
+}
+message SearchAllEventInfoReq {
+    common.enum.Push.MessageBizCodeEnum biz_code = 1; // 业务码
+}
+message SearchAllEventInfoResp {
+    common.base.ErrorMessage ret = 1; //错误码
+    repeated EventInfo event = 2; //事件
+}
+message SearchTriggerTemplateReq {
+    string template_code = 1; //模版编号
+    string template_title = 2; //模版标题
+    string template_content = 3; //模版内容
+    string push_type = 4; //推送类型
+    string biz_code = 6; //业务类型
+    string event_code = 7; //触发事件编号
+    string start_time = 8; //开始时间
+    string end_time = 9; //结束时间
+    string country = 10; //国家
+    common.base.Pagination page_info = 11; //分页信息
+}
+message SearchTriggerTemplateResp {
+    common.base.ErrorMessage ret = 1; //错误码
+    repeated TriggerTemplate template = 2; //触发模版的list
+    common.base.Pagination page_info = 3; //分页信息
+    uint32 total = 4; //总记录数
+}
+message TriggerTemplate {
+    string template_code = 1; //模版id
+    string template_title = 2; //标题
+    string template_content = 3; //内容
+    string push_type = 4; //推送类型
+    string biz_type = 5; //业务类型
+    string event_name = 6; //触发事件名字
+    string event_desc = 7; //触发事件说明
+    string modify_time = 8; //修改时间
+}
+message TriggerTemplateContentLang {
+    string language = 1; //语言
+    string title = 2; //标题
+    string content = 3; //内容
+    string secondary_title = 4; //二级标题
+}
+
+message GetTriggerTemplateInfoReq {
+    string template_code = 1; //模版编号
+}
+
+message GetTriggerTemplateInfoResp {
+    common.base.ErrorMessage ret = 1; //错误码
+    string template_code = 7; // 模版编号
+    string template_title = 2; //标题
+    string template_content = 3; //内容
+    string country = 4; // 国家
+    string event_name = 5; //触发事件名字
+    repeated TriggerTemplateContentLang template_lang = 6; // 模版多语言信息
+    string cover = 8; // 封面
+}
+
+service PushTemplateService {
+    // 搜索触发型模版的
+    rpc SearchTriggerTemplate (SearchTriggerTemplateReq) returns (SearchTriggerTemplateResp);
+    // 编辑触发型模版
+    rpc EditTriggerTemplate (EditTriggerTemplateReq) returns (EditTriggerTemplateResp);
+    // 获取所有事件信息
+    rpc SearchAllEventInfo (SearchAllEventInfoReq) returns (SearchAllEventInfoResp);
+    // 获取可编辑的模版信息
+    rpc GetTriggerTemplateInfo (GetTriggerTemplateInfoReq) returns (GetTriggerTemplateInfoResp);
+}

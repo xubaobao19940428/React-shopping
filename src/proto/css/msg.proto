@@ -1,0 +1,159 @@
+syntax = "proto3";
+
+package css.msg;
+
+import "common/enum.proto";
+import "common/base.proto";
+
+option java_multiple_files = false;
+option java_package = "com.fingo.littlec.proto.css";
+option java_outer_classname = "Msg";
+
+
+// 自定义消息实体
+message CustomEntity {
+	string key = 1;
+	string value = 2;
+}
+
+// 自定义消息
+message CustomMessage {
+    string notification = 1;
+	repeated CustomEntity custom_entity = 2;
+}
+
+// 自定义消息(过滤apns)
+message CustomNoApnsMessage {
+	string notification = 1;	// 通知内容，apns/安卓通知栏展现
+	repeated CustomEntity custom_entity = 2;
+}
+
+//消息网关消息
+message MsggwMessage{
+    string appkey = 1;
+    string content = 2;
+    uint64 guid = 3;
+    string notification = 4;
+    string from = 5;
+}
+
+//消息单元
+message MessageUnit
+{
+    EMsgType msg_type = 1; // 消息类型
+    bytes data = 2;	// 根据消息类型解析
+    bool is_retracted = 3; //是否已撤回
+}
+
+// 消息类型
+enum EMsgType
+{
+    CHAT_MSG = 0; // 单聊消息
+    GROUP_MSG = 1; // 群聊消息
+    GROUP_SIGNAL = 2; //群聊信令
+    MSGGW_MSG = 3; // 消息网关消息
+    SYSTEM_MSG = 4; // 系统消息
+    MULTI_MSG = 5;	// 群发消息
+    CHATROOM_MSG = 6; //聊天室消息
+    PRIVATE_MSG = 7; //私密消息
+    CUSTOM_MSG = 9; // 自定义消息
+    BASE_TEXT_IMAGE_MSG = 10; // 基础图文消息
+}
+
+// 消息内容类型
+enum EMsgContentType
+{
+	TEXT = 0; // 文本消息
+	IMAGE = 1; // 静态图片消息
+	VIDEO = 2; //视频消息
+	AUDIO = 3; // 语音消息
+	LOCATION = 4; // 位置消息
+	AT = 5; // At消息
+	READ_RECEIPT = 6; // 回执消息
+    FILE = 7; // 普通文件消息
+    RETRACT = 8;	// 撤回消息
+    CUSTOM = 9;	//自定义消息
+    JIMAO_READED = 10;  // 鸡毛信已读信令
+    JIMAO_SENDED = 11;   // 鸡毛信已发短信信令
+    CUSTOM_NO_APNS = 31; //自定义消息,不需apns(终端已有类型在10-30区间)
+    CUSTOM_FAMILY = 32;
+    SYSTEM_CUSTOM = 33; // 系统自定义消息
+}
+
+// 文本消息
+message TextMessage {
+	string text = 1; // 单聊消息文本
+	bool burn_after_read = 2; // 是否阅后即焚
+}
+
+// 图片消息
+message ImageMessage {
+	string file_name = 1; // 图片文件名称
+	string origin_link = 2; // 原始链接
+	string big_link = 3; // 大图连接
+	string middle_link = 4; // 中图链接
+	string small_link = 5; // 小图链接
+	uint64 file_length = 6; // 文件大小，以B为单位
+	bool isOrigin = 7; // 客户端是否发送原图
+	uint32 small_width = 8; // 小图图片宽度
+	uint32 small_height = 9; // 小图图片高度
+	uint32 middle_width = 10; // 中图图片宽度
+	uint32 middle_height = 11; // 中图图片高度
+}
+
+// 视频消息
+message VideoMessage {
+	string file_name = 1; // 视频文件名称
+	string video_link = 2; // 视频链接
+	string video_screen_short_link = 3; // 视频快照图链接
+	uint64 file_length = 4; // 文件大小，以B为单位
+	uint32 duration = 6; // 视频时长，以s为单位
+	uint32 width = 9; // 视频图片宽度
+	uint32 height = 10; // 视频图片高度
+}
+
+// 语音消息
+message AudioMessage {
+	string file_name = 1; // 语音文件名称
+	string audio_link = 2; // 语音链接
+	uint64 file_length = 4; // 文件大小，以B为单位
+	uint32 duration = 5; // 语音时长，以s为单位
+}
+
+// 位置消息
+message LocationMessage {
+    string file_name = 1; // 位置缩略图名称
+    string origin_link = 2; // 位置图片链接
+	uint64 file_length = 4; // 文件大小，以B为单位
+    uint32 width = 5; // 图片宽度
+    uint32 height = 6; // 图片高度
+    double longitude = 7; // 经度
+    double latitude = 8; // 纬度
+    string location_desc = 9; // 位置描述信息
+    string location_address = 10;	// 位置地址
+}
+
+// @消息
+message AtMessage {
+    repeated string at_member = 1; // @成员用户名
+    bool at_all = 2;	// 是否@所有成员
+    string text = 3; // @消息内容
+}
+
+// 已读回执消息
+message ReadReceiptMessage {
+    uint64 receipt_guid = 1; // 标识该回执对应的消息的guid
+}
+
+// 文件消息
+message FileMessage {
+    string file_name = 1; // 文件名
+    string file_link = 2; // 文件链接
+    uint64 file_length = 3; // 文件大小
+}
+
+// 撤回消息
+message RetractMessage {
+    uint64 retract_guid = 1; // 被撤回消息的guid
+}
+

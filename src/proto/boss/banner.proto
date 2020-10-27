@@ -1,0 +1,97 @@
+//DESC BACK littlec-promotion
+syntax = "proto3";
+package boss.banner;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.banner";
+option java_outer_classname = "Banner";
+message BannerInfo {
+    string banner_id = 1; //banner的id
+    string name = 2; //banner标题
+    repeated common.base.NameAndCode image = 3; //banner图片
+    string url = 4; //banner的跳转url
+    int64 start_time = 5; //banner的开始时间
+    int64 end_time = 6; //banner的结束时间
+    uint32 sort_no = 7; //排序
+    common.enum.PromotionEnum.BannerTypeEnum banner_type = 8;
+    string country_code = 9; //国家码
+    string background = 10; //背景颜色
+    int32 click_num = 11; //点击次数
+    common.enum.MarketingEnum.ActiveCrowdType activeCrowdType = 12; //人群类型
+}
+
+message BannerSaveReq {
+    BannerInfo banner_info = 1;
+}
+message BannerSaveResp {
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+}
+
+message BatchDeleteBannerReq {
+    repeated string banner_ids = 1;
+}
+
+message BatchDeleteBannerResp {
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+}
+
+message DeleteBannerReq {
+    string banner_id = 1;
+}
+
+message DeleteBannerResp {
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+}
+
+message ListBannerReq {
+    common.base.Pagination page = 1;
+    common.enum.PromotionEnum.BannerTypeEnum banner_type = 2;
+    string country_code = 3;
+}
+
+message ListBannerResp {
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+    repeated BannerInfo banner_infos = 3;
+    uint32 total = 4; //商品结果总数
+
+}
+
+message ChangeBannerSortReq {
+    string banner_id = 1; //banner_id
+    uint32 sort_no = 2; //排序
+}
+message ChangeBannerSortResp {
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+}
+
+service BannerBossService {
+    //新增或者编辑banner信息，若传入的数据中带有banner_id则为编辑
+    rpc SaveBanner (BannerSaveReq) returns (BannerSaveResp);
+
+    //批量删除
+    rpc BatchDeleteBanner (BatchDeleteBannerReq) returns (BatchDeleteBannerResp);
+
+    //单个删除
+    rpc DeleteBanner (DeleteBannerReq) returns (DeleteBannerResp);
+
+    //分页查询banner信息
+    rpc ListBanner (ListBannerReq) returns (ListBannerResp);
+
+    //改变排序
+    rpc ChangeBannerSort (ChangeBannerSortReq) returns (ChangeBannerSortResp);
+
+}
+
+
+
+
+

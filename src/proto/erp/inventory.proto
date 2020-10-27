@@ -1,0 +1,222 @@
+// 供应链 - 库存
+syntax = "proto3";
+package erp.inventory;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.erp.inventory";
+option java_outer_classname = "Inventory";
+
+message InventoryPB {
+    string warehouse_no = 1; // 仓库编号
+    string warehouse_name = 2; //仓库名称
+    string sku_code = 3; //sku代码
+    int32 in_stock_qty = 4; // 在库库存
+    int32 reserve_qty = 5; // 备货库存
+    int32 booked_qty = 6; // 预占库存
+    int32 available_qty = 7; // 可用库存
+    string name_cn = 9; // 名称
+    string sku_cover = 10; //sku图片
+    string standard_attr = 11; // 规格
+    common.enum.ProductEnum.SaleWay saleWay = 12; //销售方式
+    int32 supplier_qty = 13;//商家库存
+    int32 can_match_qty = 14;//可分配库存
+    int32 occupt_qty = 15;//已占用库存
+}
+
+message InventoryPageReq {
+    common.base.Pagination page = 1; // 分页结构体
+    string warehouse_no = 2; //仓库编号
+    string sku_code = 3; //sku代码
+    int32 start_instock_qty = 4; //开始在库库存
+    int32 end_instock_qty = 5; //结束在库库存
+    int32 start_reserve_qty = 6; //开始储备库存
+    int32 end_reserve_qty = 7; //结束储备库存
+    int32 start_booked_qty = 8; //开始预占库存
+    int32 end_booked_qty = 9; //结束预占库存
+    int32 start_available_qty = 10; //开始可售库存
+    int32 end_available_qty = 11; //结束可售库存
+}
+
+
+message InventoryPageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    int32 total = 3; //总数
+    repeated InventoryPB list = 4; //库存列表信息
+}
+
+message InventoryRecordPB {
+    string sku_code = 1; //sku代码
+    string warehouse_no = 2; //仓库编号
+    common.enum.ErpEnum.InventoryRecordType type = 3; // 操作类型
+    common.enum.ErpEnum.QtyType qty_type = 4; // 库存类型
+    int32 count = 5; // 操作数量
+    string source_no = 6; // 库存变动来源单号
+    string remark = 7; // 备注原因
+    string user_id = 8; // '操作者ID',
+    string user_name = 9; //'操作者名称',
+    string name_cn = 10; // 商品名称
+    common.enum.ErpEnum.QtySourceType source_type = 11; //来源单号类型
+    string create_time = 12; // 创建时间
+    string warehouse_name = 13; //仓库名称
+    string record_type = 14; // 库存变动类型
+}
+
+message InventoryRecordPageReq {
+    common.base.Pagination page = 1; // 分页结构体
+    string warehouse_no = 2; //仓库编号
+    string sku_code = 3; //sku代码
+    common.enum.ErpEnum.InventoryRecordType type = 4; // 操作类型
+    common.enum.ErpEnum.QtyType qty_type = 5; // 库存类型
+    string source_no = 6; //来源单号类型
+    common.enum.ErpEnum.QtySourceType source_type = 7; //来源单号类型
+    string start_time = 8; //创建时间 yyyy-MM-dd HH:mm:ss
+    string end_time = 9; //创建时间  yyyy-MM-dd HH:mm:ss
+    string record_type = 10; // 库存变动类型
+}
+
+message InventoryRecordPageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    int32 total = 3; //总数
+    repeated InventoryRecordPB list = 4; //库存列表信息
+}
+
+
+message AdminUpdateInventoryReq {
+    string warehouse_no = 1; //仓库编号
+    string sku_code = 2; //sku代码
+    int32 qty = 3; //变动的数量
+    common.enum.ErpEnum.InventoryOperType oper_type = 4; //修改类型
+    string remark = 5; //修改备注
+}
+
+message AdminUpdateInventoryResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    int32 qty = 2; //数量
+    string message = 3;
+}
+
+message AddInventoryReq {
+    string warehouse_no = 1; //仓库编号
+    string sku_code = 2; //sku代码
+}
+message AddInventoryResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message SkuInfoReq {
+    string sku_code = 2; //sku代码
+}
+message SkuInfoResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    SkuInfo sku = 3;
+    message SkuInfo {
+        string name_cn = 1; // 名称
+        string sku_cover = 2; //sku图片
+        string standard_attr = 3; // 规格
+        string sku_link =4;//链接
+        string product_id = 5;//商品ID
+        string supply_price =6;//采购单价
+    }
+}
+
+message GetRecordTypeReq {
+
+}
+message GetRecordTypeResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated RecordTypePB type = 2;
+    message RecordTypePB {
+        string type = 1;
+        string name = 2;
+    }
+}
+message SupplierInventoryDataResp{
+    common.base.ErrorMessage ret = 1;
+    int32 total_count =3;//总数
+    repeated SupplierInventoryDataPB  inventoryDataPB=2;
+}
+message SupplierInventoryDataPB{
+    string skuCode = 2;//skuCode
+    string skuPic = 3;//sku图片
+    string skuName=4;//sku名称
+    string standard_attr= 5;//规格
+    string snap_code = 1;//商品版本号
+    string supplier_name = 6;//供应商
+    string supplier_country = 7;//供应商国家
+    int32 stock_qty = 8;//可售库存
+    int32 delivery_way = 9;//发货方式
+    int32 sale_status = 10;//销售状态
+    string supplier_id = 11;//供应商id
+}
+message SupplierInventoryDataReq{
+    common.base.Pagination page = 1; // 分页结构体
+    string skuCode = 3;//skuCode
+    string skuName=4;//sku名称
+    string product_id =5;//商品id
+    string supplier_id = 6;//供应商id
+}
+message SupplierInventoryRecordResp{
+    common.base.ErrorMessage ret = 1;
+    int32 total = 3;//总数
+    repeated SupplierInventoryRecordPB  supplierInventoryPB=2;
+}
+message SupplierInventoryRecordPB{
+    string sku_code = 1;//商品编码
+    string snap_code =2 ;//商品版本号
+    string supplier_id = 3;//供应商ID
+    string source_no = 4;//来源单号
+    string order_type = 5;//订单类型
+    string qty_type = 6;//库存类型
+    string opt_qty = 7;//操作数量
+    string change_type = 8;//改变类型 1减少2增加
+    string operator_name = 9;//操作人姓名
+    string opt_type = 10;//操作类型 1系统操作 2手动修稿
+    string create_time =11;//修改时间
+    string remark = 12;//备注
+    string opt_source = 13;//操作来源
+    string sku_name = 14;//商品名称
+}
+message SupplierInventoryRecordReq{
+    common.base.Pagination page = 1; // 分页结构体
+    string supplier_id =2; //商家ID
+    string sku_code = 3;//skucode
+    string snap_code = 4;//版本信息
+    string source_no =5;//来源单号
+    string startDate = 6;//开始时间
+    string endDate = 7; //结束时间
+    int32 qty_type = 8;//库存类型 1锁定库存 2商家库存 3平台库存
+    int32 order_type = 9;//来源单据 1采购单 2出库单 3 入库单 4直邮订单
+    int32 opt_source =10;//操作来源 1确认采购 2生成jit订单 3jit订单发货 4采购订单发货 5jit订单取消 6入库确认 7确认出库 8商家修改库存 9标记缺货
+}
+// 库存后台接口
+service InventoryBossService {
+    // 库存列表，分页
+    rpc InventoryPage (InventoryPageReq) returns (InventoryPageResp);
+
+    // 库存变动类型列表
+    rpc GetRecordType (GetRecordTypeReq) returns (GetRecordTypeResp);
+
+    // 获取sku信息
+    rpc GetSkuInfo (SkuInfoReq) returns (SkuInfoResp);
+
+    // 创建初始库存
+    rpc AddInventory (AddInventoryReq) returns (AddInventoryResp);
+
+    // 库存日志分页
+    rpc InventoryRecordPage (InventoryRecordPageReq) returns (InventoryRecordPageResp);
+
+    // 后台修改库存
+    rpc AdminUpdateInventory (AdminUpdateInventoryReq) returns (AdminUpdateInventoryResp);
+    //商家库存列表
+    rpc QuerySupplierInventoryByCondition(SupplierInventoryDataReq) returns(SupplierInventoryDataResp);
+    //商家库存流水
+    rpc QuerySupplierInventoryRecordByCondition(SupplierInventoryRecordReq) returns (SupplierInventoryRecordResp);
+}

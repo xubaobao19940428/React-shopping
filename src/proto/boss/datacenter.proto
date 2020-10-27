@@ -1,0 +1,42 @@
+//DESC BACK littlec-datacenter
+syntax = "proto3";
+package boss.datacenter;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+import "common/errcode.proto";
+
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.datacenter";
+option java_outer_classname = "DataCenter";
+
+message UserOrderTraceReportReq{
+    string countryCode =1;
+//    common.enum.ProductEnum.DeliveryWay delivery_way = 2; // 发货方式
+}
+
+message UserOrderTraceReportResp{
+    message TimeDataInfo {
+         string timeRange =1;//时间范围
+         string startOrderTime =2;//下单开始时间
+         string endOrderTime =3;//下单结束时间
+         int32 num =4;//数量
+    }
+    message StatOrderNumInfo{
+        common.enum.OrderEnum.OrderStatus order_status =1;//待发货，待收货
+        repeated TimeDataInfo time_data =2;
+    }
+    message StatAllData{
+        common.enum.ProductEnum.DeliveryWay delivery_way = 2; // 发货方式
+        repeated StatOrderNumInfo stat_order =3;
+    }
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated StatAllData all_data = 2;
+}
+
+service OrderTraceReportService {
+    //订单追踪报表
+    rpc UserOrderTraceReport(UserOrderTraceReportReq) returns (UserOrderTraceReportResp);
+}

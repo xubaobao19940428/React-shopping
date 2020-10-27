@@ -1,0 +1,167 @@
+syntax = "proto3";
+package boss.exportrecord;
+
+
+import "common/base.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.exportrecord";
+option java_outer_classname = "ExportRecord";
+
+message BooleanResp {
+    common.base.ErrorMessage ret = 1;
+    bool success = 2;
+}
+
+message ExportResultResp {
+    common.base.ErrorMessage ret = 1;
+    int32 code = 2;
+}
+
+message LongResp {
+    common.base.ErrorMessage ret = 1;
+    int64 long = 2;
+}
+
+message ExportRecordAddOrUpdateReq {
+    //Id
+    int64 id = 1;
+    //导出编号
+    int64 export_id = 2;
+    //操作者id
+    int64 operation_id = 3;
+    //导出类型
+    ExportTypeEnum type = 4;
+    //导出状态
+    ExportStatusEnum status = 5;
+    //导出地址
+    string file_address = 6;
+    //导出参数
+    string param = 7;
+    //重试次数
+    int32 retry = 8;
+    //失败原因
+    string fail_reason =9;
+}
+
+message ListExportRecordByPageReq {
+    //Id
+    int64 id = 1;
+    //导出编号
+    int64 export_id = 2;
+    //导出类型
+    ExportTypeEnum type = 3;
+    //导出状态
+    ExportStatusEnum status = 4;
+    //创建日期-开始
+    string create_time_start = 6;
+    //创建日期-结束
+    string create_time_end = 7;
+    //发送日期-开始
+    string update_time_start = 8;
+    //发送日期-结束
+    string update_time_end = 9;
+    common.base.Pagination page = 11;
+}
+
+message ListExportRecordForFailReq {
+    //导出状态
+    repeated ExportStatusEnum status = 3;
+}
+
+message ExportRecordPb {
+    //Id
+    int64 id = 1;
+    //导出编号
+    int64 export_id = 2;
+    //操作者id
+    string operation_name = 3;
+    //导出类型
+    string type = 4;
+    //导出状态
+    ExportStatusEnum status = 5;
+    //导出地址
+    string file_address = 6;
+    //导出参数
+    string param = 7;
+    //重试次数
+    int32 retry = 8;
+    //失败原因
+    string fail_reason =9;
+    //创建时间
+    string create_time = 10;
+    //更新时间（默认与创建时间一致）
+    string update_time = 11;
+    int32 is_delete = 12;
+}
+
+enum ExportTypeEnum {
+    INVALID_TYPE = 0;
+    CATEGORY = 1;
+    PRODUCT_ANALYSIS = 2;
+    GROUP_BUY = 3;
+    STAFF_CHAT = 4;
+    ERP_PO_ABNORMAL = 5;
+    ERP_DELIVERY_ABNORMAL = 6;
+    ERP_SO_ABNORMAL = 7;
+}
+
+enum ExportStatusEnum {
+    INVALID_STATUS = 0;
+    PREPARE = 1;
+    EXECUTING = 2;
+    SUCCESS = 3;
+    FAILED = 4;
+}
+
+message ListExportRecordByPageResp {
+    common.base.ErrorMessage ret = 1;
+    int32 total = 2;
+    repeated ExportRecordPb export_record_pb = 3;
+}
+
+message CommonExportReq {
+    ExportTypeEnum type = 1;
+    string param = 2;
+    int64 exportRecordId = 3;
+    int64 operationId = 4;
+    string filePath = 5;
+}
+
+message EmptyReq {
+
+}
+
+message DeleteExportByIdReq {
+    repeated int64 export_id = 1;
+}
+
+/*message ExportParam {
+    string name = 1; // 120：各品类销售详情  121：动销商品数据 122：动销商品用户数据 123：各品类访购情况
+    string startTime = 2;
+    string endTime = 3;
+    string type = 4; //  0 ：单品 1:一级分类2：二级分类 3：三级分类 4：供应商
+}*/
+
+
+//>>>>>>>>>ExportRecordBossService message end>>>>>>>>>>>>>>>>>
+
+
+service ExportRecordBossService {
+    //添加记录
+    rpc AddExportRecord (ExportRecordAddOrUpdateReq) returns (LongResp);
+    //修改记录
+    rpc UpdateExportRecord (ExportRecordAddOrUpdateReq) returns (BooleanResp);
+    //分页查询记录
+    rpc ListExportRecordByPage (ListExportRecordByPageReq) returns (ListExportRecordByPageResp);
+    //查找失败记录
+    rpc ListExportRecordForFail (ListExportRecordForFailReq) returns (ListExportRecordByPageResp);
+    //删除文件和记录
+    rpc DeleteExportTask (DeleteExportByIdReq) returns (BooleanResp);
+
+}
+
+service CommonExportBossService {
+    rpc RouteAndExport (CommonExportReq) returns (ExportResultResp);
+    rpc RetryPreAndExeExportTask (EmptyReq) returns (BooleanResp);
+}

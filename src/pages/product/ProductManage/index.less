@@ -1,0 +1,25 @@
+.product-info {
+    display: flex;
+    text-align: left;
+    .imgBox {
+        width: 70px;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        margin-right: 10px;
+        flex-shrink: 0;
+        img {
+            max-width: 100%;
+        }
+    }
+}
+
+.table-text {
+    display: -webkit-box;
+    word-wrap: break-word;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    width: 125px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

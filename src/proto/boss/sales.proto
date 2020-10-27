@@ -1,0 +1,81 @@
+//DESC BACK littlec-product
+syntax = "proto3";
+package boss.sales;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.sales";
+option java_outer_classname = "Sales";
+
+//功能放在 product 服务中, 需请求 product 服务
+
+//设置商品的销量配置
+message SetProductSalesConfigReq{
+    string product_id = 1; //商品id
+    uint32 multiple = 2; //增长倍数
+    GrowthStatus growth_status = 3; //增长状态
+    uint32 grand_total = 4; // 修改的累计增长销量
+}
+
+message SetProductSalesConfigResp {
+    common.base.ErrorMessage ret = 1; //返回错误码
+}
+
+//增长状态
+enum GrowthStatus{
+    GROWTH_NULL = 0;//不使用
+    START = 1; //增长中
+    STOP = 2; //停止
+}
+
+message ProductSalesUnit{
+    string product_id = 1;//商品id
+    string cover = 2; // 商品主图
+    string title = 3; //商品名称
+    GrowthStatus growth_status = 4; //增长状态
+    uint32 multiple = 5; //增长倍数
+    uint32 grand_total = 6; //计算得到的累计增长销量
+    uint32 real_sales = 7; //统计时商品的真实销量
+    string calc_param = 8; //上一次计算
+    string operation_name = 9; //上一次操作者信息
+}
+
+//分页获取销量信息
+message GetProductSalesReq{
+    common.base.Pagination  page = 1; //分页信息
+    string product_id = 2; //商品id
+    string multiple = 3; //增长倍数
+    string cate_id = 4; //后台类目id
+    string growth_status = 5; //增长状态
+    enum MultipleType {
+        MULTIPLE_NULL = 0;
+        EQUAL = 1; //等于
+        GREATER_THAN = 2; //大于
+        LESS_THAN = 3; //小于
+    }
+    MultipleType multiple_type = 6; //增长倍数
+//    string start_time = 7; //开始时间
+//    string end_time = 8; //结束时间
+    string attr_id = 9;// 规格id
+    string sku_code = 10;//固定编码
+    string title = 11; //商品名称
+}
+//分页获取销量信息
+message GetProductSalesResp{
+    common.base.ErrorMessage ret = 1; //返回错误码
+    repeated ProductSalesUnit sales = 2; //销量信息
+    uint32 total = 3; //总数
+}
+
+
+//销量管理
+service SalesService{
+    //设置商品的销量配置
+    rpc SetProductSalesConfig (SetProductSalesConfigReq) returns (SetProductSalesConfigResp);
+
+    //分页获取销量信息
+    rpc GetProductSales (GetProductSalesReq) returns (GetProductSalesResp);
+}

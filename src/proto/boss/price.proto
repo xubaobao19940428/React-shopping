@@ -1,0 +1,280 @@
+//DESC BACK littlec-product
+syntax = "proto3";
+package boss.price;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.price";
+option java_outer_classname = "Price";
+
+//功能放在 product 服务中, 需请求 product 服务
+
+// >>>>>message_start>>>>>>>>>>>>ProductPriceTemplate 后台价格模板>>>>>>>>
+message ProductPriceTemplate {
+    //id
+    int32 template_id = 1;
+    // 中文模版名
+    string template_name_cn = 2;
+    // 汇率模版Id
+    int32 exchange_rate_template_id = 20;
+    // 国内物流费
+    string domestic_express_fee = 3;
+    // 国内仓储费
+    string domestic_warehousing_fee = 4;
+    // 空运-体积-单位体积
+    string air_volume_unit = 5;
+    // 空运-体积-单位体积价格
+    string air_volume_price = 6;
+    // 空运-重量-单位重量
+    string air_weight_unit = 7;
+    // 空运-重量-单位重量价格
+    string air_weight_price = 8;
+    // 海运-体积-单位体积
+    string ocean_volume_unit = 9;
+    // 海运-体积-单位体积重量
+    string ocean_volume_price = 10;
+    // 国际仓储费
+    string international_warehousing_fee = 11;
+    // 支付通道费
+    string payment_passage_fee = 12;
+    // 提现手续费
+    string cash_service_fee = 13;
+    // 运营开支
+    string operating_fee = 14;
+    // 原价毛利率
+    string gross_interest_rate = 15;
+    // vip价毛利率
+    string vip_gross_interest_rate = 16;
+    // 活动毛利率
+    string active_gross_interest_rate = 17;
+    //适用国家
+    string country_code = 19;
+    // 绑定类目ID
+    repeated common.base.IdAndName category = 21;
+    // 状态1-显示 2-隐藏
+    int32 status = 22;
+    // 是否逻辑删除, 1已经删除 0未删除
+    int32 is_delete = 23;
+    // 创建时间
+    string create_time = 24;
+    // 更新时间（默认与创建时间一致）
+    string update_time = 25;
+    //最后一次操作者
+    string operation_name = 26;
+}
+
+message AddNewProductPriceTemplateReq {
+    // 中文模版名
+    string template_name_cn = 1;
+    // 汇率模版Id
+    int32 exchange_rate_template_id = 19;
+    // 国内物流费
+    string domestic_express_fee = 2;
+    // 国内仓储费
+    string domestic_warehousing_fee = 3;
+    // 空运-体积-单位体积
+    string air_volume_unit = 4;
+    // 空运-体积-单位体积价格
+    string air_volume_price = 5;
+    // 空运-重量-单位重量
+    string air_weight_unit = 6;
+    // 空运-重量-单位重量价格
+    string air_weight_price = 7;
+    // 海运-体积-单位体积
+    string ocean_volume_unit = 8;
+    // 海运-体积-单位体积重量
+    string ocean_volume_price = 9;
+    // 国际仓储费
+    string international_warehousing_fee = 10;
+    // 支付通道费
+    string payment_passage_fee = 11;
+    // 提现手续费
+    string cash_service_fee = 12;
+    // 运营开支
+    string operating_fee = 13;
+    // 原价毛利率
+    string gross_interest_rate = 14;
+    // vip价毛利率
+    string vip_gross_interest_rate = 15;
+    // 活动毛利率
+    string active_gross_interest_rate = 16;
+    //适用国家
+    string country_code = 18;
+
+    // 绑定类目ID集合
+    repeated int32 category_id = 20;
+
+    // 生效状态；1-启用 2-停用
+    int32 status = 21;
+    // 是否逻辑删除, 1已经删除 0未删除
+    int32 is_delete = 22;
+}
+
+message AddNewProductPriceTemplateResp {
+    // 价格模板id
+    int32 template_id = 1;
+    // 错误码
+    common.base.ErrorMessage ret = 2;
+    string message = 3;
+}
+
+message UpdateProductPriceTemplateReq {
+    //id
+    int32 template_id = 1;
+    // 中文模版名
+    string template_name_cn = 2;
+    // 汇率模版Id
+    int32 exchange_rate_template_id = 20;
+    // 国内物流费
+    string domestic_express_fee = 3;
+    // 国内仓储费
+    string domestic_warehousing_fee = 4;
+    // 空运-体积-单位体积
+    string air_volume_unit = 5;
+    // 空运-体积-单位体积价格
+    string air_volume_price = 6;
+    // 空运-重量-单位重量
+    string air_weight_unit = 7;
+    // 空运-重量-单位重量价格
+    string air_weight_price = 8;
+    // 海运-体积-单位体积
+    string ocean_volume_unit = 9;
+    // 海运-体积-单位体积重量
+    string ocean_volume_price = 10;
+    // 国际仓储费
+    string international_warehousing_fee = 11;
+    // 支付通道费
+    string payment_passage_fee = 12;
+    // 提现手续费
+    string cash_service_fee = 13;
+    // 运营开支
+    string operating_fee = 14;
+    // 原价毛利率
+    string gross_interest_rate = 15;
+    // vip价毛利率
+    string vip_gross_interest_rate = 16;
+    // 活动毛利率
+    string active_gross_interest_rate = 17;
+    //适用国家
+    string country_code = 19;
+    // 绑定类目ID集合
+    repeated int32 category_id = 21;
+    // 生效状态；2-失效，1-有效
+    common.enum.PriceTemplateEnum.EffectStatus effect_status = 22;
+    // 是否逻辑删除, 1已经删除 0未删除
+    int32 is_delete = 23;
+}
+
+message UpdateProductPriceTemplateResp {
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+}
+
+//分页获取定价模板
+message ListProductPriceTemplateReq {
+    common.base.Pagination page = 1; //分页信息
+}
+
+message ListProductPriceTemplateResp {
+    common.base.ErrorMessage ret = 1;
+    repeated ProductPriceTemplate data = 2;
+    uint32 total = 3; //总数
+}
+
+message GetTemplateByIdReq {
+    // 商品价格模版id
+    int32 template_id = 1;
+}
+
+message GetTemplateByIdListReq {
+    repeated int32 template_id = 1;// 商品价格模版id
+}
+
+message GetTemplateByIdResp {
+    common.base.ErrorMessage ret = 1;
+    ProductPriceTemplate data = 2;
+}
+
+message GetTemplateByIdListResp {
+    common.base.ErrorMessage ret = 1;
+    repeated ProductPriceTemplate data = 2;
+}
+
+message GetTemplateByCategoryIdReq {
+    repeated int32 category_id = 1;
+}
+
+message GetTemplateByCategoryIdResp {
+    common.base.ErrorMessage ret = 1;
+    repeated ProductPriceTemplate data = 2;
+}
+
+message ProductPriceAccountData {
+    //原价
+    double price = 2;
+    //vip价格
+    double price_vip = 1;
+    //活动价
+    double active_price = 3;
+    //计算完的货币编码
+    string result_currency_code = 4;
+}
+
+message GetProductPriceAccountingReq {
+    // 供货价
+    string price_from_supplier = 1;
+    // 供货的货币编码
+    string currency_code = 2;
+    //计算完的货币编码
+    string result_currency_code = 8;
+    // 重量
+    string weight = 3;
+    // 含包装体积
+    string box_specification = 4;
+    // 国际物流方式
+    int32 international_logistics_mode = 5;
+    // 模版ID
+    int32 template_id = 6;
+    //佣金率
+    double commission_rate = 7;
+}
+
+message GetProductPriceAccountingResp {
+    common.base.ErrorMessage ret = 1;
+    ProductPriceAccountData data = 2;
+}
+
+//停用 启用 定价模板
+message ChangePriceTemplateEffectStatusReq{
+    int32 template_id = 1;
+    common.enum.PriceTemplateEnum.EffectStatus effect_status = 2; //生效状态
+}
+
+message ChangePriceTemplateEffectStatusResp{
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+}
+
+// 后台商品价格模版模块
+service ProductPriceTemplateService {
+    // 新增商品价格模版
+    rpc AddNewProductPriceTemplate (AddNewProductPriceTemplateReq) returns (AddNewProductPriceTemplateResp);
+    // 更新商品价格模版
+    rpc UpdateProductPriceTemplate (UpdateProductPriceTemplateReq) returns (UpdateProductPriceTemplateResp);
+    // 获取所有商品价格模版
+    rpc ListProductPriceTemplate (ListProductPriceTemplateReq) returns (ListProductPriceTemplateResp);
+    // 通过id获取商品价格模版
+    rpc GetTemplateById (GetTemplateByIdReq) returns (GetTemplateByIdResp);
+    // 通过类目id获取商品价格模版
+    rpc GetTemplateByCategoryId (GetTemplateByCategoryIdReq) returns (GetTemplateByCategoryIdResp);
+    // 商品定价核算
+    rpc GetProductPriceAccounting (GetProductPriceAccountingReq) returns (GetProductPriceAccountingResp);
+    // 停用定价模板
+    rpc ChangePriceTemplateEffectStatus (ChangePriceTemplateEffectStatusReq) returns (ChangePriceTemplateEffectStatusResp);
+
+    // 通过id获取商品价格模版 - 批量
+    rpc GetTemplateByIdList (GetTemplateByIdListReq) returns (GetTemplateByIdListResp);
+}

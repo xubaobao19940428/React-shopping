@@ -1,0 +1,174 @@
+//DESC BACK littlec-chat
+syntax = "proto3";
+
+package boss.pushtask;
+
+import "common/errcode.proto";
+import "common/base.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss";
+option java_outer_classname = "PushTask";
+
+message CancelTimingTaskReq {
+    string push_task_code = 1; //推送编号
+}
+message CancelTimingTaskResp {
+    common.base.ErrorMessage ret = 1; //结果
+}
+message CreatePushTaskReq {
+    string country = 1; //国家
+    PushChannelEnum push_channel = 2; //推送渠道
+    string push_type = 3; //推送类型
+    string push_pic = 4; //推送图片
+    RedirectTypeEnum redirect = 5; //跳转
+    string redirect_param = 6; //跳转参数 应用内为：action_type 链接:url
+    repeated PushLang push_lang = 7; //多语言
+}
+message CreatePushTaskResp {
+    common.base.ErrorMessage ret = 1; //结果
+}
+message DeletePushTaskReq {
+    string push_task_code = 1; //推送编号
+}
+message DeletePushTaskResp {
+    common.base.ErrorMessage ret = 1; //结果
+}
+message EditPushTaskReq {
+    string push_task_code = 1; //推送任务编号
+    PushChannelEnum push_channel = 2; //推送渠道
+    string push_type = 3; //推送类型
+    string push_pic = 4; //推送图片
+    RedirectTypeEnum redirect = 5; //跳转
+    string redirect_param = 6; //应用内为：action_type 链接:url
+    repeated PushLang push_lang = 7; //多语言
+}
+message EditPushTaskResp {
+    common.base.ErrorMessage ret = 1; //结果
+}
+message EditUserGroupReq {
+    string push_task_code = 1; //推送编号
+    GroupTypeEnum group_type = 2; //推送人群类型
+    repeated uint32 user_level = 3; //用户等级
+    repeated string user_id = 4; //用户id
+    string userGroupId = 5;    //用戶畫像分組id
+}
+message EditUserGroupResp {
+    common.base.ErrorMessage ret = 1; //结果
+}
+enum GroupTypeEnum {
+    GROUP_TYPE_NULL = 0; //空
+    GROUP_ALL = 1; //全员
+    USER_LEVEL = 2; //用户等级分
+    USER_IDS = 3; //用户id分
+    USER_PROFILE_GROUP = 4; //用戶畫像分組
+}
+enum PushChannelEnum {
+    PUSH_CHANNEL_NULL = 0; //空
+    CHANNEL_ALL = 1; //站内和站外
+    INNER = 2; //站内
+    OUTER = 3; //站外
+}
+message PushLang {
+    string language = 1; //语言
+    string title = 2; //标题
+    string content = 3; //内容
+}
+message PushTaskItem {
+    string push_task_code = 1; //推送任务编号
+    string title = 2; //标题（英文）
+    string content = 3; //内容（英文）
+    PushChannelEnum push_channel = 4; //推送渠道
+    string push_type = 5; //推送类型（二级标题）
+    string creator = 6; //创建人
+    string sender = 7; //发送人
+    string success_sent_num = 8; //成功发送数
+    string open_rate = 9; //打开率
+    string create_time = 10; //创建时间（UTC时间戳）
+    string sent_time = 11; //发送时间（UTC时间戳）
+    SendStatusEnum send_status = 12; //发送状态
+    GroupTypeEnum group_type = 13; //推送人群类型
+    repeated uint32 user_level = 14; //用户等级
+    repeated string user_id = 15; //用户id
+    repeated PushLang item_lang = 16; // 多语言
+    string push_pic = 17; // 推送图片
+    RedirectTypeEnum redirect = 18; // 跳转
+    string redirect_param = 19; // 跳转参数
+    string userGroupId = 20; //用戶分群Id
+}
+enum RedirectTypeEnum {
+    REDIRECT_TYPE_NULL = 0; //空
+    LINK = 1; //链接
+    INNER_APP = 2; //应用内
+    NO_REDIRECT = 3; //不跳转
+}
+message SearchPushTaskOrRecordReq {
+    string title = 1; //标题
+    string content = 2; //内容
+    string push_task_code = 3; //推送编号
+    PushChannelEnum push_channel = 4; //推送渠道
+    string push_type = 5; //推送类型（事件编号）
+    SendStatusEnum send_type = 6; //发送状态
+    string create_time_start = 7; //创建日期-开始
+    string create_time_end = 8; //创建日期-结束
+    string send_time_start = 9; //发送日期-开始
+    string send_time_end = 10; //发送日期-结束
+    string country = 11; //国家
+    TaskTypeEnum type = 12; //类型
+    common.base.Pagination page = 13; //分页
+    repeated string id = 14; // 推送任务/记录编号
+}
+enum TaskTypeEnum {
+    TASK_TYPE_NULL = 0;
+    TASK = 1; // 任务
+    RECORD = 2; // 记录
+}
+message SearchPushTaskOrRecordResp {
+    common.base.ErrorMessage ret = 1; //结果
+    uint32 total = 2; //结果总数
+    repeated PushTaskItem item = 3; //结果列表
+}
+message SendPushReq {
+    string push_task_code = 1; //推送编号
+    SendTypeEnum send_type = 2; //发送类型
+    string send_time = 3; //发送时间
+}
+message SendPushResp {
+    common.base.ErrorMessage ret = 1; //结果
+}
+enum SendStatusEnum {
+    SEND_STATUS_NULL = 0; //空
+    DONE = 1; //已发送
+    SENDING = 2; //发送中
+    SCHEDULE = 3; //定时发送
+}
+message SendTimingTaskNowReq {
+    string push_task_code = 1; //推送编号
+}
+message SendTimingTaskNowResp {
+    common.base.ErrorMessage ret = 1; //结果
+}
+enum SendTypeEnum {
+    SEND_TYPE_NULL = 0; //空
+    IMMEDIATELY = 1; //立即发送
+    TIMING_TASK = 2; //定时发送
+}
+
+service PushTaskService {
+    // 取消定时推送
+    rpc CancelTimingTask(CancelTimingTaskReq) returns (CancelTimingTaskResp);
+    // 创建推送任务
+    rpc CreatePushTask(CreatePushTaskReq) returns (CreatePushTaskResp);
+    // 删除推送任务
+    rpc DeletePushTask(DeletePushTaskReq) returns (DeletePushTaskResp);
+    // 编辑推送任务
+    rpc EditPushTask(EditPushTaskReq) returns (EditPushTaskResp);
+    // 编辑推送目标人群
+    rpc EditUserGroup(EditUserGroupReq) returns (EditUserGroupResp);
+    // 发送推送任务
+    rpc SendPush(SendPushReq) returns (SendPushResp);
+    // 马上发送定时推送
+    rpc SendTimingTaskNow(SendTimingTaskNowReq) returns (SendTimingTaskNowResp);
+    // 搜索推送任务/记录
+    rpc SearchPushTaskOrRecord(SearchPushTaskOrRecordReq) returns (SearchPushTaskOrRecordResp);
+}

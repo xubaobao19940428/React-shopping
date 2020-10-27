@@ -1,0 +1,101 @@
+//DESC BACK littlec-promotion
+syntax = "proto3";
+package boss.girdle;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.girdle";
+option java_outer_classname = "Girdle";
+message GirdleInfo {
+    string girdle_id = 1; //girdle_id
+    string title = 2; //标题
+    repeated common.base.NameAndCode img_url = 3; //图片地址
+    string link_url = 4; //链接url
+    common.enum.PromotionEnum.BuyTypeEnum buy_type = 5;
+    common.enum.PromotionEnum.TimeTypeEnum time_type = 6;
+    int64 start_time = 7; //banner的开始时间
+    int64 end_time = 8; //banner的结束时间
+    uint32 sort_no = 9; //排序
+    string country_code = 10; //国家码
+    int32 type = 11; //类型(1:上腰风,2:中腰风)
+//    string background = 12; //背景
+    int32 click_num = 12;//点击次数
+    common.enum.PromotionEnum.PromotionAppUrlType url_type = 13; //跳转类型
+    int64 create_time = 14; //创建时间
+    common.enum.MarketingEnum.ActiveCrowdType activeCrowdType = 15; //人群类型
+}
+
+message GirdleSaveReq {
+    GirdleInfo girdle_info = 1;
+}
+message GirdleSaveResp {
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+}
+
+message BatchDeleteGirdleReq {
+    repeated string girdle_ids = 1;
+}
+
+message BatchDeleteGirdleResp {
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+}
+
+message DeleteGirdleReq {
+    string girdle_id = 1;
+}
+
+message DeleteGirdleResp {
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+}
+
+message ListGirdleReq {
+    common.base.Pagination page = 1;
+    string country_code = 2;
+    int32 type = 3; //类型(4:上腰风,6:中腰风/平台广告位)
+
+}
+
+message ListGirdleResp {
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+    repeated GirdleInfo Girdle_infos = 3;
+    uint32 total = 4; //商品结果总数
+}
+
+message ChangeGirdleSortReq {
+    string Girdle_id = 1; //Girdle_id
+    uint32 sort_no = 2; //排序
+}
+message ChangeGirdleSortResp {
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+}
+
+service GirdleBossService {
+    //新增或者编辑Girdle信息，若传入的数据中带有Girdle_id则为编辑
+    rpc SaveGirdle (GirdleSaveReq) returns (GirdleSaveResp);
+
+    //批量删除
+    rpc BatchDeleteGirdle (BatchDeleteGirdleReq) returns (BatchDeleteGirdleResp);
+
+    //单个删除
+    rpc DeleteGirdle (DeleteGirdleReq) returns (DeleteGirdleResp);
+
+    //分页查询Girdle信息
+    rpc ListGirdle (ListGirdleReq) returns (ListGirdleResp);
+
+    //改变排序
+    rpc ChangeGirdleSort (ChangeGirdleSortReq) returns (ChangeGirdleSortResp);
+
+}
+
+
+
+
+

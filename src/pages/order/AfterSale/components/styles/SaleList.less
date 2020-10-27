@@ -1,0 +1,91 @@
+.produt{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    img{
+        width: 110px;
+        height: 110px;
+    }
+    .product-content{
+        // width: 250px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+    }
+    .product-content-name{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+        margin-bottom: 10px;
+    }
+    .product-content-supplier{
+        text-align: left;
+        color: rgb(120, 120, 120)
+    }
+    .product-pledge{
+        display: flex;
+        div{
+            margin-right: 5px;
+        }
+    }
+}
+.promotion-coupon-wrapper{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 30px;
+    .promotion, .coupon{
+        display: flex;
+        align-items: center;
+        flex: 1;
+        max-width: 150px;
+        height: 100%;
+        overflow: hidden;
+        em{
+            background: #fd9a38;
+            color: #fff;
+            box-sizing: border-box;
+            padding: 0 5px;
+            height: 100%;
+        }
+        >div{
+            flex: 1;
+            height: 100%;
+            display: inline-block;
+            vertical-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border: 1px solid #fd9a38;
+            color: #fd9a38;
+        }
+        span{
+            margin-left: 4px;
+        }
+    }
+    .coupon{
+        margin-left: 10px;
+        >div{
+            border: 1px solid #e30326;
+            color: #e30326;
+        }
+        em{
+            background: #e30326;
+        }
+    }
+}
+.pricess{
+    color: #e30326;
+}
+.prompt-color{
+    margin-right: 10px;
+}
+.amount-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,153 @@
+//DESC BACK littlec-carrier
+syntax = "proto3";
+package boss.carrier;
+
+
+import "common/base.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.carrier";
+option java_outer_classname = "Carrier";
+
+message CreateUploadTaskRequest {
+  string keyword = 1; //关键词
+  int32 category_id = 2; //fingo类目ID
+  int32 target = 3; //目标上货数量
+  repeated string product_attr = 4;//商品属性词列表
+  /*repeated int32 source_catetory_id = 4;//源类目ID*/
+  string min_price = 5;
+  string max_price = 6;
+  int64 creator_id = 7;//操作人ID
+  string creator_name = 8; //操作人姓名
+  string category_name = 9;//类目名称
+  string min_weight = 10;//最小重量(KG)
+  string max_weight = 11;//最大重量(KG)
+}
+
+message CreateUploadTaskResponse {
+  common.base.ErrorMessage ret = 1; //返回值
+}
+
+message GetTaskListRequest {
+}
+
+message GetTaskListResponse{
+  message TaskInfo {
+    int64 task_id = 1;
+    string keyword = 2; //关键词
+    int32 category_id = 3; //类目ID
+    int32 target = 4; //上货数量
+    int32 progress = 5;//进度
+    int32 status = 6; //状态
+    repeated string product_attr = 7;
+    string min_price = 8;
+    string max_price = 9;
+    int64 creator_id = 10;//操作人ID
+    string creator_name = 11; //操作人姓名
+    string category_name = 12;//类目名称
+    string create_time = 13;//创建时间
+    string update_time = 14;//更新时间
+    string finish_time = 15;//完成时间
+    string operate_time = 16;//操作时间
+    string start_time = 17;//任务启动时间
+    string min_weight = 18;//重量下限
+    string max_weight = 19;//重量上限
+  }
+  common.base.ErrorMessage ret = 1; //返回值
+  repeated TaskInfo task_info = 2;
+}
+
+message StopTaskRequest{
+  int64 task_id = 1;
+}
+message StopTaskResponse{
+  common.base.ErrorMessage ret = 1; //返回值
+}
+
+message GetChilindoImagesReq{
+  common.base.Pagination page = 1;
+  int32 filter = 2;//0: all, 1: 只看已录用, 2: 只看未录用
+  string start_time = 3;
+  string end_time = 4;
+}
+
+message GetChilindoImagesResp{
+  message ChilindoImageInfo {
+    string image_url = 1;
+    int32 status = 2;
+    int32 id = 3;
+  }
+  int32 total = 1;
+  repeated ChilindoImageInfo image = 2;
+  common.base.ErrorMessage ret = 3; //返回值
+}
+message DownloadChilindoImagesResp{
+  string url = 1; //生成文件地址
+  common.base.ErrorMessage ret = 2; //返回值
+}
+
+message TagChilindoImageReq{
+  repeated int32 id = 1;
+  bool type = 2; //false: 标记; true: 取消标记
+}
+message TagChilindoImageResp{
+  common.base.ErrorMessage ret = 1; //返回值
+}
+
+message BatchAddTaskReq {
+  string filename = 1;
+  int64 creator_id = 2;
+  string creator_name = 3;
+}
+message BatchAddTaskResp {
+  common.base.ErrorMessage ret = 1; //返回值
+}
+
+message CreateSameKindTaskReq{
+  repeated string product_id = 1;//1688商品ID
+}
+message CreateSameKindTaskResp{
+  common.base.ErrorMessage ret = 1; //返回值
+}
+message SameKindTaskListReq{
+}
+message SameKindTaskListResp{
+  message SameKindTaskInfo {
+    string task_id = 1;
+    int32 status = 2;//状态,0(排队),1(进行),2(完成),3(错误)
+    string create_time = 3;
+    int32 progress = 4;
+  }
+  repeated SameKindTaskInfo task = 1;
+  common.base.ErrorMessage ret = 2; //返回值
+}
+message SameKindResultReq {
+  string task_id = 1;
+}
+message SameKindResultResp {
+  common.base.ErrorMessage ret = 1; //返回值
+  map<string, string> result = 2;//查找结果
+}
+service CarrierService {
+    //添加任务
+    rpc CreateUploadTask (CreateUploadTaskRequest) returns (CreateUploadTaskResponse);
+    //批量添加任务
+    rpc BatchAddTask (BatchAddTaskReq) returns (BatchAddTaskResp);
+    //获取任务列表
+    rpc GetTaskList (GetTaskListRequest) returns (GetTaskListResponse);
+    //停止任务
+    rpc StopTask (StopTaskRequest) returns (StopTaskResponse);
+    //攻取chilindo图片列表
+    rpc GetChilindoImages (GetChilindoImagesReq) returns (GetChilindoImagesResp);
+    //标记chilindo图片
+    rpc TagChilindoImage (TagChilindoImageReq) returns (TagChilindoImageResp);
+    //创建找低价同款任务
+    rpc CreateSameKindTask (CreateSameKindTaskReq) returns (CreateSameKindTaskResp);
+    //找低价同款任务列表
+    rpc SameKindTaskList (SameKindTaskListReq) returns (SameKindTaskListResp);
+    //查看结果
+    rpc SameKindResult (SameKindResultReq) returns (SameKindResultResp);
+    //下载chilindo图片列表
+    rpc downloadChilindoImages (GetChilindoImagesReq) returns (DownloadChilindoImagesResp);
+}
+

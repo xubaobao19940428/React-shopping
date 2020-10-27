@@ -1,0 +1,399 @@
+//DESC BACK littlec-product
+syntax = "proto3";
+package boss.category;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.category";
+option java_outer_classname = "Category";
+
+//功能放在 product 服务中, 需请求product 服务
+
+message CategoryUnit {
+    uint32 cate_id = 2; //类目id
+    uint32 pid = 3; //父类目id
+    uint32 sort = 4; //排序值
+    string cover = 5; //类目图
+    repeated common.base.NameAndCode cate_name_value = 6; // 类目名称语言简码信息
+    common.enum.CategoryEnum.ShowStatus status = 7; //有效状态 1 显示, 0 隐藏
+    common.enum.CategoryEnum.CateType cate_type = 8; //类目类型 1 前台类目 2 后台类目
+    common.enum.CategoryEnum.CateLevel level = 9; //类目级别 1 一级 2二级 3 三级
+    string bind_id = 10; //前台类目关联的后台叶子类目id, cate_type为1时使用 以,分隔
+    string param_attr_id = 11; //后台类目关联的参数模板id 以,分隔
+    string standard_attr_id = 12; //后台类目关联的规格模板id 以,分隔
+    string desc = 13; //类目描述
+    repeated BindCateInfo bind_cate_info = 14; //绑定的三级类目信息
+    string cate_name = 15;//类目名中文
+    string country_code = 16; //前台类目国家码
+    bool is_star = 17; // 是否星标，1-是，0-否
+    IconInfo icon_info = 18; // 图标信息
+}
+
+//前台类目中绑定三级类目信息
+message BindCateInfo{
+    string cate_id = 1; // 类目id
+    string cate_name = 2; // 类目名
+}
+
+message IconInfo{
+    string selected = 1; // 已选中
+    string unselected = 2; // 未选中
+}
+
+//增加分类req
+message CategoryAddReq {
+    uint32 pid = 1; //父类目id 一级类目父类目id传0
+    repeated common.base.NameAndCode cate_name_value = 2; // 类目名称语言简码信息
+    //string name = 2;//类目名, 按照 语言/值 的json格式存储, 形如{"cn":"鞋子", "en":"shoe"}
+    common.enum.CategoryEnum.CateLevel level = 3; //类目级别 1 一级 2二级 3 三级
+    string desc = 4; //分类描述
+    string cover = 5; //类目图
+    common.enum.CategoryEnum.CateType cate_type = 6; //类目类型 1 前台类目 2 后台类目
+    //uint32 sort = 7;//排序值
+    string bind_id = 8; //前台类目关联的后台叶子类目id, cate_type为1时使用 以,分隔
+    string param_attr_id = 9; //后台类目关联的参数模板id 以,分隔
+    string standard_attr_id = 10; //后台类目关联的规格模板id 以,分隔
+    string country_code = 11; //前台类目需传递国家码
+    IconInfo icon_info = 12; // 前台类目选中未选中展示图
+}
+//增加分类Resp
+message CategoryAddResp {
+    common.base.ErrorMessage ret = 1;
+    CategoryUnit category_unit = 2; //添加或修改的类目信息
+}
+//删除分类Req
+message CategoryDeleteReq {
+    uint32 cate_id = 1; //类目id
+}
+//删除分类Resp
+message CategoryDeleteResp {
+    common.base.ErrorMessage ret = 1;
+}
+//修改分类req
+message CategoryUpdateReq {
+    uint32 cate_id = 1; // 类目id
+    uint32 pid = 2; //父类目ied 一级类目父类目id传0
+    //string name = 3;//类目名, 按照 语言/值 的json格式存储, 形如{"cn":"鞋子", "en":"shoe"}
+    repeated common.base.NameAndCode cate_name_value = 3; // 类目名称语言简码信息
+    //uint32 level = 4;//类目级别 1 一级 2二级 3 三级
+    string desc = 5; //分类描述
+    string cover = 6; //类目图
+    common.enum.CategoryEnum.CateType cate_type = 7; //类目类型 1 前台类目 2 后台类目
+    uint32 sort = 8; //排序值
+    string bind_id = 9; //前台类目关联的后台叶子类目id, cate_type为1时使用
+    string param_attr_id = 10; //后台类目关联的参数模板id
+    string standard_attr_id = 11; //后台类目关联的规格模板id
+    IconInfo iconInfo = 12; // 前台类目选中未选中展示图
+}
+//修改类目resp
+message CategoryUpdateResp {
+    common.base.ErrorMessage ret = 1;
+    CategoryUnit category_unit = 2; //添加或修改的类目信息
+}
+
+//查询类目req
+message CategoryListGetReq {
+    uint32 pid = 1; //父类目id
+    common.enum.CategoryEnum.CateType cate_type = 2; //类目类型 1 前台类目 2 后台类目
+    common.base.Pagination page = 3; //分页信息
+    string country_code = 4; //前台类目按国家查询
+    string language_code = 5; //语言码
+}
+//查询类目resp
+message CategoryListGetResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated CategoryUnit category_unit = 2; //该层级下的类目信息
+    uint32 total = 3;
+}
+
+//隐藏或显示类目req
+message CategoryHiddenOrShowReq {
+    int32 cate_id = 1;
+    common.enum.CategoryEnum.ShowStatus status = 2;
+}
+//隐藏或显示类目resp
+message CategoryHiddenOrShowResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//类目上下移动req
+message CategoryChangSortReq {
+    uint32 cate_id = 1;
+    common.enum.CategoryEnum.SortDirection sort_direction = 2; //1:上移  2：下移
+}
+//类目上下移动resp
+message CategoryChangSortResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//类目移至某个排序值请求
+message CategoryChangeToSortReq{
+    uint32 cate_id = 1;
+    uint32 target_sort = 2; //移至的序号
+}
+
+//类目移至某个排序值响应
+message CategoryChangeToSortResp{
+    common.base.ErrorMessage ret = 1;
+}
+
+
+//模糊查询类目req
+message CategoryQueryByNameReq {
+    string category_name = 1;
+}
+
+
+message CategoryQueryResult {
+    uint32 cate_id_1 = 1; // 搜索结果一级类目id
+    string cate_name_1 = 2; //搜索结果一级类目名
+    uint32 cate_id_2 = 3; //搜索结果二级类目id
+    string cate_name_2 = 4; //搜索结果二级类目名
+    uint32 cate_id_3 = 5; //搜索结果三级类目id
+    string cate_name_3 = 6; //搜索结果三级类目名
+
+}
+
+//模糊查询类目resp
+message CategoryQueryByNameResp {
+    repeated CategoryQueryResult category_result = 1;
+    common.base.ErrorMessage ret = 2;
+}
+
+//获取关联上级类目信息
+message GetUpperRelatedCategoryByIdReq{
+    uint32 cate_id = 1; //类目id
+    string product_id = 2; //商品id 用于编辑时查询商品绑定的属性信息, 防止属性与类目关系解除导致商品编辑无法展示属性项
+    string draft_id = 3; //草稿箱id
+}
+
+//获取关联上级类目信息
+message GetUpperRelatedCategoryByIdResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated CategoryUnit category_unit = 2; //该层级及上级类目信息
+}
+
+//类目商品排序列表
+message ListCategoryProductReq{
+    common.base.Pagination page = 1; //分页信息
+    uint32 front_cate_id = 2; //前台二级类目id
+    repeated string product_id = 3; //商品ID list
+}
+
+message ListCategoryProductResp{
+    message CategoryProductUnit{
+        string product_id = 1; //商品id
+        string spu_cover = 2; //商品spu缩略图
+        string title = 3; //商品标题
+        repeated string front_cate = 4; //前台商品类目
+        int32 sort = 5; //人工权重分
+        common.enum.CategoryEnum.CateProdTop top = 6; //置顶枚举
+        uint32 back_cate_id  = 7 ;//商品的后台类目id
+        int32 total_sort = 8; //总排序分
+    }
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated CategoryProductUnit category_product_unit = 2; //返回的类目商品项信息
+    uint32 total = 3; //总数
+
+}
+
+//修改商品的后台类目排序值
+message ChangeCategoryProductSortReq{
+    string product_id  = 1; //商品id
+    uint32 sort = 2; //人工权重分
+    //uint32 cate_id = 4; //类目id
+}
+
+message ChangeCategoryProductSortResp{
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+//设置商品置顶
+message SetCategoryProductTopReq{
+    string product_id  = 1; //商品id
+    common.enum.CategoryEnum.CateProdTop top = 2; //置顶枚举
+}
+
+message SetCategoryProductTopResp{
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+
+message LevelTwoCopyUnit{
+    //待拷贝的二级类目id
+    uint32 from_level_two_cate_id = 1;
+    //目标二级类目所在的一级类目 --> 当拷贝一级类目时, 此id并不知道, 不填, 拷贝二级类目时需要填, 否则无法关联
+    uint32 to_level_one_cate_id = 2;
+}
+
+message CategoryCopyToUnit{
+    //待拷贝的一级类目id --> 一级类目需要拷贝时填
+    uint32 from_level_one_cate_id = 1;
+    //二级类目
+    repeated LevelTwoCopyUnit levelTwo = 2;
+    //拷贝目标国家码
+    string to_country_code = 3;
+}
+
+message CopyFrontCategoryReq{
+    //按国家整理成一份 CategoryCopyToUnit
+    repeated CategoryCopyToUnit copy_unit = 2;
+
+}
+
+message CopyFrontCategoryResp{
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+//查询类目分组详情req
+message CategoryGroupGetReq {
+    uint32 id = 1; // 分组id
+}
+//查询类目分组详情req
+message CategoryGroupGetResp {
+    common.base.ErrorMessage ret = 1; //返回值
+
+    uint32 id = 2; // 分组ID
+    string name = 3; // 分组名称
+    repeated common.base.NameAndCode name_value = 4; // 类目名称语言简码信息
+
+    message SecondCategory {
+        uint32 id = 1; // 类目id
+        string name = 2; // 类目名称
+        string cover = 3; // 类目图
+        uint32 sort = 4; // 类目排序值
+    }
+
+    repeated SecondCategory second_category = 5; // 二级类目关联列表
+}
+
+//查询分组类目req
+message CategoryGroupListGetReq {
+    uint32 pid = 1; // 一级类目id
+}
+
+//查询分组类目列表resp
+message CategoryGroupListGetResp {
+    common.base.ErrorMessage ret = 1; //返回值
+
+    uint32 pid = 2; // 一级类目id
+
+    message CategoryGroup {
+        uint32 id = 1; // 分组id
+        string name = 2; // 分组名称
+        string cate_names = 3; // 分组关联的二级类目
+    }
+
+    repeated CategoryGroup category_group = 3; // 分组列表
+}
+
+//增加分组分类req
+message CategoryGroupAddOrUpdateReq {
+    uint32 id = 1; // 分组id，添加时无，更新时填入分组id
+    uint32 pid = 2; // 分组父类id
+    string name = 3; // 分组名称
+    repeated common.base.NameAndCode name_value = 4; // 类目名称语言简码信息
+    repeated uint32 category_id = 5; // 已选择的前提二级类目
+}
+
+//增加分组分类Resp
+message CategoryGroupAddOrUpdateResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+
+//删除分组分类req
+message CategoryGroupDeleteReq {
+    uint32 id = 1; // 分组id
+}
+
+//删除分组分类Resp
+message CategoryGroupDeleteResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//类目星标Req
+message CategoryStarReq {
+    uint32 id = 1; // 二级分类id
+    uint32 is_star = 2; // 是否星标，1-是，0-否
+}
+
+//类目星标Resp
+message CategoryStarResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//分组分类排序req
+message CategoryGroupSortReq {
+    repeated uint32 id = 1; // 类目分组id，顺序从前到后
+    uint32 pid = 2; // 分组父类id
+}
+
+//分组分类排序Resp
+message CategoryGroupSortResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//类目模块
+service ProductCategoryService {
+    //增加类目
+    rpc CategoryAdd (CategoryAddReq) returns (CategoryAddResp);
+
+    //删除类目
+    rpc CategoryDelete (CategoryDeleteReq) returns (CategoryDeleteResp);
+
+    //修改类目
+    rpc CategoryUpdate (CategoryUpdateReq) returns (CategoryUpdateResp);
+
+    //获取类目列表
+    rpc CategoryListGet (CategoryListGetReq) returns (CategoryListGetResp);
+
+    //模糊查询类目
+    rpc CategoryQueryByName (CategoryQueryByNameReq) returns (CategoryQueryByNameResp);
+
+    //隐藏或显示类目
+    rpc CategoryHiddenOrShow (CategoryHiddenOrShowReq) returns (CategoryHiddenOrShowResp);
+
+    // 类目上下移动
+    rpc CategoryChangSort (CategoryChangSortReq) returns (CategoryChangSortResp);
+
+    // 类目移至某个排序值
+    rpc CategoryChangeToSort (CategoryChangeToSortReq) returns (CategoryChangeToSortResp);
+
+    // 获取关联上级类目信息
+    rpc GetUpperRelatedCategoryById (GetUpperRelatedCategoryByIdReq) returns (GetUpperRelatedCategoryByIdResp);
+
+    //类目商品排序列表
+    rpc ListCategoryProduct (ListCategoryProductReq) returns (ListCategoryProductResp);
+
+    //修改商品的后台类目排序值
+    rpc ChangeCategoryProductSort (ChangeCategoryProductSortReq) returns (ChangeCategoryProductSortResp);
+
+    //设置商品置顶
+    rpc SetCategoryProductTop (SetCategoryProductTopReq) returns (SetCategoryProductTopResp);
+
+    //复制前台类目
+    rpc CopyFrontCategory (CopyFrontCategoryReq) returns (CopyFrontCategoryResp);
+
+    //获取类目分组列表
+    rpc CategoryGroupListGet (CategoryGroupListGetReq) returns (CategoryGroupListGetResp);
+
+    //获取类目分组详情
+    rpc CategoryGroupGet (CategoryGroupGetReq) returns (CategoryGroupGetResp);
+
+    //添加或者修改类目分组信息，添加时id为0或者小于0，修改时id为服务端返回的分组id
+    rpc CategoryGroupAddOrUpdate (CategoryGroupAddOrUpdateReq) returns (CategoryGroupAddOrUpdateResp);
+
+    //类目分组删除
+    rpc CategoryGroupDelete (CategoryGroupDeleteReq) returns (CategoryGroupDeleteResp);
+
+    //类目分组排序
+    rpc CategoryGroupSort (CategoryGroupSortReq) returns (CategoryGroupSortResp);
+
+    //二级类目是否星标
+    rpc CategoryStar (CategoryStarReq) returns (CategoryStarResp);
+
+}

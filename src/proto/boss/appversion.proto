@@ -1,0 +1,183 @@
+syntax = "proto3";
+package boss.appversion;
+
+import "common/enum.proto";
+import "common/errcode.proto";
+import "common/base.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.appversion";
+option java_outer_classname = "AppVersion";
+
+message CreateAppVersionReq {
+    //客户端类型
+    common.enum.MsggwEnum.DeviceType client_type = 1;
+    //版本号
+    string version_code = 2;
+    //更新类型
+    common.enum.AppVersion.AppVersionUpdateTypeEnum update_type = 4;
+    //更新国家
+    string country = 5;
+    // 多语言
+    repeated AppVersionLang lang = 6;
+    //安装包路径
+    string app_url = 7;
+}
+
+message AppVersionLang {
+    // 语言
+    string language = 1;
+    // 内容
+    string content = 2;
+}
+
+message CreateAppVersionResp {
+    //结果
+    common.base.ErrorMessage ret = 1;
+}
+
+message EditAppVersionReq {
+    //id
+    string id = 1;
+    //更新类型
+    common.enum.AppVersion.AppVersionUpdateTypeEnum update_type = 5;
+    //更新国家
+    string country = 6;
+    // 多语言
+    repeated AppVersionLang lang = 7;
+    //安装包路径
+    string app_url = 8;
+}
+
+message EditAppVersionResp {
+    //结果
+    common.base.ErrorMessage ret = 1;
+}
+
+message SearchCurrentAppVersionInfoReq {
+    //国家
+    string country = 1;
+}
+
+message GetAppVersionDetailReq {
+    string id = 1;
+}
+
+message GetAppVersionDetailResp {
+    common.base.ErrorMessage ret = 1;
+    VersionInfo current_version_info = 2;
+}
+
+message SearchCurrentAppVersionInfoResp {
+    //结果
+    common.base.ErrorMessage ret = 1;
+    //当前版本号
+    repeated VersionInfo current_version_info = 2;
+}
+
+message VersionInfo {
+    //国家
+    string country = 1;
+    //App名字
+    string app_name = 2;
+    //版本号
+    string version_code = 3;
+    //版本id
+    uint32 version_id = 4;
+    //客户端类型
+    common.enum.MsggwEnum.DeviceType client_type = 5;
+    //更新类型
+    common.enum.AppVersion.AppVersionUpdateTypeEnum update_type = 6;
+    //多语言信息
+    repeated VersionLang content_lang = 7;
+    //创建时间
+    string create_time = 8;
+    //更新时间
+    string update_time = 9;
+    // 发布状态
+    StatusEnum status = 10;
+    // id
+    string id = 11;
+    // 安装包路径
+    string app_url = 12;
+}
+
+enum StatusEnum{
+    PUBLISHED = 0;
+    UNPUBLISHED = 1;
+    CANCEL = 2;
+}
+
+message VersionLang {
+    //语言
+    string language = 1;
+    //内容
+    string content = 2;
+}
+
+message SearchLowestAppVersionInfoReq {
+    //国家
+    string country = 1;
+}
+
+message SearchLowestAppVersionInfoResp {
+    //结果
+    common.base.ErrorMessage ret = 1;
+    //当前版本号
+    repeated VersionInfo lowest_version_info = 2;
+}
+
+message SearchAppVersionInfoWithPageReq {
+    //分页
+    common.base.Pagination page = 2;
+}
+
+message SearchAppVersionInfoWithPageResp {
+    //结果
+    common.base.ErrorMessage ret = 1;
+    //总数
+    uint32 total = 2;
+    //当前版本号
+    repeated VersionInfo all_version_info = 3;
+}
+
+message UpdateAppVersionToCurrentAppVersionReq {
+    // 版本号id
+    string app_version_id = 1;
+}
+
+message PublishAppVersionOrNotReq{
+    // 版本号id
+    string id = 1;
+    StatusEnum status = 2;
+}
+
+message UpdateAppVersionToCurrentAppVersionResp {
+    //结果
+    common.base.ErrorMessage ret = 1;
+}
+
+message PublishAppVersionOrNotResp{
+    //结果
+    common.base.ErrorMessage ret = 1;
+}
+
+
+service AppVersionBossService {
+    // 创建app版本
+    rpc CreateAppVersion (CreateAppVersionReq) returns (CreateAppVersionResp);
+    // 编辑app版本
+    rpc EditAppVersion (EditAppVersionReq) returns (EditAppVersionResp);
+    // 查询当前版本的信息
+    rpc SearchCurrentAppVersionInfo (SearchCurrentAppVersionInfoReq) returns (SearchCurrentAppVersionInfoResp);
+    // 查询当前最低版本信息
+    rpc SearchLowestAppVersionInfo (SearchLowestAppVersionInfoReq) returns (SearchLowestAppVersionInfoResp);
+    // 分页查询所有版本分页
+    rpc SearchAppVersionInfoWithPage (SearchAppVersionInfoWithPageReq) returns (SearchAppVersionInfoWithPageResp);
+    // 更新版本
+    rpc UpdateAppVersionToCurrentAppVersion(UpdateAppVersionToCurrentAppVersionReq) returns (UpdateAppVersionToCurrentAppVersionResp);
+    // 发布或撤销版本
+    rpc PublishAppVersionOrNot (PublishAppVersionOrNotReq) returns (PublishAppVersionOrNotResp);
+    // 发布或撤销版本
+    rpc GetAppVersionDetail (GetAppVersionDetailReq) returns (GetAppVersionDetailResp);
+}

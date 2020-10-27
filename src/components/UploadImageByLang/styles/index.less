@@ -1,0 +1,74 @@
+.container {
+    .list {
+        display: flex;
+        margin: 0 -10px;
+        overflow: hidden;
+    }
+
+    :global {
+        .ant-tabs-nav {
+            margin-bottom: 10px;
+        }
+
+        .ant-upload-select-picture-card,
+        .ant-upload-list-picture-card-container,
+        .ant-upload-list-picture-card .ant-upload-list-item {
+            width: 150px;
+            height: 150px;
+        }
+
+        .ant-upload-list-picture-card .ant-upload-list-item-info::before {
+            left: 0;
+        }
+    }
+
+    .require {
+        &::before {
+            content: '*';
+            color: #e71f19;
+            margin-right: 5px;
+        }
+    }
+
+    .tip {
+        margin-top: 10px;
+        font-weight: 400;
+        color: #666;
+
+        span {
+            color: #333;
+        }
+    }
+
+    .box {
+        width: 150px;
+        margin: 0 10px;
+        text-align: center;
+
+        .country-name {
+            color: #666;
+            font-size: 16px;
+            span {
+                color: #e71f19;
+                margin-right: 5px;
+            }
+        }
+
+        .upload-box {
+            width: 150px;
+            height: 150px;
+        }
+
+        .action {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+
+            button {
+                font-size: 14px;
+                height: auto;
+                padding: 0;
+            }
+        }
+    }
+}

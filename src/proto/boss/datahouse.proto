@@ -1,0 +1,2431 @@
+//DESC BACK littlec-datahouse
+syntax = "proto3";
+package boss.datahouse;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+import "common/errcode.proto";
+
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.datahouse";
+option java_outer_classname = "DataHouse";
+
+message SimpleDataDisplayReq {
+    repeated string dataType = 1; //数据类型
+}
+
+message SimpleDataDisplayResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated SimpleData data = 2;
+}
+
+message SimpleData {
+    string dataType = 1; //数据类型
+    string volume = 2; //数据量
+    double weeklyChange = 3; //周同比
+    double dailyChange = 4; //日环比
+}
+
+message OrderBrokenLineGraphReq {
+    string dataType = 1; //数据类型
+    int64 startTime = 2; //开始时间
+    int64 endTime = 3; //结束时间
+    repeated DimensionType dimension = 4; //维度
+}
+
+message OrderBrokenLineGraphResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    string dataType = 2; //数据类型
+    repeated Data dataPoint = 3; //数据点
+    int64 startTime = 4; //开始时间
+    int64 endTime = 5; //结束时间
+}
+
+message Data {
+    double volume = 1; //数据量
+    string dimensionTag = 2; //所属维度标签
+    string date = 3; //日期 yyyymmdd
+}
+
+message OrderProductTypeProportionReq {
+    int64 startTime = 1; //开始时间
+    int64 endTime = 2; //结束时间
+    repeated DimensionType dimension = 3; //维度
+}
+
+message OrderProductTypeProportionResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated TypeProportion proportion = 2;
+}
+
+message TypeProportion {
+    string productType = 1; //商品類型
+    double percentage = 2; //百份比
+    // 前端需要，添加百分比具体数值进去
+    int64 productValue = 3;
+}
+
+message OrderFrequencyReq {
+    int64 startTime = 1; //开始时间
+    int64 endTime = 2; //结束时间
+    repeated DimensionType dimension = 3; //维度
+}
+
+message OrderFrequencyResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated PurchaseFrequency data = 2;
+}
+
+message PurchaseFrequency {
+    string frequency = 1; //頻次段
+    int64 volume = 2; //數據量
+}
+
+message OrderAmountDistributionReq {
+    int64 startTime = 1; //开始时间
+    int64 endTime = 2; //结束时间
+    repeated DimensionType dimension = 3; //维度
+}
+
+message OrderAmountDistributionResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated AmountPercentage percentages = 2;
+}
+
+message AmountPercentage {
+    string amountPaid = 1; //訂單金額
+    double percentage = 2; //百份比
+    int64 amountValue = 3; // 前端需要，添加返回数值
+}
+
+// 商品GMV占比
+message ProductGMVPercentGraphReq {
+    int64 startTime = 1; //开始时间
+    int64 endTime = 2; //结束时间
+    repeated DimensionType dimension = 3; //维度
+}
+message ProductGMVPercentGraphResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated TypeProportion proportion = 2; // 商品类型
+}
+
+// 站点GMV占比
+message SiteGMVPercentGraphReq {
+    int64 startTime = 1; //开始时间
+    int64 endTime = 2; //结束时间
+    repeated DimensionType dimension = 3; //维度
+}
+message SiteGMVPercentGraphResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated SiteType siteType = 2; // 站点类型
+}
+
+message DimensionType {
+    // 前端传递维度参考枚举类
+    int32 dimensionCode = 1;
+    repeated int32 degree = 2;
+}
+
+// 站点类型
+message SiteType {
+    string siteName = 1; // 站点名称
+    double percent = 2; //  百分比
+    // 前端需要，添加百分比具体数值进去
+    int64 siteValue = 3;
+}
+
+message OrderActivityProductDataReq {
+    int64 startTime = 1; //开始时间
+    int64 endTime = 2; //结束时间
+    repeated int64 activityId = 3; //活动编号
+    repeated DimensionType dimension = 4; //维度
+}
+
+message OrderActivityProductDataResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    int64 totalNumber = 2; //爆款商品总数
+    int64 totalGMV = 3; //爆款商品贡献GMV
+    repeated ActivityProduct product = 4; //爆款商品详细
+}
+
+message ActivityProduct {
+    int64 spuId = 1; //商品编号
+    string productName = 2; //商品名称
+    int64 salesNumber = 3; //销售量
+    double changePP = 4; //同比
+}
+
+//會員團隊相關
+message MemberIncreaseNumberReq{
+    string countryCode = 1;//国家编码
+    repeated int32 dataType = 2;//数据类型
+}
+
+message MemberIncreaseNumberResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated VolumeData data = 2;
+}
+
+message VolumeData{
+    string dataType = 1; //数据类型
+    string volume = 2; //数量
+}
+
+message MemberMiscellaneousDataReq{
+    string countryCode = 1;//国家编码
+    repeated int32 dataType = 2; //数据类型
+}
+
+message MemberMiscellaneousDataResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated VolumeData data = 2;
+}
+
+message MemberBrokenLineGraphReq{
+    string startTime = 1; //开始时间
+    string endTime = 2; //结束时间
+    int32 dimension = 3; //维度编码
+    int32 dataType = 4; //数据类型
+}
+
+message MemberBrokenLineGraphResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated PointData data = 2;
+}
+
+message PointData{
+    string dimensionTag = 1; //维度标签
+    double volume = 2; //数量
+    string date = 3; //日期 yyyymmdd
+}
+
+message MemberPsIncreaseRankingListReq{
+    string startTime = 1; //开始时间
+    string endTime = 2; //结束时间
+    string countryCode = 3; //國家編碼
+}
+
+message MemberPsIncreaseRankingListResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated RankingMemberInfo  memberData = 2;
+}
+
+message RankingMemberInfo{
+    string userId = 1;  //用戶id
+    string userNickname = 2;    //用戶昵稱
+    string volume = 3;  //數量
+    double changePP = 4;    //環比變化
+}
+
+message MemberPsIncreaseRiseRankingListReq{
+    string startTime = 1; //开始时间
+    string endTime = 2; //结束时间
+    string countryCode = 3; //國家編碼
+}
+
+message MemberPsIncreaseRiseRankingListResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated RankingMemberInfo  memberData = 2;
+}
+
+message MemberPsIncreaseDropRankingListReq{
+    string startTime = 1; //开始时间
+    string endTime = 2; //结束时间
+    string countryCode = 3; //國家編碼
+}
+
+message MemberPsIncreaseDropRankingListResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated RankingMemberInfo  memberData = 2;
+}
+
+//核心數據指標列表
+message CoreIndicatorDataListReq{
+    repeated int32 dataType = 1; //数据类型
+    string startTime = 2; //开始时间
+    string endTime = 3; //结束时间
+}
+
+message CoreIndicatorDataListResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated TableData tableData = 2;
+}
+
+message TableData{
+    int32 dataType = 1;
+    string monthlyData = 2;
+    string progress = 3;
+    string periodData = 4;
+    double MoM = 5;
+}
+
+message CoreIndicatorPlatformGMVPieChartReq{
+    string startTime = 1; //开始时间
+    string endTime = 2; //结束时间
+    repeated string countryCode = 3; //国家编码
+}
+
+message CoreIndicatorPlatformGMVPieChartResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated PieData pieData = 2;
+}
+
+message PieData{
+    double volume = 1;          //数量
+    string orderType = 2;      //訂單类型
+    string countryCode = 3;     //国家编码
+    double percentage = 4;      //佔總百份比
+    string percentStr = 5;      //佔總百份比(字符串)
+}
+
+message CoreIndicatorNormalGMVPieChartReq{
+    string startTime = 1; //开始时间
+    string endTime = 2; //结束时间
+    repeated string countryCode = 3; //国家编码
+    int32 dataType = 4; //数据类型
+}
+
+message CoreIndicatorNormalGMVPieChartResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated NormalPieData pieData = 2;
+}
+
+message NormalPieData{
+    string dataType = 1;     //数据类型
+    double volume = 2;      //数量
+    string countryCode = 3; //国家编码
+    string  typeTwo = 4;     //二级类型
+    int64 quantity = 5;     //件数
+    double pricePerItem = 6; //商品单价
+    double percentage = 7;  //佔總百份比
+    string percentStr = 8;      //佔總百份比(字符串)
+    double countryRatio = 9;    //佔國家百份比
+    string countryRatioStr = 10;   //佔國家百份比(字符串)
+}
+
+message CoreIndicatorPSIncreaseMapReq{
+    string startTime = 1; //开始时间
+    string endTime = 2; //结束时间
+}
+
+message CoreIndicatorPSIncreaseMapResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated MapData mapData = 2;
+}
+
+message MapData{
+    string areaCode = 1;   //地区编码
+    int64 newPSNum = 2;     //新增PS数
+    double MoM = 3;         //环比
+}
+
+// 商品品类
+// 页面顶部四块品类数据
+message StatisticsTodayCategoryReq {
+    string flag = 1;
+}
+
+message StatisticsTodayCategoryResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated TodayCategory todayCategory = 2;
+}
+
+message TodayCategory {
+    string type = 1;
+    string data = 2;
+}
+
+// 各品类销售详情
+message ShowCategorySaleDetailReq {
+    common.base.Pagination page = 1;
+    string startTime = 2;
+    string endTime = 3;
+    string type = 4;
+}
+
+message ShowCategorySaleDetailResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    common.base.Pagination page = 2;
+    string total = 3;
+    repeated CategorySaleDetail CategorySaleDetail = 4;
+}
+
+message CategorySaleDetail {
+    string date = 1;
+    string catLevelOne = 2;
+    string catLevelTwo = 3;
+    string catLevelThree = 4;
+    string productId = 5;
+    string productName = 6;
+    string skuCode = 7;
+    string skuValue = 8;
+    string supplierId = 9;
+    string supplierName = 10;
+    string saleNum = 11;
+    string saleAmount = 12; // 修改为string返回
+    string PV = 13;
+    string UV = 14;
+    double UVDivPV = 15;
+    double grossMargin = 16;
+    string inStockCN = 17;
+    double inStockCNAmount = 18;
+    string inStockMY = 19;
+    double inStockMYAmount = 20;
+    string inStockTH = 21;
+    double inStockTHAmount = 22;
+    string productPic = 23;
+}
+
+// 动销商品用户数据
+message GetMovableUserDetailReq {
+    common.base.Pagination page = 1;
+    string startTime = 2;
+    string endTime = 3;
+    string type = 4;
+}
+
+message GetMovableUserDetailResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    common.base.Pagination page = 2;
+    string total = 3;
+    repeated MovablePinRateUser movablePinRateUser = 4;
+}
+
+message MovablePinRateUser {
+    string catLevelOne = 1;
+    string catLevelTwo = 2;
+    string catLevelThree = 3;
+    string firstPayNum = 4;
+    string SH_Rate = 5;
+    string PS_Rate = 6;
+    string AM_Rate = 7;
+    string AT_Rate = 8;
+    string saleOrderPrice = 9;
+    string saleOrderNum = 10;
+    string repeatedBuyRate = 11;
+    string allPayUser = 12; // 所有付费用户数  4.3添加
+
+}
+
+// 取消订单品类占比
+message GetCancelCategoryRateReq {
+    string startTime = 1;
+    string endTime = 2;
+}
+
+message GetCancelCategoryRateResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated CancelCatRate cancelCatRate = 2;
+}
+
+message CancelCatRate {
+    string cateName = 1;
+    double cateRateValue = 2;
+    string cateValue = 3;
+}
+
+// 申请退货的品类占比
+message GetReturnCategoryRateReq {
+    string startTime = 1;
+    string endTime = 2;
+}
+
+message GetReturnCategoryRateResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated ReturnCatRate returnCatRate = 2;
+}
+
+message ReturnCatRate {
+    string cateName = 1;
+    double cateRateValue = 2;
+    string cateValue = 3;
+}
+
+
+// 动销商品数据
+message GetMovableCategoryDetailReq {
+    common.base.Pagination page = 1;
+    string startTime = 2;
+    string endTime = 3;
+    string type = 4;
+}
+message GetMovableCategoryDetailResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    string total = 2;
+    repeated MovablePinRate movablePinRate = 3;
+}
+
+message MovablePinRate {
+    string catLevelOne = 1;
+    string catLevelTwo = 2;
+    string catLevelThree = 3;
+    string saleNum = 4;
+    string saleAmount = 5; // 修改为string返回
+    string movableProductNum = 6;
+    string onSaleProductNum = 7;
+    string movableProductRate = 8;
+}
+
+// 各品类访购情况
+message GetCateVisitDetailReq {
+    common.base.Pagination page = 1;
+    string startTime = 2;
+    string endTime = 3;
+    string type = 4;
+}
+
+message GetCateVisitDetailResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    string total = 2;
+    repeated CateVisitDetail cateVisitDetail = 3;
+}
+
+message CateVisitDetail {
+    string catLevelOne = 1;
+    string catLevelTwo = 2;
+    string catLevelThree = 3;
+    string pvCount = 4;
+    string orderNum = 5;
+    string visitBuyRate = 6;
+}
+
+// 各品类复购情况
+message GetRepeatedBuyCateDetailReq {
+    string startTime = 1;
+    string endTime = 2;
+    string type = 3;
+}
+
+message GetRepeatedBuyCateDetailResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated RepeatedBuyProduct repeatedBuyProduct = 3;
+}
+
+message RepeatedBuyProduct {
+    string dataType = 1;
+    string cateName = 2;
+    string cateValue = 3;
+    string cateRate = 4;
+}
+
+// 导出四个接口的数据生成excel
+message GetAllCategoryDetailToExcelReq {
+    string name = 1; // 120：各品类销售详情  121：动销商品数据 122：动销商品用户数据 123：各品类访购情况
+    string startTime = 2;
+    string endTime = 3;
+    string type = 4; //  0 ：单品 1:一级分类2：二级分类 3：三级分类 4：供应商
+}
+message GetAllCategoryDetailToExcelResp {
+    common.base.ErrorMessage ret = 1;
+    string excelUrl = 2; // 文件地址
+}
+
+// 前端接口，平台商品漏斗
+message GetProductFunnelViewDataReq {
+    string startTime = 1;
+    string endTime = 2;
+    string cateId = 3;
+    repeated string productType = 4;
+}
+
+message GetProductFunnelViewDataResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated ProductFunnelViewData productFunnelViewDatas = 2;
+}
+
+message ProductFunnelViewData {
+    string viewDataName = 1; // 数据名称
+    string viewDataCount = 2; // 数据值
+    string viewDataRate = 3; // 数据占比
+    string viewDataConversion = 4; // 转化率
+    string viewDataChain = 5; // 环比变化
+    string viewDataTypeCode = 6; // 用于调日趋势
+}
+
+// 转化率趋势
+message GetProductFunnelViewTradeDataReq {
+    string startTime = 1;
+    string endTime = 2;
+    string cateId = 3;
+    repeated string productType = 4;
+    string dataType = 5;
+}
+
+message GetProductFunnelViewTradeDataResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated ViewDataTrade viewDataTrades = 2;
+}
+message ViewDataTrade{
+    string dateDay = 1;
+    string viewDataConversion = 2;
+    string viewDataChain = 3;
+}
+
+// 单品详细漏斗
+message GetProductViewDataDetailReq {
+    string startTime = 1;
+    string endTime = 2;
+    string queryType = 3;
+    string queryParam = 4;
+    string cateId = 5;
+    common.base.Pagination page = 6;
+    string orderByName = 7;
+    string orderByType = 8; // 排序规则，传递"desc"或者"asc"
+}
+
+message GetProductViewDataDetailResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    string count = 2;
+    repeated ProductFunnelViewDataDetail productFunnelViewDataDetails = 3;
+}
+message ProductFunnelViewDataDetail{
+    string productName = 1; // 商品名称
+    string productId = 2; // 商品id
+    string cateOneName = 3; // 一级类目名称
+    string cateTwoName = 4; // 二级类目名称
+    string cateThreeName = 5; // 三级类目名称
+    string productView = 6; // 曝光
+    string productClick = 7; // 点击
+    string orderCreateNum = 8; // 下单
+    string orderPayNum = 9; // 支付成功
+    string viewClickRate = 10; // 曝光点击转化率
+    string clickOrderRate = 11; // 点击下单转化率
+    string orderPayRate = 12; // 下单支付转化率
+    string viewPayRate = 13; // 曝光支付转化率
+    string onSaleStatus = 14; // 在架状态
+    string onSaleCount = 15; // 在架时长
+}
+
+message GetDataCenterTypeDataReq {
+}
+message GetDataCenterTypeDataResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated DataCenterProductInfo productInfo = 2; //平台商品漏斗 商品类型
+    repeated DataCenterOrderName orderName = 3; // 单品详细漏斗 排序字段
+    repeated DataCenterProductInfo CoreInfo = 4; //核心數據指標 數據類型
+    repeated DataHouseConfig dataHouseConfig = 5; // dataHouse枚举
+}
+
+// dataHouse枚举
+message DataHouseConfig{
+    string dataHousePageName = 1; // 页面名称
+    string dataHousePageCode = 2; // 页面code
+    repeated DataHouseComponent dataHouseComponent = 3; // 页面组件
+}
+
+// 页面组件
+message DataHouseComponent {
+    string componentName = 1; // 组件名称
+    string componentCode = 2; // 组件code
+    repeated DataHouseComponentType dataHouseItemConfig = 3; // 组件类型
+}
+
+// 组件类型
+message DataHouseComponentType {
+    string componentTypeName = 1; // 组件类型名称
+    string componentCode = 2; // 组件类型code
+    repeated DataHouseItemConfig dataHouseItemConfig = 3; // 组件的枚举
+}
+
+// 枚举名称和code
+message DataHouseItemConfig {
+    string itemCode = 1; // 枚举code
+    string itemName = 2; // 枚举名称
+}
+
+message DataCenterProductInfo {
+    string typename = 1;
+    string typeCode = 2;
+}
+
+message DataCenterOrderName {
+    string typeName = 1;
+    string typeCode = 2;
+}
+
+// 新增指标
+message AddTargetDataReq {
+    string targetCategoryName = 1;
+    string targetKey = 2;
+    string targetName = 3;
+    string targetDescription = 4;
+    string targetStatus = 5; // 指标状态 前端传递 1 有效 2 失效
+    string targetCategoryId = 6; // 如果要在已存在的指标类目下添加多个指标需要这个参数
+}
+message AddTargetDataResp {
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+// 分页模糊查询
+message GetTargetPageByParamReq {
+    common.base.Pagination page = 1;
+    string targetName = 2; // 没有则不传
+    string targetKey = 3; // 没有则不传
+}
+message GetTargetPageByParamResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated TargetPageViewList targetPageViewList = 2;
+    string total = 3;
+}
+
+message TargetPageViewList {
+    string targetCategoryId = 1; // 类目id
+    string targetCategoryName = 2; // 类目名称（指标大类）
+    string targetId = 3; // 指标id
+    string targetKey = 4; // 指标键
+    string targetName = 5; // 指标名称
+    string targetDescription = 6; // 业务口径描述
+    string targetStatus = 7; // 状态
+    string createTime = 8; // 创建时间
+}
+
+// 编辑指标
+message EditTargetDataReq {
+    string targetCategoryId = 1;
+    string targetCategoryName = 2;
+    string targetId = 3;
+    string targetKey = 4;
+    string targetName = 5;
+    string targetDescription = 6;
+    string targetStatus = 7; // 指标状态 前端传递 1 有效 2 失效
+}
+message EditTargetDataResp {
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+// 删除指标
+message DeleteTargetDataReq {
+    string targetId = 1;
+}
+message DeleteTargetDataResp {
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+// 批量导入
+message AddTargetDataByExcelReq {
+    string targetDataList = 1; // excel文件地址
+}
+message AddTargetDataByExcelResp {
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+
+// 拼团数据看板
+
+// 拼团关键数据
+message GetGroupImportantDataReq {
+    string startTime = 1;
+    string endTime = 2;
+    string groupType = 3;
+    string countryCode = 4;
+    common.base.Pagination page = 5;
+
+}
+
+message GetGroupImportantDataResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated GroupImportantDataInfo groupImportantDataInfo = 2;
+    string total = 3;
+}
+
+message GroupImportantDataInfo {
+    string dateDay = 1;
+    string groupTotal = 2; // 开团数
+    string groupTotalSuccess = 3; // 开团成功数
+    string groupOrderTotal = 4; // 拼团订单数
+    string gmv = 5; // gmv
+    string groupOrderTotalHistory = 6; // 历史拼团订单数
+    string gmvTotal = 7; // 累计GMV
+    string indexEntryNum = 8;   //首頁拼团入口數
+    string psShopEntryNum = 9;  //Ps店鋪入口數
+    string accountEntryNum = 10;   //个人中心页入口
+}
+
+// 拼团商品数据
+message GetGroupProductDataReq {
+    string startTime = 1;
+    string endTime = 2;
+    string productId = 3;
+    string groupType = 4;
+    common.base.Pagination page = 5;
+    string orderType = 6; // 排序字段
+    string orderName = 7; // 排序名称
+
+}
+
+message GetGroupProductDataResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated GroupProductDataInfo groupProductDataInfo = 2;
+    string total = 3;
+}
+
+
+message GroupProductDataInfo {
+    string productName = 1; // 商品名称
+    string productPic = 2; // 商品图片
+    string productId = 3; // 商品id
+    string productView = 4; // 曝光
+    string productClick = 5; // 点击
+    string viewClickRate = 6; // 曝光点击转化率
+    string groupTotal = 7; // 开团数
+    string groupTotalSuccess = 8; //  开团成功数
+    string groupMatch = 9; // 真人成团数
+    string groupNotMatch = 10; // 机器人团数
+    string groupOrderTotal = 11; // 真人订单销量
+    string orderAmount = 12; // 真人订单金额
+}
+
+// 拼团商品数据2.0
+message GetGroupBuyProductInfoReq {
+    string startTime = 1;
+    string endTime = 2;
+    string productId = 3;
+    string groupType = 4;
+    common.base.Pagination page = 5;
+    string orderType = 6; // 排序字段
+    string orderName = 7; // 排序名称
+    string country_code = 8; //國家編碼
+}
+
+message GetGroupBuyProductInfoResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated GroupBuyProductInfo groupBuyProductInfo = 2;
+    string total = 3;
+}
+
+message GroupBuyProductInfo {
+    string productName = 1; // 商品名称
+    string productPic = 2; // 商品图片
+    string productId = 3; // 商品id
+    string productViewPv = 4; // 曝光Pv
+    string productViewUv = 18; //// 曝光Uv
+    string productClickPv = 5; // 点击PV
+    string productClickUv = 6; // 点击UV
+    string clickPerView = 17;//点击转化率
+    string createGroupPv = 7; // 開團PV
+    string createGroupUv = 8; // 開團UV
+    string joinGroupPv = 9; // 參團PV
+    string joinGroupUv = 10; // 參團UV
+    string specSelectPv = 11; // 规格确认PV
+    string specSelectUv = 12; // 规格确认UV
+    string joinPaidNum = 13; // 参团支付成功
+    string createPaidNum = 14; // 开团支付成功
+    string orderAmount = 15; // 订单金额
+    string orderNum = 16; // 订单销量
+}
+
+message GetGroupBuyProductInfoToExcelReq {
+    string startTime = 1;   //開始時間
+    string endTime = 2;     //結束時間
+    string productId = 3;   //商品Id
+    string groupType = 4;   //拼團類型
+    string orderType = 6;   // 排序字段
+    string orderName = 7;   // 排序名称
+    string country_code = 8; //國家編碼
+}
+
+message GetGroupBuyProductInfoToExcelResp {
+    common.base.ErrorMessage ret = 1;
+    string excelUrl = 2; // 文件地址
+}
+
+message RealTimeCsStaffOnLineInfoReq {
+
+}
+
+message RealTimeCsStaffOnLineInfoResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated StaffOnLineInfo staffOnLineInfos = 2;
+    message StaffOnLineInfo {
+        string type = 1;
+        string value = 2;
+        //客服昵称
+        repeated string staff_nickName = 3;
+    }
+}
+
+message UserRealTimeOnLineInfoReq {
+    //国家
+    string country = 1;
+}
+
+message UserRealTimeOnLineInfoResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated UserRealTimeOnLineInfo userRealTimeOnLineInfo = 2;
+    message UserRealTimeOnLineInfo {
+        string type = 1;
+        string value = 2;
+    }
+}
+
+message CsStaffPersonalDataReq {
+    //客服id
+    string staff_id = 1;
+}
+
+message CsStaffPersonalDataResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated CsStaffPersonalData csStaffPersonalData = 2;
+    message CsStaffPersonalData {
+        string type = 1;
+        string value = 2;
+    }
+}
+
+message CsStaffListReq {
+    //模糊查询
+    string select_param = 1;
+}
+
+message CsStaffListResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated CsStaffInfo csStaffInfo = 2;
+    message CsStaffInfo {
+        //客服id
+        string staff_id = 1;
+        //客服昵称
+        string staff_nickName = 2;
+    }
+}
+
+message DayConsultationVolumeReq {
+
+}
+
+message DayConsultationVolumeResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated DayConsultationVolumeInfo dayConsultationVolumeInfo = 2;
+    message DayConsultationVolumeInfo {
+        //日期时间
+        string date_time = 1;
+        //用户访问量
+        uint32 user_req_num = 2;
+        //转接人工客服量
+        uint32 transfer_labor_num = 3;
+        //人工接线量
+        uint32 cs_pickUp_num = 4;
+        //放弃量
+        uint32 abandonment_quantity = 5;
+    }
+}
+
+//用戶獲客模塊
+//頂端簡單數據顯示
+message UserActivityDataDisplayReq{
+    repeated int32 dataType = 1; //数据类型
+}
+message UserActivityDataDisplayResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated VolumeData data = 2; //數據對象
+}
+
+//用戶獲客折線圖
+message UaBrokenLineGraphReq{
+    int32 dataType = 1; //数据类型
+    string startTime = 2; //开始时间
+    string endTime = 3; //结束时间
+    int32 dimension = 4;//維度編碼
+}
+message UaBrokenLineGraphResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated TwoDimensionPointData data = 2;
+}
+
+message TwoDimensionPointData{
+    string dimensionTag = 1; //维度标签
+    repeated PointVolume data = 2;
+}
+
+message PointVolume{
+    double volume = 1; //数量
+    string date = 2; //日期 yyyymmdd
+}
+
+//獲客渠道佔比
+message UaSourceProportionPieChartReq{
+    string startTime = 1; //开始时间
+    string endTime = 2; //结束时间
+}
+message UaSourceProportionPieChartResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated UaPieData data = 2;
+}
+
+message UaPieData{
+    string dataTag = 1; //數據標簽
+    double volume = 2; //數量
+}
+
+//獲客終端類型佔比
+message UaSiteProportionPieChartReq{
+    string startTime = 1; //开始时间
+    string endTime = 2; //结束时间
+}
+message UaSiteProportionPieChartResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated UaPieData data = 2;
+}
+
+// 用户在线报表
+message CustomerServiceUserOnLineDataReq {
+    string startTime = 1;
+    string endTime = 2;
+    string language = 3;
+    string countryCode = 4;
+    common.base.Pagination page = 5;
+}
+
+message CustomerServiceUserOnLineDataResp {
+    string total = 1; // 总数
+    repeated CustomerServiceUserOnLineDataList customerServiceUserOnLineDataList = 2;
+    common.base.ErrorMessage ret = 3; //返回值
+
+}
+
+message CustomerServiceUserOnLineDataList {
+    string dateDay = 1; // 日期
+    string uv = 2; // 访问uv
+    string robotChat = 3; // 机器人聊天数
+    string humanChat = 4; // 转人工客服聊天数
+    string humanPick = 5; // 人工接起量
+    string pickRate = 6; // 接起率
+    string notPickUp = 7; // 放弃量
+    string notPickUpRate = 8; // 放弃率
+    string averageWaitTime = 9; // 平均等待时长
+    string totalChatTime = 10; // 总聊天时长
+    string averageChatTime = 11; // 平均聊天时长
+    string commentTotal = 12; // 评价量
+    string commentRate = 13; // 参评率
+    string goodCommentTotal = 14; // 好评量
+    string goodCommentRate = 15; // 好评率
+    string badCommentTotal = 16; // 差评量
+    string badCommentRate = 17; // 差评率
+}
+
+// 客服数据报表
+message CustomerServiceEachDetailDataReq {
+    string startTime = 1;
+    string endTime = 2;
+    string customerServiceName = 3;
+    common.base.Pagination page = 4;
+}
+message CustomerServiceEachDetailDataResp {
+    string total = 1;
+    repeated CustomerServiceEachDetailDataList customerServiceEachDetailDataList = 2;
+    common.base.ErrorMessage ret = 3; //返回值
+
+}
+message CustomerServiceEachDetailDataList {
+    string dateDay = 1; //	时间
+    string customerServiceName = 2; // 客服
+    string loginTime = 3; //	登录时间
+    string logoutTime = 4; //	退出时间
+    string loginTimeTotal = 5; //	登录时长
+    string pickTotal = 6; //	接线量
+    string onLineTotal = 7; //	在线时长
+    string busyTotl = 8; //	忙碌时长
+    string busyStatusTotal = 9; //	置忙次数
+    string customerServiceRate = 10; //	客服利用率
+    string firstPickUpTotal = 11; //	首次响应时长
+    string averagePickUpTotal = 12; //	平均响应时长
+    string chatTotal = 13; //	总聊天时长
+    string averageChatTotal = 14; //	平均聊天时长
+    string commentTotal = 15; //	评价量
+    string commentRate = 16; // 评价率
+    string goodComment = 17; // 好评
+    string goodCommentRate = 18; // 好评率
+    string badComment = 19; // 差评
+    string badCommentRate = 20; //	差评率
+}
+
+// 客户聊天详情报表
+message CustomerServiceChatDetailDataReq{
+    common.base.Pagination page = 1;
+    string startTime = 2;	//开始时间
+    string endTime = 3; //	结束时间
+    string customerServiceName = 4; //	客服姓名
+    string chatTotal = 5; //	聊天时长
+    string chatId = 6; //	聊天记录id
+    string userId = 7; //	用户userId
+    string comment = 8; //	客户评价
+    string language = 9; //	客户终端语言
+    string countryCode = 10; //	客户国家
+    string operationSystem = 11; //	操作系统 暂时不用
+    string chatSource = 12; //	聊天来源 暂时不用
+    string customerServiceGroup	 = 13; //客服组
+    string commentTag = 14; //	评价标签
+}
+message CustomerServiceChatDetailDataResp {
+    string total = 1;
+    repeated CustomerServiceChatDetailDataList customerServiceChatDetailDataList = 2;
+    common.base.ErrorMessage ret = 3; //返回值
+
+}
+
+message CustomerServiceChatDetailDataList {
+    string chatId = 1; //	聊天记录id
+    string customerServiceGroup = 2;//	客服组
+    string userId = 3;//	客户userId
+    string chatSource = 4; //	聊天来源 暂时没有
+    string language = 5; //	客户终端语言
+    string version = 6; //	App版本 // 暂时没有
+    string operationSystem = 7; //	操作系统 暂时没有
+    string countryCode = 8; //	客户国家
+    string waitTime = 9; //	排队等待时长
+    string chatStartTime = 10; //	聊天开始时间
+    string charEndTime = 11; //	聊天结束时间
+    string chatTime = 12; //	聊天时长
+    string firstPickTime = 13; //	首次响应时长
+    string averagePicTime = 14; //	平均响应时长
+    string customerServiceName = 15; //	客服姓名
+    string comment = 16; //	评价
+    string commentTag = 17; // 	评价标签
+}
+
+// 未接起聊天详情报表
+message CustomerServiceUnPickDetailDataReq {
+    common.base.Pagination page = 1;
+    string startTime = 2; //	开始时间
+    string endTime = 3; //	结束时间
+    string userId = 4; //	用户userId
+    string language = 5; //	客户终端语言
+    string operationSystem = 6; //	操作系统
+    string countryCode = 7; //	客户国家
+    string waitTimeTotal = 8; //	等待时长
+    string chatSource = 9; //	聊天来源
+}
+
+message CustomerServiceUnPickDetailDataResp {
+    string total = 1;
+    repeated CustomerServiceUnPickDetailDataList customerServiceUnPickDetailDataList = 2;
+    common.base.ErrorMessage ret = 3; //返回值
+
+}
+
+message CustomerServiceUnPickDetailDataList {
+    string waitStartTime = 1; //	等待开始时间
+    string waitEndTime = 2; //	等待结束时间
+    string waitTimeTotal = 3; //	等待时长
+    string chatSource = 4; //	聊天来源
+    string language	= 5; //客户终端语言
+    string version = 6; //	App版本
+    string operationSystem = 7; //	操作系统
+    string countryCode = 8; //	客户国家
+    string userId = 9; // 用户id
+}
+
+// 导出excel数据
+message CustomerServiceAllDataDetailToExcelReq {
+    string startTime = 1; //时间都为unix时间戳
+    string endTime = 2;
+    string reportName = 3; // 哪个模块需要导出 // 下面的参数有什么就传什么
+    string customerServiceName = 4; //	客服姓名
+    string chatTotal = 5; //	聊天时长
+    string chatId = 6; //	聊天记录id
+    string userId = 7; //	用户userId
+    string comment = 8; //	客户评价
+    string language = 9; //	客户终端语言
+    string countryCode = 10; //	客户国家
+    string operationSystem = 11; //	操作系统 暂时不用
+    string chatSource = 12; //	聊天来源 暂时不用
+    string customerServiceGroup	 = 13; //客服组
+    string commentTag = 14; //	评价标签
+    string waitTimeTotal = 15; //等待时长
+
+}
+
+message CustomerServiceAllDataDetailToExcelResp {
+    common.base.ErrorMessage ret = 1;
+    string excelUrl = 2; // 文件地址
+}
+
+message CustomerChatDetailDataReq {
+    //聊天开始时间
+    string chat_start_time = 1;
+    //聊天结束时间
+    string chat_end_time = 2;
+    //客服id
+    string staff_id = 3;
+    //用户id
+    string user_id = 4;
+    //聊天记录id
+    string chat_record_id = 5;
+    //聊天时长开始
+    uint32 chat_time_start = 6;
+    //聊天时长结束
+    uint32 chat_time_end = 7;
+    //客户端语言
+    string app_language = 8;
+    //客户国家
+    string user_country = 9;
+    //客服组
+    string customer_group = 10;
+    //客户评价
+    string user_evaluation = 11;
+    //评价标签
+    string evaluation_tag = 12;
+    //分页信息
+    common.base.Pagination page = 13;
+}
+
+message CustomerChatDetailDataResp {
+    int32 total = 1;
+    common.base.ErrorMessage ret = 2;
+    repeated CustomerChatRecordInfo data = 3;
+
+}
+
+message CustomerChatRecordInfo {
+
+    //聊天记录id
+    string chat_record_id = 1;
+    //客服组
+    string customer_group = 2;
+    //客户userid
+    string user_id = 3;
+    //客户端语言
+    string app_language = 4;
+    //app版本
+    string app_version = 5;
+    //用户国家
+    string user_country = 6;
+    //排队等待时长
+    string queue_wait_time = 7;
+    //聊天开始时间
+    string chat_start_time = 8;
+    //聊天结束时间
+    string chat_end_time = 9;
+    //首次响应时长 毫秒
+    string first_respt_time = 10;
+    //平均响应时长 毫秒
+    string average_respt_time = 11;
+    //评价
+    string evaluation = 12;
+    //评价标签
+    string evaluation_tag = 13;
+}
+
+
+//埋點事件管埋模塊
+message GetBuryingPointInfoReq {
+    common.base.Pagination page = 1;
+    //开始日期时间戳
+    string begin_date = 2;
+    //结束日期时间戳
+    string end_date = 3;
+    //埋点名称
+    string point_event_key = 4;
+}
+
+message GetBuryingPointInfoResp {
+    common.base.ErrorMessage ret = 1;
+    repeated BuryingPointInfo pointInfos = 2;
+    int32 total = 3;
+    common.base.Pagination page = 4;
+}
+
+message BuryingPointInfo {
+    //埋点名称
+    string point_event_name = 1;
+    //埋点key
+    string point_event_key = 2;
+    //事件类型
+    string type = 3;
+    //埋点事件发生数目
+    string num = 4;
+    //参数数量
+    uint32 paramNum = 5;
+}
+
+message GetBuryingPointParamInfoReq {
+    common.base.Pagination page = 1;
+    //开始日期时间戳
+    string begin_date = 2;
+    //结束日期时间戳
+    string end_date = 3;
+    //埋点key
+    string point_event_key = 4;
+}
+
+message GetBuryingPointParamInfoResp {
+    common.base.ErrorMessage ret = 1;
+    repeated BuryingPointParamInfo pointParamInfos = 2;
+    int32 total = 3;
+    common.base.Pagination page = 4;
+}
+
+message BuryingPointParamInfo {
+    //字段名称
+    string param_name = 1;
+    //参数类型
+    string data_type = 2;
+    //字段发生数目
+    string num = 3;
+}
+
+message GetBuryingPointParamValueInfoReq {
+    common.base.Pagination page = 1;
+    //开始日期时间戳
+    string begin_date = 2;
+    //结束日期时间戳
+    string end_date = 3;
+    //埋点key
+    string point_event_key = 4;
+    //字段名称
+    string param_name = 5;
+}
+
+message GetBuryingPointParamValueInfoResp {
+    common.base.ErrorMessage ret = 1;
+    repeated BuryingPointParamValueInfo pointParamValueInfos = 2;
+    int32 total = 3;
+    common.base.Pagination page = 4;
+}
+
+message BuryingPointParamValueInfo {
+    //字段值
+    string param_value = 2;
+    //字段发生数目
+    string num = 3;
+}
+
+// 用户分组，分群
+// 新增特定用户组
+message AddUserGroupBySpeRep {
+    string userGroupName = 1; // 特定用户组名称
+    string url = 2; // 导入excel的地址
+    string userInput = 3; //使用者手動輸入 以逗號分隔的用戶id
+}
+message AddUserGroupBySpeResp {
+    string total = 1; // 共多少用户
+    common.base.ErrorMessage ret = 2; // 返回值
+}
+
+// 新增分群用户组
+message AddUserGroupByGroupReq {
+    string userGroupName = 1; // 分群用户组名称
+    UserGroupAnd userGroupAnd = 2; // 自定义筛选
+}
+
+message UserGroupAnd {
+    // 每个选中的属性 1 如果是and关系，则是list
+    repeated UserGroupOr userGroupOr = 1;
+}
+
+message UserGroupOr {
+    //or關系的條件 保存到同一個List之下
+    repeated GroupingCondition condition = 1;
+}
+
+message GroupingCondition{
+    //分群條件
+    //具体某条属性
+    string name = 1; // 字段名
+    string operationSign = 2; // 运算符号
+    string value = 3; // 数值
+    string type = 4; //屬性類型
+    string desc = 5; //屬性描述
+    string key = 6; //屬性key
+}
+
+message AddUserGroupByGroupResp{
+    //    string total = 1; // 共多少用户
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+// 查询用户组列表
+message GetUserGroupInfoReq{
+    string userGroupName = 1; // 分群用户组名称
+    string userGroupType = 2; // 用户组属性 1：特定 2：分群
+    common.base.Pagination page = 3; // 分页信息
+    string userGroupId = 4; //分群用戶組id
+}
+
+message GetUserGroupInfoResp{
+    string total = 1; // 总数
+    repeated UserGroupInfo userGroupInfo = 2; // 用户组列表
+    common.base.ErrorMessage ret = 3; // 返回值
+}
+
+message UserGroupInfo {
+    string userGroupId = 1; // 用户分群分组id
+    string userGroupName = 2; // 分群用户组名称
+    string userGroupType = 3; // 用户组属性 1：特定 2：分群
+    string number = 4; // 人数
+    string operationName = 5; // 编辑者
+    string editTime = 6; // 编辑时间
+}
+
+// 查询特定用户组詳情
+message GetUserGroupDetailInfoReq {
+    string userGroupId = 1; // 分群用户组id
+    string userGroupType = 2; // 用户组属性 1：特定 2：分群
+}
+
+message GetUserGroupDetailInfoResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    string userGroupId = 2; // 分群用户组id
+    string userGroupType = 3; // 用户组属性 1：特定 2：分群
+    string userId = 4; //特定用户组 返回用户id 以逗吧分隔
+    UserGroupAnd userGroupAnd = 5; // 分群用户 返回每个属性的字段
+}
+
+// 编辑用户组
+message EditUserGroupInfoReq{
+    string userGroupId = 1; // 用户分群分组id
+    string userGroupType = 2; // 编辑哪种类型用户组 1：特定 2：分群
+    string userGroupName = 3; // 分群用户组名称
+    //以下三選一
+    UserGroupAnd userGroupAnd = 4; //分群用户 每个属性的字段
+    string url = 5; // 导入excel的地址
+    string userInput = 6; //使用者手動輸入 以逗號分隔的用戶id
+}
+
+message EditUserGroupInfoResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+// 删除用户组
+message DeleteUserGroupInfoReq{
+    string userGroupId = 1; // 用户分群分组id
+}
+
+message DeleteUserGroupInfoResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+// 用户属性查询
+message GetUserPropertyListReq{
+    string propertyName = 1; //属性名称
+    common.base.Pagination page = 2; // 分页信息
+}
+
+message GetUserPropertyListResp{
+    string total = 1;
+    repeated UserPropertyList userPropertyList = 2;
+    common.base.ErrorMessage ret = 3; // 返回值
+}
+
+message UserPropertyList {
+    string propertyName = 1; // 属性名称
+    string propertyType = 2; // 属性类型
+    string propertyDesc = 3; // 属性值描述
+    string onLineTime = 4; // 上线时间
+    string propertyKey = 5; //屬性Key
+}
+
+
+// 分组分群userId导出excel
+message GetUserGroupIdToExcelReq{
+    string userGroupId = 1; // 用户分群分组id
+}
+
+message GetUserGroupIdToExcelResp{
+    string url = 1; //下载地址
+    common.base.ErrorMessage ret = 2; // 返回值
+}
+
+// 分群统计共多少用户
+message GetUserGroupIdTotalReq {
+    string userGroupId = 1; // 用户分群分组id
+}
+
+message GetUserGroupIdTotalResp {
+    string total = 1; // 共多少人
+    common.base.ErrorMessage ret = 2; // 返回值
+}
+
+message GetUserIdsExcelOnEditPageReq{
+    UserGroupAnd userGroupAnd = 1; // 自定义筛选
+}
+
+message GetUserIdsExcelOnEditPageResp {
+    string url = 1; //下载地址
+    common.base.ErrorMessage ret = 2; // 返回值
+}
+
+message GetUserIdsCountOnEditPageReq{
+    UserGroupAnd userGroupAnd = 1; // 自定义筛选
+}
+
+message GetUserIdsCountOnEditPageResp{
+    string count = 1; //數量
+    common.base.ErrorMessage ret = 2; // 返回值
+}
+
+
+//數據大屏模塊
+//GMV看板，今日交易數據
+message BigScreenGmvStatsReq{}
+message BigScreenGmvStatsResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated OrderStats orderStats = 2; //Gmv數據
+    repeated TradeDataPoint points = 3; //訂單折線圖數據
+}
+
+message OrderStats{
+    string type = 1;    //數據類型 總計："Total"，禮包："Gift"，普貨："Norm"
+    string countryCode = 2; //國家編碼 默認："Default", 馬來："MY",泰國："TH",新加玻："SG"
+    double totalGmv = 3;    //總gmv
+    string totalOrderNum = 4;   //總單數
+    string totalPricePerOrder = 5;  //總客單價
+}
+
+message TradeDataPoint{
+    string time = 1; //時間段名字
+    string type = 2;    //類型
+    int64 gmv = 3;  //GMV
+    string change = 4;  //同比
+}
+
+//用戶活躍數據
+message BigScreenDauStatsReq{}
+message BigScreenDauStatsResp{
+    common.base.ErrorMessage ret = 1;   // 返回值
+    repeated DauData dauData = 2;   //活躍數據
+    string updateTime = 3;      //最後更新時間
+}
+
+message DauData{
+    string type = 1;    //數據類型
+    string volume = 2;  //數量
+    string change = 3;  //同比
+}
+
+//轉化率漏斗
+message BigScreenConversionFunnelReq{}
+message BigScreenConversionFunnelResp{
+    common.base.ErrorMessage ret = 1;   // 返回值
+    double loginRate = 2;   //登錄轉化率
+    double browseRate = 3;  //瀏覽轉化率
+    double orderRate = 4;   //購買轉化率
+    double payRate = 5;     //支付轉化率
+    double completeRate = 6; //成功支付轉化率
+}
+
+//拉新產品數據
+message BigScreenAcquisitionStatsReq{}
+message BigScreenAcquisitionStatsResp{
+    common.base.ErrorMessage ret = 1;   // 返回值
+    repeated PromotionStats stats = 2;  //拉新產品數據
+}
+
+message PromotionStats{
+    string promotionName = 1;   //拉新產品名字
+    string totalRegisterNum = 2;    //總注冊用戶數
+    repeated PromotionCountryStats countryStats = 3; //各國家數據
+}
+
+message PromotionCountryStats{
+    string promotionName = 1;   //拉新產品名字
+    string countryCode = 2;    //國家編碼
+    int64 registerNum = 3;  //新注冊用戶數
+}
+
+//首頁模塊GMV
+message BigScreenModuleStatsReq{}
+message BigScreenModuleStatsResp{
+    common.base.ErrorMessage ret = 1;   // 返回值
+    repeated ModuleStats moduleStats = 2; //模塊GMV
+}
+
+message ModuleStats{
+    string moduleName = 1; //首頁模塊名字
+    string gmv = 2; //模塊產生的gmv
+    string change = 3; //同比
+}
+
+//Top5商品當日成交件數
+message BigScreenProductSaleReq{}
+message BigScreenProductSaleResp{
+    common.base.ErrorMessage ret = 1;   // 返回值
+    repeated ProductStats productStats = 2; //商品數據
+}
+
+message ProductStats{
+    string productName = 1; //商品名字
+    string cateOneName = 2; //一級類目名字
+    string salesNum = 3;    //售出件數
+    string gmv = 4;         //商品gmv
+}
+
+//今日注冊及PS數
+message BigScreenMemberStatsReq{}
+message BigScreenMemberStatsResp{
+    common.base.ErrorMessage ret = 1;   // 返回值
+    repeated MemberStats memberStats = 2;   //用戶數據
+}
+
+message MemberStats{
+    string periodName = 1;  //時間段名字
+    int64 registerNum = 2;  //新增注冊用戶數
+    int64 psNum = 3;    //新增PS數
+}
+
+//數據慨覽
+//今日數據 - 數據看板
+message OverviewTodayWatchBoardReq{}
+message OverviewTodayWatchBoardResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated OverviewBoardData boardData = 2; //看板資料
+}
+
+message OverviewBoardData{
+    string type = 1;    //類型
+    string volume = 2;  //數值
+    string ratio = 3;   //佔總百比分
+    string todayTargetProgress = 4; //今日目標達成率
+    string monthlyTargetProgress = 5;   //本月目標完成率
+    string updateTime = 6;  //更新時間
+    string change = 7;  //同比
+}
+
+//今日數據 - 數據列表
+message OverviewTodayTableReq{}
+message OverviewTodayTableResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated OverviewTableData tableData = 2;   //表資料
+}
+
+message OverviewTableData{
+    string title = 1;   //標題
+    repeated string columnName = 2;     //列名
+    repeated OverviewListData listData = 3; //行資料對像
+}
+
+message OverviewListData{
+    string rowName = 1; //行名
+    string myData = 2;  //馬來西亞的數據
+    string thData = 3;  //泰國的數據
+    string sgData = 4;  //新加玻數據
+    string totalData = 5;   //合計數量
+}
+
+//小時增長
+message OverviewHourlyIncreaseReq{
+    string countryCode = 1; //國家編碼
+    string type = 2;    //圖表類型
+}
+
+message OverviewHourlyIncreaseResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated OverviewGraphData graphData = 2;   //折線圖資料
+}
+
+message OverviewGraphData{
+    string type = 1;    //類型
+    repeated OverviewPointData pointData = 2;   //點數據
+}
+
+message OverviewPointData{
+    string tag = 1; //標簽
+    int64 volume = 2;   //累計數據
+    string change = 3;  //同比
+}
+
+//普货商品Top30榜
+message OverviewOrdinaryGoodsReq{
+    string startTime = 1;   //開始時間
+    string endTime = 2;     //結束時間
+    string orderBy = 3;     //排序維度
+}
+
+message OverviewOrdinaryGoodsResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated OverviewRankData rankData = 2; //榜單對像
+}
+
+message OverviewRankData{
+    string title = 1;   //標題
+    repeated OverviewRankRowData rowData = 2;   //行數據
+}
+
+message OverviewRankRowData{
+    string productName = 1; //商品名稱
+    string productId = 2;   //商品Id
+    string soldNum = 3;     //售出件數
+    string paidGmv = 4;     //支付GMV
+}
+
+//增長趨勢
+message OverviewTrendGraphReq{
+    string startTime = 1;   //開結時間
+    string endTime = 2;     //結束時間
+    string countryCode = 3; //國家編碼
+    string type = 4;        //數據類型 1：支付GMV，2：支付訂單數，3：普貨支付GMV，4：用戶，5：商品，6：普貨品類
+}
+
+message OverviewTrendGraphResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated OverviewTrendGraph graph = 2;  //趋势圖資料
+    repeated OverviewTrendPieChart chart = 3;   //餅圖資料
+}
+
+//趋势圖資料
+message OverviewTrendGraph{
+    string type = 1; //類型
+    repeated OverviewTrendPoint point = 2;
+    bool visible = 3;
+}
+
+//數據點
+message OverviewTrendPoint{
+    string tag = 1; //標簽
+    int64 volume = 2;  //數量
+    string progress = 3; //目標完成率
+    string change = 4;  //環比
+}
+
+//餅圖資料
+message OverviewTrendPieChart{
+    string type = 1; //類型
+    repeated OverviewTrendPieSlice slice = 2; //片資料
+}
+
+message OverviewTrendPieSlice{
+    string tag = 1;     //標簽
+    int64 volume = 2;   // 數量
+}
+
+//年销量统计
+message OverviewYearlySalesReq{
+    string countryCode = 1; //國家編碼
+}
+
+message OverviewYearlySalesResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated OverviewYearlyData data = 2; //年销量資料
+}
+
+message OverviewYearlyData{
+    repeated OverviewParentRowData rowData = 1;   //行資料
+    repeated OverviewYearlyGraphData graphData = 2;
+}
+
+message OverviewParentRowData{
+    string rowName = 1;     //日期
+    string data1 = 2;       //數據1 對應：下單數/下單GMV
+    string data2 = 3;       //數據2 對應：支付數/支付GMV
+    string data3 = 4;       //數據3 對應：對應：有效訂單數/收入
+    repeated OverviewChildRowData childRowData = 5; //
+}
+
+message OverviewChildRowData{
+    string rowName = 1;     //行名
+    string data1 = 2;       //數據1 對應：下單數/下單GMV
+    string data2 = 3;       //數據2 對應：支付數/支付GMV
+    string data3 = 4;       //數據3 對應：對應：有效訂單數/收入
+}
+
+message OverviewYearlyGraphData{
+    repeated string date = 1;                   //日期
+    string type = 2;                            //類型
+    repeated OverviewYearlyPointData point = 3; //點數據
+}
+
+message OverviewYearlyPointData{
+    int64 value = 1;
+    string change = 2;
+}
+
+//平台累計歷史數據
+message OverviewPlatformWideDataReq{
+    string countryCode = 1; //國家編碼
+}
+
+message OverviewPlatformWideDataResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated OverviewPlatformWideData data = 2;
+    repeated OverviewMemberNumber num = 3;
+    string totalUserNum = 4;
+}
+
+message OverviewPlatformWideData{
+    string type = 1;    //類型 0:总收入, 1:总支付订单数, 2:总注册用户数, 3:总支付用户数, 4:普货总支付用户数, 5:总会员数
+    string volume = 2;  //數量
+    string ratio = 3;   //佔總 總支付用戶數，普货总支付用户数，总会员数專用
+}
+
+message OverviewMemberNumber{
+    string type = 1;    //類型 SH, PS, AM, AT
+    int64 number = 2;   //數量
+}
+
+message GetBackendLevelOneCategoryReq{
+
+}
+
+message GetBackendLevelOneCategoryResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    string categoryInfo = 2;
+}
+
+message OrdinaryProductAnalysisReq{
+    string date = 1;        //開始時間
+    string countryCode = 2; //國家編碼
+    string type = 3;        //普貨類型 1:整体，2:會場，3:会场，4:品牌馆，5:日常活动，6:精选商品，7:新品,
+                            //         8:机器上货, 9:爆款好物, 10:现货专区, 11:直播商品, 12:限时抢购, 13:其它
+}
+
+message OrdinaryProductAnalysisResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated ProductAnalysisBoardData boardData = 2;    //看版數據
+    repeated ProductAnalysisRankingData soldNumRanking = 3; //售出件數排名
+    repeated ProductAnalysisRankingData gmvRanking = 4; //gmv排名
+}
+
+message ProductAnalysisBoardData{
+    string type = 1;    //普貨類型
+    string gmv = 2;     //GMV
+    double ratio = 3;   //佔總百分比
+    string change = 4;  //同比增長
+}
+
+message ProductAnalysisRankingData{
+    string productId = 1;   //商品Id
+    string productName = 2; //商品名稱
+    string cateOneName = 3; //一級類目名稱
+    string soldNum = 4;     //售出件數
+    string gmv = 5;         //支付GMV
+}
+
+message ProductTrendAnalysisReq{
+    string startTime = 1;   //開始時間
+    string endTime = 2;     //結束時間
+    string countryCode = 3; //國家編碼
+    string graphType = 4;   //圖表類型 1:普貨支付GMV, 2:普貨售出件數, 3:件均價, 4:商品動銷, 5:成交品類分布
+    string cateOneId = 5;   //一級類目Id
+}
+
+message ProductTrendAnalysisResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated ProductAnalysisGraph graph = 2;   //折線圖數據
+    repeated ProductAnalysisPieChart chart = 3;     //餅圖數據
+}
+
+message ProductAnalysisGraph{
+    string type = 1;    //類型
+    repeated ProductAnalysisPoint point = 2; //點資料
+    bool visible = 3;   //是否顯示
+}
+
+message ProductAnalysisPoint{
+    string tag = 1;     //標簽
+    double volume = 2;   //數量
+    string ratio = 3;   //佔整體比
+    string change = 4;  //環比
+}
+
+message ProductAnalysisPieChart{
+    string type = 1; //類型
+    repeated ProductAnalysisPieSlice slice = 2; //片資料
+}
+
+message ProductAnalysisPieSlice{
+    string tag = 1;     //標簽
+    int64 volume = 2;   // 數量
+}
+
+message ProductSalesDetailReq{
+    string startTime = 1;   //開始時間
+    string endTime = 2;     //結束時間
+    string countryCode = 3; //國家編碼
+    string cateId = 4;      //品類Id
+    string cateLevel = 5;   //品類等級
+    string activityType = 6;    //活動類型
+    common.base.Pagination page = 7;    //分頁信息
+    string olderField = 8;  //排序字段
+    string order = 9;       //順序 acs:正序，desc:倒序
+}
+
+message ProductSalesDetailResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated ProductAnalysisItemDetail detail = 2;
+    string total = 3;               //總數
+    repeated string types = 4;      //活動類型List
+}
+
+message ProductAnalysisItemDetail{
+    string activityType = 1;        //活動類型
+    string activityName = 2;        //活動名稱
+    string productId = 3;           //商品Id
+    string productName = 4;         //商品名稱
+    string productPic = 5;          //商品圖片
+    string cateOneName = 6;         //一級類目名字
+    string cateTwoName = 7;         //二級類目名字
+    string cateThreeName = 8;       //三級類目名字
+    string supplierName = 9;        //供應商名字
+    string soldNum = 10;            //售出件數
+    string pnoAmt = 11;             //商品GMV
+    string discount = 12;           //商品優惠金額
+    string freight = 13;            //商品運費
+    string freightDiscount = 14;    //商品運費優惠
+    string paidGmv = 15;            //支付GMV
+    string productView = 16;        //曝光量
+    string productClick = 17;       //點擊量
+    string clickPerView = 18;       //曝光點擊率
+    string orderNum = 19;           //下單數
+    string orderPerClick = 20;      //點擊購買率
+    string orderPaidNum = 21;       //下單已支付數
+    string payPerOrder = 22;        //支付轉化率
+    string refundQty = 23;          //退款件數
+    string refundRate = 24;         //退款率
+    string refundGmv = 25;          //退款GMV
+    string income = 26;             //收入
+}
+
+message GetAllProductSalesDetailToExcelReq{
+    string startTime = 1;   //開始時間
+    string endTime = 2;     //結束時間
+    string countryCode = 3; //國家編碼
+    string cateId = 4;      //品類Id
+    string cateLevel = 5;   //品類等級
+    string activityType = 6;    //活動類型
+    string olderField = 7;  //排序字段
+    string order = 8;       //順序 acs:正序，desc:倒序
+}
+
+message GetAllProductSalesDetailToExcelResp {
+    common.base.ErrorMessage ret = 1;
+    string excelUrl = 2; // 文件地址
+}
+
+message PriceBrandAnalysisReq {
+    string date = 1;
+    string countryCode = 2;
+    string cateOneId = 3;
+}
+
+message PriceBrandAnalysisResp {
+    common.base.ErrorMessage ret = 1;
+    repeated ProductAnalysisPriceRangeInfo info = 2;
+}
+
+message ProductAnalysisPriceRangeInfo {
+    string cateOneName = 1;
+    string priceRange = 2;
+    string currency = 3;
+    string stockNum = 4;
+    string soldProductNum = 5;
+    string rollingSalesRate = 6;
+    string salesQty = 7;
+    string paidGmv = 8;
+    string soldProductCost = 9;
+    string netProfitMargin = 10;
+}
+
+message ProductAnalysisBroadcastReq {}
+
+message ProductAnalysisBroadcastResp{
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+}
+
+//ERP時效監控
+
+//共用
+message ErpTimelinessBoardData{
+    int32 type = 1;     //類型 1:SO整體時效，2:SO达标-东马，3:SO达标-西马，4:SO达标-泰国
+    //      5:SO出库达标 6:SO跨境达标 7:SO宅配达标
+    //      8:PO整体时效 9:PO达标-东莞仓
+    //      10:PO采购下单达标 11:PO发货达标 12:PO采购到仓达标
+    string data = 2;    //數據
+    string change = 3;  //同比增長
+}
+
+message ErpTimelinessGraph{
+    string type = 1;                            //線標簽
+    bool isVisible = 2;                         //是否顯示
+    repeated ErpTimelinessPointData points = 3; //數據點資料
+}
+
+message ErpTimelinessPointData{
+    string tag = 1;         //標簽
+    double volume = 2;      //數據
+    string onTargetNum = 3; //達標數量
+    string paidOrderNum = 4;//支付訂單數
+}
+
+//SO关键指标
+message ErpSoCriticalIndicatorReq{
+    string startTime = 1;   //開始時間
+    string endTime = 2;     //結束時間
+    int32 orderType = 3;    //訂單類型  1.商家直邮，2.JIT，3.预售，4.备货：就是非1，2，3的
+    int32 standardType = 4; //時效類型  1:標準時效，2:非標準時效
+    string countryName = 5; //國家名稱 全部(null)/东马/西马/府内/府外/新加玻
+    string areaName = 6;    //地區名稱 全部(null)
+}
+
+message ErpSoCriticalIndicatorResp{
+    common.base.ErrorMessage ret = 1;
+    repeated ErpTimelinessBoardData board = 2;  //看板資料
+    repeated ErpTimelinessGraph graph = 3;      //折線圖資料
+    int32 totalOrderNum = 4;                    //總訂單數
+    repeated string areaNames = 5;              //地區枚舉
+}
+
+//PO关键指标
+message ErpPoCriticalIndicatorReq{
+    string startTime = 1;       //開始時間
+    string endTime = 2;         //結束時間
+    int32 orderType = 3;        //訂單類型  1.商家直邮，2.JIT，3.预售，4.备货：就是非1，2，3的
+    int32 standardType = 4;     //時效類型  1:標準時效，2:非標準時效
+    string warehouseName = 5;   //倉庫名稱  全部(null)
+}
+
+message ErpPoCriticalIndicatorResp{
+    common.base.ErrorMessage ret = 1;
+    repeated ErpTimelinessBoardData board = 2;  //看板資料
+    repeated ErpTimelinessGraph graph = 3;      //折線圖資料
+    int32 totalOrderNum = 4;                    //總訂單數
+}
+
+//SO异常数据图表
+message ErpSoAbnormalDataGraphReq{
+    string startTime = 1;               //開始時間
+    string endTime = 2;                 //結束時間
+    int32 orderType = 3;                //訂單類型  1.商家直邮，2.JIT，3.预售，4.备货：就是非1，2，3的
+    string countryName = 4;             //國家名稱 全部(null)/东马/西马/府内/府外/新加玻
+    string areaName = 5;                //地區名稱 全部(null)
+    common.base.Pagination page = 6;    //分頁信息
+}
+
+message ErpSoAbnormalDataGraphResp{
+    common.base.ErrorMessage ret = 1;
+    repeated ErpTimelinessGraph graph = 2;      //折線圖資料
+    repeated ErpTimelinessSoErrorList list = 3; //SO異常列表資料
+    int32 total = 4;    //分頁總數量
+}
+
+//SO异常数据图表導出
+message ErpSoAbnormalDetailToExcelReq{
+    string startTime = 1;               //開始時間
+    string endTime = 2;                 //結束時間
+    int32 orderType = 3;                //訂單類型  1.商家直邮，2.JIT，3.预售，4.备货：就是非1，2，3的
+    string countryName = 4;             //國家名稱 全部(null)/东马/西马/府内/府外/新加玻
+    string areaName = 5;                //地區名稱 全部(null)
+}
+
+message ErpSoAbnormalDetailToExcelResp{
+    common.base.ErrorMessage ret = 1;
+    string excelUrl = 2; // 文件地址
+}
+
+message ErpTimelinessSoErrorList{
+    string date = 1;                //日期
+    string outErrorNum = 2;         //出庫異常單量
+    string outErrorGmv = 3;         //出庫異常Gmv
+    string overseaErrorNum = 4;     //跨境異常單量
+    string overseaErrorGmv = 5;     //跨境異常Gmv
+    string deliveryErrorNum = 6;    //宅配異常單量
+    string deliveryErrorGmv = 7;    //宅配異常Gmv
+}
+
+//PO异常数据图表
+message ErpPoAbnormalDataGraphReq{
+    string startTime = 1;               //開始時間
+    string endTime = 2;                 //結束時間
+    int32 orderType = 3;                //訂單類型  1.商家直邮，2.JIT，3.预售，4.备货：就是非1，2，3的
+    string warehouseName = 4;           //倉庫名稱  全部(null)
+    string cateOneId = 5;               //一級類目Id 全部(null)
+    common.base.Pagination page = 6;    //分頁信息
+}
+
+message ErpPoAbnormalDataGraphResp{
+    common.base.ErrorMessage ret = 1;
+    repeated ErpTimelinessGraph graph = 2;      //折線圖資料
+    repeated ErpTimelinessPoErrorList list = 3; //PO異常列表資料
+    int32 total = 4;    //分頁總數量
+}
+
+message ErpTimelinessPoErrorList{
+    string date = 1;                //日期
+    string purchaseOrderNo = 2;     //PO采購單號
+    string errorType = 3;           //異常類型
+}
+
+//PO异常数据图表導出
+message ErpPoAbnormalDetailToExcelReq{
+    string startTime = 1;               //開始時間
+    string endTime = 2;                 //結束時間
+    int32 orderType = 3;                //訂單類型  1.商家直邮，2.JIT，3.预售，4.备货：就是非1，2，3的
+    string warehouseName = 4;           //倉庫名稱  全部(null)
+    string cateOneId = 5;               //一級類目Id 全部(null)
+}
+
+message ErpPoAbnormalDetailToExcelResp{
+    common.base.ErrorMessage ret = 1;
+    string excelUrl = 2; // 文件地址
+}
+
+//宅配时效监控
+message ErpDeliveryTimelinessReq{
+    string startTime = 1;               //開始時間
+    string endTime = 2;                 //結束時間
+    int32 orderType = 3;                //訂單類型  1.商家直邮，2.JIT，3.预售，4.备货：就是非1，2，3的
+    string countryName = 4;             //國家名稱 全部(null)/东马/西马/府内/府外/新加玻
+    string areaName = 5;                //地區名稱 全部(null)
+    string logiCompany = 6;             //宅配商名字 全部(null)
+    common.base.Pagination page = 7;    //分頁信息
+}
+
+message ErpDeliveryTimelinessResp{
+    common.base.ErrorMessage ret = 1;
+    repeated ErpTimelinessGraph graph = 2;      //折線圖資料
+    repeated ErpTimelinessDeliveryErrorList list = 3; //宅配異常列表資料
+    int32 total = 4;                //分頁總數量
+    repeated string logiNames = 5;  //宅配商名字
+}
+
+message ErpTimelinessDeliveryErrorList{
+    string date = 1;                //日期
+    string deliveryStartTime = 2;   //開始時間
+    string deliveryEndTime = 3;     //結束時間
+    string timeTaken = 4;           //時效
+    string outNo = 5;               //出庫單號
+}
+
+//宅配異常訂單導出
+message ErpDeliveryAbnormalOrderToExcelReq{
+    string startTime = 1;               //開始時間
+    string endTime = 2;                 //結束時間
+    int32 orderType = 3;                //訂單類型  1.商家直邮，2.JIT，3.预售，4.备货：就是非1，2，3的
+    string countryName = 4;             //國家名稱 全部(null)/东马/西马/府内/府外/新加玻
+    string areaName = 5;                //地區名稱 全部(null)
+    string logiCompany = 6;             //宅配商名字 全部(null)
+}
+
+message ErpDeliveryAbnormalOrderToExcelResp{
+    common.base.ErrorMessage ret = 1;
+    string excelUrl = 2; // 文件地址
+}
+
+service CoreIndicatorBossService {
+
+    //核心指標列表
+    rpc CoreIndicatorDataList(CoreIndicatorDataListReq) returns(CoreIndicatorDataListResp);
+
+    //全平台GMV饼图
+    rpc CoreIndicatorPlatformGMVPieChart(CoreIndicatorPlatformGMVPieChartReq) returns (CoreIndicatorPlatformGMVPieChartResp);
+
+    //普货GMV饼图
+    rpc CoreIndicatorNormalGMVPieChart(CoreIndicatorNormalGMVPieChartReq) returns (CoreIndicatorNormalGMVPieChartResp);
+
+    //PS增长地图
+    rpc CoreIndicatorPSIncreaseMap(CoreIndicatorPSIncreaseMapReq) returns (CoreIndicatorPSIncreaseMapResp);
+}
+
+service MemberTeamBossService {
+
+    //会员团队 - 新增会员数/累计会员数
+    rpc MemberIncreaseNumber (MemberIncreaseNumberReq) returns (MemberIncreaseNumberResp);
+
+    //会员团队 - 顶部看版最后6个数据
+    //0度PS激活数/累计数
+    //邀约PS成功用户数/累计数
+    //开首单用户数/累计数
+    rpc MemberMiscellaneousData(MemberMiscellaneousDataReq) returns (MemberMiscellaneousDataResp);
+
+    //会员团队 - 数据折线图
+    //各级用户增长数
+    //用户收入
+    //用户消费
+    rpc MemberBrokenLineGraph(MemberBrokenLineGraphReq) returns (MemberBrokenLineGraphResp);
+
+    //会员团队 - 用戶新增PS數Top50列表
+    rpc MemberPsIncreaseRankingList(MemberPsIncreaseRankingListReq) returns (MemberPsIncreaseRankingListResp);
+
+    //会员团队 - 用戶新增PS數環比上漲Top50列表
+    rpc MemberPsIncreaseRiseRankingList(MemberPsIncreaseRiseRankingListReq) returns (MemberPsIncreaseRiseRankingListResp);
+
+    //会员团队 - 用戶新增PS數環比下降Top50列表
+    rpc MemberPsIncreaseDropRankingList(MemberPsIncreaseDropRankingListReq) returns (MemberPsIncreaseDropRankingListResp);
+}
+
+service OrderSalesBossService {
+
+    //订单页面 - 顶部简单数据显示
+    rpc SimpleDataDisplay (SimpleDataDisplayReq) returns (SimpleDataDisplayResp);
+
+    //订单页面 - 数据折线图
+    rpc OrderBrokenLineGraph (OrderBrokenLineGraphReq) returns (OrderBrokenLineGraphResp);
+
+    //订单页面 - 订单数量商品占比
+    rpc OrderProductTypeProportion (OrderProductTypeProportionReq) returns (OrderProductTypeProportionResp);
+
+    //订单页面 - 购买频次分布
+    rpc OrderFrequency (OrderFrequencyReq) returns (OrderFrequencyResp);
+
+    //订单页面 - 下单金额分布
+    rpc OrderAmountDistribution (OrderAmountDistributionReq) returns (OrderAmountDistributionResp);
+
+    // 商品GMV占比
+    rpc ProductGMVPercentGraph (ProductGMVPercentGraphReq) returns (ProductGMVPercentGraphResp);
+
+    // 站点GMV占比
+    rpc SiteGMVPercentGraph (SiteGMVPercentGraphReq) returns (SiteGMVPercentGraphResp);
+
+    //爆款商品统计
+    rpc OrderActivityProductData (OrderActivityProductDataReq) returns (OrderActivityProductDataResp);
+}
+
+// 商品品类
+service StatisticsCategoryProductBossService {
+    // 页面顶部四块品类数据
+    rpc StatisticsTodayCategory (StatisticsTodayCategoryReq) returns (StatisticsTodayCategoryResp);
+
+    // 各品类销售详情
+    rpc ShowCategorySaleDetail (ShowCategorySaleDetailReq) returns (ShowCategorySaleDetailResp);
+
+    // 动销商品用户数据
+    rpc GetMovableUserDetail (GetMovableUserDetailReq) returns (GetMovableUserDetailResp);
+
+    // 取消订单品类占比
+    rpc GetCancelCategoryRate (GetCancelCategoryRateReq) returns (GetCancelCategoryRateResp);
+
+    // 退货品类占比
+    rpc GetReturnCategoryRate (GetReturnCategoryRateReq) returns (GetReturnCategoryRateResp);
+
+    // 动销商品数据
+    rpc GetMovableCategoryDetail (GetMovableCategoryDetailReq) returns (GetMovableCategoryDetailResp);
+
+    // 各品类访购情况
+    rpc GetCateVisitDetail (GetCateVisitDetailReq) returns (GetCateVisitDetailResp);
+
+    // 各品类复购情况
+    rpc GetRepeatedBuyCateDetail (GetRepeatedBuyCateDetailReq) returns (GetRepeatedBuyCateDetailResp);
+
+    // 商品品类四个接口导出数据 各品类销售详情 动销商品数据 动销商品用户数据 各品类访购情况
+    rpc GetAllCategoryDetailToExcel (GetAllCategoryDetailToExcelReq) returns (GetAllCategoryDetailToExcelResp);
+}
+
+// 商品流量漏斗
+service DataCenterFunnelService {
+
+    // 前端接口，平台商品漏斗
+    rpc GetProductFunnelViewData (GetProductFunnelViewDataReq) returns (GetProductFunnelViewDataResp);
+    // 转化率趋势
+    rpc GetProductFunnelViewTradeData (GetProductFunnelViewTradeDataReq) returns (GetProductFunnelViewTradeDataResp);
+    // 单品详细漏斗
+    rpc GetProductViewDataDetail (GetProductViewDataDetailReq) returns (GetProductViewDataDetailResp);
+}
+
+// 所有数据中心枚举返回
+service DataCenterTypeService {
+    rpc GetDataCenterTypeData (GetDataCenterTypeDataReq) returns (GetDataCenterTypeDataResp);
+}
+
+// 数据指标管理
+service DataHouseTargetService {
+    // 新增指标
+    rpc AddTargetData (AddTargetDataReq) returns (AddTargetDataResp);
+
+    // 分页模糊查询
+    rpc GetTargetPageByParam (GetTargetPageByParamReq) returns (GetTargetPageByParamResp);
+
+    // 编辑指标
+    rpc EditTargetData (EditTargetDataReq) returns (EditTargetDataResp);
+
+    // 删除指标
+    rpc DeleteTargetData (DeleteTargetDataReq) returns (DeleteTargetDataResp);
+
+    // 批量导入
+    rpc AddTargetDataByExcel (AddTargetDataByExcelReq) returns (AddTargetDataByExcelResp);
+}
+
+// 拼团看板数据
+service DataHouseGroupDataService {
+    // 拼团关键数据
+    rpc GetGroupImportantData (GetGroupImportantDataReq) returns (GetGroupImportantDataResp);
+
+    // 拼团商品数据
+    rpc GetGroupProductData (GetGroupProductDataReq) returns (GetGroupProductDataResp);
+
+    //拼團商品數據2.0
+    rpc GetGroupBuyProductInfo (GetGroupBuyProductInfoReq) returns (GetGroupBuyProductInfoResp);
+}
+
+//客服看板
+service CustomerServiceDataService {
+
+    //实时客服在线状态
+    rpc RealTimeCsStaffOnLineInfo(RealTimeCsStaffOnLineInfoReq) returns (RealTimeCsStaffOnLineInfoResp);
+
+    //用户实时在线数据
+    rpc UserRealTimeOnLineInfo(UserRealTimeOnLineInfoReq) returns (UserRealTimeOnLineInfoResp);
+
+    //客服个人数据
+    rpc CsStaffPersonalData(CsStaffPersonalDataReq) returns (CsStaffPersonalDataResp);
+
+    //获取客服列表数据
+    rpc CsStaffList(CsStaffListReq) returns (CsStaffListResp);
+
+    //每日咨询量趋势
+    rpc DayConsultationVolume(DayConsultationVolumeReq) returns (DayConsultationVolumeResp);
+
+    // 用户在线报表
+    rpc CustomerServiceUserOnLineData(CustomerServiceUserOnLineDataReq) returns (CustomerServiceUserOnLineDataResp);
+
+    // 客服数据报表
+    rpc CustomerServiceEachDetailData(CustomerServiceEachDetailDataReq) returns (CustomerServiceEachDetailDataResp);
+
+    // 客户聊天详情报表
+    rpc CustomerServiceChatDetailData(CustomerServiceChatDetailDataReq) returns (CustomerServiceChatDetailDataResp);
+
+    // 未接起聊天详情报表
+    rpc CustomerServiceUnPickDetailData(CustomerServiceUnPickDetailDataReq) returns (CustomerServiceUnPickDetailDataResp);
+
+    // 导出excel数据
+    rpc CustomerServiceAllDataDetailToExcel(CustomerServiceAllDataDetailToExcelReq) returns (CustomerServiceAllDataDetailToExcelResp);
+
+    // 客户聊天详情报表
+    rpc CustomerChatDetailData(CustomerChatDetailDataReq) returns (CustomerChatDetailDataResp);
+
+}
+
+//用戶獲客
+service UserAcquisitionBossService{
+
+    //頂部簡單數據顯示
+    rpc UserActivityDataDisplay (UserActivityDataDisplayReq) returns (UserActivityDataDisplayResp);
+
+    //折線圖
+    rpc UaBrokenLineGraph (UaBrokenLineGraphReq) returns (UaBrokenLineGraphResp);
+
+    //獲客渠道圓型圖
+    rpc UaSourceProportionPieChart (UaSourceProportionPieChartReq) returns (UaSourceProportionPieChartResp);
+
+    //獲客終端圓型圖
+    rpc UaSiteProportionPieChart (UaSiteProportionPieChartReq) returns (UaSiteProportionPieChartResp);
+}
+
+//埋點事件管埋
+service BuryingPointSearchService {
+
+    //获取埋点统计信息
+    rpc GetBuryingPointInfo (GetBuryingPointInfoReq) returns (GetBuryingPointInfoResp);
+
+    //获取埋点字段统计信息
+    rpc GetBuryingPointParamInfo (GetBuryingPointParamInfoReq) returns (GetBuryingPointParamInfoResp);
+
+    //获取埋点字段值统计信息
+    rpc GetBuryingPointParamValueInfo (GetBuryingPointParamValueInfoReq) returns (GetBuryingPointParamValueInfoResp);
+}
+
+// 用户分组，分群
+service PushTaskUserGroupService {
+    // 新增特定用户组
+    rpc AddUserGroupBySpe (AddUserGroupBySpeRep) returns (AddUserGroupBySpeResp);
+    // 新增分群用户组
+    rpc AddUserGroupByGroup (AddUserGroupByGroupReq) returns (AddUserGroupByGroupResp);
+    // 查询用户组
+    rpc GetUserGroupInfo (GetUserGroupInfoReq) returns (GetUserGroupInfoResp);
+    //查詢用戶組詳情
+    rpc GetUserGroupDetailInfo (GetUserGroupDetailInfoReq) returns (GetUserGroupDetailInfoResp);
+    // 编辑用户组
+    rpc EditUserGroupInfo (EditUserGroupInfoReq) returns (EditUserGroupInfoResp);
+    // 删除用户组
+    rpc DeleteUserGroupInfo (DeleteUserGroupInfoReq) returns (DeleteUserGroupInfoResp);
+    // 用户属性查询
+    rpc GetUserPropertyList (GetUserPropertyListReq) returns (GetUserPropertyListResp);
+    // 分组分群userId导出excel
+    rpc GetUserGroupIdToExcel (GetUserGroupIdToExcelReq) returns (GetUserGroupIdToExcelResp);
+    // 分群统计共多少用户
+    rpc GetUserGroupIdTotal (GetUserGroupIdTotalReq) returns (GetUserGroupIdTotalResp);
+
+    // 編輯頁面中使用ES導出用戶Id excel
+    rpc GetUserIdsExcelOnEditPage (GetUserIdsExcelOnEditPageReq) returns (GetUserIdsExcelOnEditPageResp);
+    // 分群统计共多少用户
+    rpc GetUserIdsCountOnEditPage (GetUserIdsCountOnEditPageReq) returns (GetUserIdsCountOnEditPageResp);
+}
+
+//數據大屏
+service BigScreenStatisticsService{
+    //GMV看板，今日交易數據
+    rpc BigScreenGmvStats (BigScreenGmvStatsReq) returns (BigScreenGmvStatsResp);
+
+    //用戶活躍數據
+    rpc BigScreenDauStats (BigScreenDauStatsReq) returns (BigScreenDauStatsResp);
+
+    //轉化率漏斗
+    rpc BigScreenConversionFunnel (BigScreenConversionFunnelReq) returns (BigScreenConversionFunnelResp);
+
+    //拉新產品數據
+    rpc BigScreenAcquisitionStats (BigScreenAcquisitionStatsReq) returns (BigScreenAcquisitionStatsResp);
+
+    //首頁模塊GMV
+    rpc BigScreenModuleStats (BigScreenModuleStatsReq) returns (BigScreenModuleStatsResp);
+
+    //Top5商品當日成交件數
+    rpc BigScreenProductSale (BigScreenProductSaleReq) returns (BigScreenProductSaleResp);
+
+    //今日注冊及PS數
+    rpc BigScreenMemberStats (BigScreenMemberStatsReq) returns (BigScreenMemberStatsResp);
+
+}
+
+
+//數據慨覽2.0
+service DataOverviewPageService{
+    //今日數據 - 數據看板
+    rpc OverviewTodayWatchBoard (OverviewTodayWatchBoardReq) returns (OverviewTodayWatchBoardResp);
+
+    //今日數據 - 數據列表
+    rpc OverviewTodayTable (OverviewTodayTableReq) returns (OverviewTodayTableResp);
+
+    //小時增長
+    rpc OverviewHourlyIncrease (OverviewHourlyIncreaseReq) returns (OverviewHourlyIncreaseResp);
+
+    //普货商品Top30榜
+    rpc OverviewOrdinaryGoodsRank (OverviewOrdinaryGoodsReq) returns (OverviewOrdinaryGoodsResp);
+
+    //增長趨勢
+    rpc OverviewTrendGraph (OverviewTrendGraphReq) returns (OverviewTrendGraphResp);
+
+    //年銷量統計
+    rpc OverviewYearlySales (OverviewYearlySalesReq) returns (OverviewYearlySalesResp);
+
+    //平台累計歷史數據
+    rpc OverviewPlatformWideData (OverviewPlatformWideDataReq) returns (OverviewPlatformWideDataResp);
+}
+
+//商品分析2.0
+service ProductAnalysisService{
+    //後台一級類目查詢
+    rpc GetBackendLevelOneCategory(GetBackendLevelOneCategoryReq) returns (GetBackendLevelOneCategoryResp);
+
+    //普貨分析
+    rpc OrdinaryProductAnalysis(OrdinaryProductAnalysisReq) returns (OrdinaryProductAnalysisResp);
+
+    //商品趨勢解析
+    rpc ProductTrendAnalysis(ProductTrendAnalysisReq) returns (ProductTrendAnalysisResp);
+
+    //商品銷售詳情
+    rpc ProductSalesDetail(ProductSalesDetailReq) returns (ProductSalesDetailResp);
+
+    //供銷價格帶分析
+    rpc PriceBrandAnalysis(PriceBrandAnalysisReq) returns (PriceBrandAnalysisResp);
+
+    //消息條接口
+    rpc ProductAnalysisBroadcast(ProductAnalysisBroadcastReq) returns (ProductAnalysisBroadcastResp);
+}
+
+//ERP時效監控
+service ErpTimelinessService {
+    //SO关键指标
+    rpc ErpSoCriticalIndicator (ErpSoCriticalIndicatorReq) returns (ErpSoCriticalIndicatorResp);
+
+    //PO关键指标
+    rpc ErpPoCriticalIndicator (ErpPoCriticalIndicatorReq) returns (ErpPoCriticalIndicatorResp);
+
+    //SO异常数据图表
+    rpc ErpSoAbnormalDataGraph (ErpSoAbnormalDataGraphReq) returns (ErpSoAbnormalDataGraphResp);
+
+    //PO异常数据图表
+    rpc ErpPoAbnormalDataGraph (ErpPoAbnormalDataGraphReq) returns (ErpPoAbnormalDataGraphResp);
+
+    //宅配时效监控
+    rpc ErpDeliveryTimeliness (ErpDeliveryTimelinessReq) returns (ErpDeliveryTimelinessResp);
+}

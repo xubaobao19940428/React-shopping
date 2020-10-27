@@ -1,0 +1,38 @@
+.query-form {
+    :global {
+        .ant-form-item {
+            padding: 0 5px;
+        }
+        .ant-form-item-control-input {
+            min-width: 200px;
+        }
+
+        .ant-form-item-label {
+            label {
+                color: #606266;
+            }
+        }
+        .ant-form-item-explain {
+            font-size: 12px;
+        }
+    }
+
+    button {
+        margin: 0 5px;
+    }
+
+    .collapse {
+        display: inline-block;
+        margin-left: 3px;
+        transition: .3s all;
+        transform: rotate(0);
+
+        &.open {
+            transform: rotate(180deg);
+        }
+    }
+
+    .form-btn {
+        margin-bottom: 24px;
+    }
+}

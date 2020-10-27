@@ -1,0 +1,106 @@
+//DESC BACK littlec-datacenter
+syntax = "proto3";
+package mdc.performance;
+
+import "common/errcode.proto";
+import "common/base.proto";
+import "common/enum.proto";
+
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.mdc.performance";
+option java_outer_classname = "performance";
+
+
+message OutOrderStatReq {
+    string warehouse_no = 1; // 仓库编号
+    common.enum.ErpEnum.YesNo refresh = 2; // 是否刷新
+}
+message OutOrderStatResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated OutOrderStat stat = 2;
+    message OutOrderStat {
+        string title = 1; // 标题
+        int64 begin_time = 2; //开始时间，跳转列表参数
+        int64 end_time = 3; // 截止时间，跳转列表参数
+
+        int32 sync_fail = 4; // 同步失败的
+        int32 un_out = 5; // 未出库的
+    }
+}
+
+
+message IncomeOrderStatReq {
+    int64 supplier_id = 1; // 供应商ID
+    string warehouse_no = 2; // 仓库编号
+    common.enum.ErpEnum.YesNo refresh = 3; // 是否刷新
+}
+message IncomeOrderStatResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated IncomeOrderStat stat = 2;
+    message IncomeOrderStat {
+        string title = 1; // 标题
+        int64 begin_time = 2; //开始时间，跳转列表参数
+        int64 end_time = 3; // 截止时间，跳转列表参数
+
+        int32 un_sign = 4; // 未签收
+        int32 un_income = 5; // 未入库
+        int32 abnormal = 6; // 入库异常
+    }
+}
+
+message SystemPurchaseOrderStatReq {
+    string warehouse_no = 1; // 仓库编号
+    common.enum.ErpEnum.YesNo refresh = 2; // 是否刷新
+}
+message SystemPurchaseOrderStatResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated SystemPurchaseOrderStat stat = 2;
+    message SystemPurchaseOrderStat {
+        string title = 1; // 标题
+        int64 begin_time = 2; //开始时间，跳转列表参数
+        int64 end_time = 3; // 截止时间，跳转列表参数
+
+        string purchase_status = 4; // 采购单状态
+        int32 purchase = 5; // 采购单数量
+        int32 sku = 6; // sku种类
+        int32 order = 7; // 订单数量
+    }
+}
+
+
+message ArtificialPurchaseOrderStatReq {
+    string warehouse_no = 1; // 仓库编号
+    common.enum.PurchaseOrderEnum.DeliveWay delive_way = 2; // 发货方式
+    common.enum.ErpEnum.YesNo refresh = 3; // 是否刷新
+}
+message ArtificialPurchaseOrderStatResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated ArtificialPurchaseOrderStat stat = 2;
+    message ArtificialPurchaseOrderStat {
+        string title = 1; // 标题
+        int64 begin_time = 2; //开始时间，跳转列表参数
+        int64 end_time = 3; // 截止时间，跳转列表参数
+
+        string purchase_status = 4; // 采购单状态
+        int32 purchase = 5; // 采购单数量
+        int32 sku = 6; // sku种类
+    }
+}
+
+
+// 履约监控统计
+service PerformanceBossService{
+
+    // 出库单跟踪统计
+    rpc OutOrderStat(OutOrderStatReq) returns (OutOrderStatResp);
+
+    // 入库单跟踪统计
+    rpc IncomeOrderStat(IncomeOrderStatReq) returns (IncomeOrderStatResp);
+
+    // 采购单跟踪统计 - 系统单
+    rpc SystemPurchaseOrderStat(SystemPurchaseOrderStatReq) returns (SystemPurchaseOrderStatResp);
+
+    // 采购单跟踪统计 - 人工单
+    rpc ArtificialPurchaseOrderStat(ArtificialPurchaseOrderStatReq) returns (ArtificialPurchaseOrderStatResp);
+}

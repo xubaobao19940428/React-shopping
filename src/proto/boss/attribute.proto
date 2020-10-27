@@ -1,0 +1,313 @@
+syntax = "proto3";
+package boss.attribute;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.attribute";
+option java_outer_classname = "Attribute";
+
+//功能放在 product 服务中, 需请求product 服务
+
+//属性管理
+message ProductAttrValue {
+    string attr_id = 1; // 属性名id 修改时填写
+    string value_id = 2; //属性值id 修改时填写
+    repeated common.base.NameAndCode value_name = 3; //属性值的语言和简码
+    common.enum.AttributeEnum.ShowStatus status = 5; //隐藏或显示
+    common.enum.AttributeEnum.ValueType value_type = 6; //1 属于属性模板中的属性值, 2 属于自定义属性值
+    bool can_be_modify = 7; //属性值是否可以编辑
+    string attr_name = 8;
+}
+
+
+message ProductAttrAddReq {
+    repeated common.base.NameAndCode attr_name = 1; //名称和语言简码
+    common.enum.AttributeEnum.Customize customize = 2; //是否允许自定义 1 允许, 0 不允许
+    repeated ProductAttrValue attr_value = 3; //属性值列表,
+    //string operator_id = 4; //执行修改用户信息
+}
+
+message ProductAttrAddResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message ProductAttr {
+    string attr_id = 1; //属性id 修改时填写
+    string attr_name = 2; // 属性名
+    repeated string attr_value_name = 3; //属性值 组合
+    common.enum.AttributeEnum.ShowStatus status = 4; // 隐藏 或显示
+    string operator_id = 5; //执行修改用户名
+    string operation_name = 6; //执行者昵称
+    string update_time = 7; //页面修改时间戳
+    bool can_be_delete = 8; //是否可以删除
+    repeated common.base.NameAndCode attr_name_code = 9; //属性的语言和简码
+}
+
+message ProductAttrGetReq {
+    string attr_id_key = 1; //属性id 精确匹配
+//    string value_id_key = 2; //属性值id 精确匹配
+    string attr_name_key = 3; //属性名搜索 模糊搜索
+    string attr_name_language_code = 4; //语言简码
+//    string value_name_key = 5; //属性值搜索 模糊搜索
+//    string value_name_language_code = 6; //语言简码
+    string category_name_key = 7; //类目名 模糊匹配
+    common.base.Pagination page = 8; //分页信息
+    string empty_language_code = 9; //查找空名语言码
+}
+
+message ProductAttrGetResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated ProductAttr product_attr = 2; //管理属性列表
+    uint32 total = 3; //总数
+}
+
+message ProductAttrGetByIdReq {
+    string attr_id = 1; //属性id
+    string product_id = 2; // 当存在商品id时, 返回最后拼上自定义属性, 如果有的话
+    common.enum.AttributeEnum.AttrType attr_type = 3; //1 参数属性, 2 规格属性
+    bool filter_hidden_attr_value = 4; //过滤隐藏/被删除属性值
+    string draft_id = 5; //草稿箱id
+}
+
+message ProductAttrGetByIdResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string attr_id = 2; //属性id 修改时填写
+    repeated common.base.NameAndCode attr_name = 3; //名称和语言简码
+    repeated ProductAttrValue attr_value = 4; //属性值列表,
+    common.enum.AttributeEnum.ShowStatus status = 5; // 隐藏 或 显示
+    common.enum.AttributeEnum.Customize customize = 6; //是否允许自定义 1 允许, 0 不允许
+    string operator_id = 7; //执行修改用户名
+    string operation_name = 8; //执行者昵称
+    bool can_be_modify = 9; //属性值是否可以编辑
+}
+
+message ProductAttrModifyReq {
+    string attr_id = 1; // 属性名id
+    repeated common.base.NameAndCode attr_name = 2; //名称和语言简码
+    common.enum.AttributeEnum.Customize customize = 3; //是否允许自定义 1 允许, 0 不允许
+    repeated ProductAttrValue attr_value = 4; //属性值列表
+    //string operator_id = 5; //执行修改用户名
+}
+
+message ProductAttrModifyResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message ProductAttrDisableReq {
+    string attr_id = 1;
+}
+
+message ProductAttrDisableResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message ProductAttrValueDisableReq {
+    string attr_id = 1;
+    string value_id = 2;
+}
+
+message ProductAttrValueDisableResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message ProductAttrDownloadReq {
+    string attr_id_key = 1; //属性id 精确匹配
+    string attr_name_key = 3; //属性名搜索 模糊搜索
+    string attr_name_language_code = 4; //语言简码
+    string category_name_key = 7; //类目名 模糊匹配
+    string empty_language_code = 9; //查找空名语言码
+}
+
+message ProductAttrDownloadResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string file_url = 2; //下载文件地址
+    string query_code = 3; //下载查询码
+}
+
+message ProductAttrPreUploadReq {
+    string file_url = 1; //上传文件地址
+}
+
+message ProductAttrPreUploadResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string upload_id = 2; //上传id编号
+    repeated string check_result = 3; //返回确认的结构体
+    string message = 4;
+}
+
+message ProductAttrConfirmUploadReq {
+    string upload_id = 1; //确认上传的id编号
+}
+
+message ProductAttrConfirmUploadResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message ProductAttrGetByIdBatchReq {
+    repeated string param_attr_id = 1; //参数属性id列表
+    repeated string standard_attr_id = 2; //规格属性id列表
+    string product_id = 3; // 当存在商品id时, 返回最后拼上自定义属性, 如果有的话
+    bool filter_hidden_attr_value = 4; //过滤隐藏/被删除属性值
+    string draft_id = 5; //草稿箱id
+}
+
+message ProductAttrRespUnit {
+    string attr_id = 2; //属性id 修改时填写
+    repeated common.base.NameAndCode attr_name = 3; //名称和语言简码
+    repeated ProductAttrValue attr_value = 4; //属性值列表,
+    //    uint32 status = 5; // 隐藏 或显示
+    common.enum.AttributeEnum.Customize customize = 6; //是否允许自定义 1 允许, 0 不允许
+    //    string operator_id = 7; //执行修改用户名
+    //    string operator_name = 8; //执行者昵称
+}
+
+message ProductAttrGetByIdBatchResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated ProductAttrRespUnit param_attr = 2; // 参数属性
+    repeated ProductAttrRespUnit standard_attr = 3; //规格属性
+
+}
+
+//向属性名下添加一个属性值
+message AddCustomizeAttrValueReq {
+    string attr_id = 2; //属性id 修改时填写
+    repeated common.base.NameAndCode value_name = 3; //属性值的语言和简码
+    string first_add_time = 4; //取第一次增加的自定义属性时间
+}
+
+message AddCustomizeAttrValueResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string attr_id = 2; //属性id 修改时填写
+    repeated common.base.NameAndCode attr_name = 3; //名称和语言简码
+    repeated ProductAttrValue attr_value = 4; //属性值列表, 最后一个为添加的属性值信息
+    common.enum.AttributeEnum.ShowStatus status = 5; // 隐藏 或显示
+    common.enum.AttributeEnum.Customize customize = 6; //是否允许自定义 1 允许, 0 不允许
+    string message = 7;
+}
+
+message TranslateSelectedAttrReq{
+    repeated string attr_id = 1; //属性id
+    repeated string value_id = 2; //属性值id
+    repeated string target_language_code = 3; //翻译的目标语言码 --> 对于已存在的语言翻译, 一键翻译不会做修改
+}
+
+message TranslateSelectedAttrResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+
+message ProductAttrValueGetReq {
+    string value_id_key = 1; //属性值id 精确匹配
+    string product_id_key = 2; //商品id
+    string empty_language_code = 3; //查找空名语言码
+    common.base.Pagination page = 4; //分页信息
+//    repeated string language_code_sequence = 5; //语言项排布顺序, 按照排入顺序返回对应顺序的翻译语言内容
+}
+
+message ProductAttrValueGetResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated ProductAttrValue product_attr_value = 2; //管理属性列表
+    uint32 total = 3; //总数
+}
+
+message UpdateAttrTranslateByIdReq{
+    string content_id = 1;
+    repeated common.base.NameAndCode value_name = 3; //名称和语言简码
+}
+
+message UpdateAttrTranslateByIdResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message ProductAttrValueDownloadReq{
+    string value_id_key = 1; //属性值id 精确匹配
+    string product_id_key = 2; //商品id
+    string empty_language_code = 3; //查找空名语言码
+}
+
+message ProductAttrValueDownloadResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    string file_url = 2; //下载地址
+    string query_code = 3; //下载状态查询码
+}
+
+message UploadAttrTranslateReq{
+    string upload_url = 1;
+    string file_path = 2; //调试用, 勿调用
+}
+
+message UploadAttrTranslateResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    string query_code = 3; //上传状态查询码
+}
+
+message UploadAttrValueTranslateReq{
+    string upload_url = 1;
+    string file_path = 2; //调试用, 勿调用
+}
+
+message UploadAttrValueTranslateResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    string query_code = 3; //上传状态查询码
+}
+
+
+service ProductAttrService {
+    //添加商品属性
+    rpc ProductAttrAdd (ProductAttrAddReq) returns (ProductAttrAddResp);
+
+    //获取商品属性
+    rpc ProductAttrGet (ProductAttrGetReq) returns (ProductAttrGetResp);
+
+    //修改商品属性
+    rpc ProductAttrModify (ProductAttrModifyReq) returns (ProductAttrModifyResp);
+
+    //失效商品属性
+    rpc ProductAttrDisable (ProductAttrDisableReq) returns (ProductAttrDisableResp);
+
+    //失效商品属性值
+    rpc ProductAttrValueDisable (ProductAttrValueDisableReq) returns (ProductAttrValueDisableResp);
+
+    //根据id获取属性信息
+    rpc ProductAttrGetById (ProductAttrGetByIdReq) returns (ProductAttrGetByIdResp);
+
+    //下载搜索到的属性数据
+    rpc ProductAttrDownload (ProductAttrDownloadReq) returns (ProductAttrDownloadResp);
+
+    //预上传属性模板
+    rpc ProductAttrPreUpload (ProductAttrPreUploadReq) returns (ProductAttrPreUploadResp);
+
+    //确认上传属性模板
+    rpc ProductAttrConfirmUpload (ProductAttrConfirmUploadReq) returns (ProductAttrConfirmUploadResp);
+
+    //根据属性id批量获取
+    rpc ProductAttrGetByIdBatch (ProductAttrGetByIdBatchReq) returns (ProductAttrGetByIdBatchResp);
+
+    //向属性下添加一个自定义属性值, 并返回添加后的属性信息及属性值列表信息
+    rpc AddCustomizeAttrValue (AddCustomizeAttrValueReq) returns (AddCustomizeAttrValueResp);
+
+    //一键翻译选择的属性/属性值
+    rpc TranslateSelectedAttr (TranslateSelectedAttrReq) returns (TranslateSelectedAttrResp);
+
+    //属性值分页获取
+    rpc ProductAttrValueGet (ProductAttrValueGetReq) returns (ProductAttrValueGetResp);
+
+    //属性值更新翻译信息
+    rpc UpdateAttrTranslateById (UpdateAttrTranslateByIdReq) returns (UpdateAttrTranslateByIdResp);
+
+    //属性值下载
+    rpc ProductAttrValueDownload (ProductAttrValueDownloadReq) returns (ProductAttrValueDownloadResp);
+
+    //上传文件方式更新属性翻译信息
+    rpc UploadAttrTranslate (UploadAttrTranslateReq) returns (UploadAttrTranslateResp);
+
+    //上传文件方式更新属性值翻译信息
+    rpc UploadAttrValueTranslate (UploadAttrValueTranslateReq) returns (UploadAttrValueTranslateResp);
+}

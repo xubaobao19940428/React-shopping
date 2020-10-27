@@ -1,0 +1,341 @@
+//DESC BACK littlec-product
+syntax = "proto3";
+package boss.pledge;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.pledge";
+option java_outer_classname = "Pledge";
+
+//功能放在 product 服务中, 需请求product 服务
+
+//售后策略多语言字段
+message PledgeLanguage {
+    int32 type = 1;//售后策略字段，1：标签2：文案3：详细图
+    string language_code = 2;//语言代码
+    string translation = 3;//译文
+}
+//1 售后策略服务
+message AfterSalePledgeUnit{
+    string after_sale_id = 1;//售后策略id
+    string name = 2;//售后策略名
+    repeated common.base.NameAndCode label = 3;//标签
+    repeated common.base.NameAndCode document = 4;//文案
+    repeated common.base.NameAndCode detail_picture = 5;//详细图
+    uint32 after_sale_restrict = 6;//商品确认收货后，售后申请通道的开放时长
+    common.enum.PledgeEnum.RangeType range_type = 7;//适用范围，1：商品类目，2：商品类型
+    repeated common.enum.ProductEnum.ProductType product_type = 8;//商品类型，若range_type选择了商品类型
+    repeated AfterSaleCategory after_sale_cate = 9;//商品类目，若range_type选择了商品类目
+    common.enum.PledgeEnum.ShowType show_type = 10;//外显类型，1：只外显商品详细页，2：全部外显，3：不外显
+    string operator_id = 11;//最后一次操作者id
+    uint32 status = 12;//状态
+    string operator_name = 13;//最后一次操作者名称
+    string update_time = 14;//更新时间
+}
+
+//售后策略商品类目
+message AfterSaleCategory {
+    string cate_id = 1;//类目id，若range_type选择了商品类目
+    string cate_name = 2;//类目名
+    int32 level = 3;//类目级别，若range_type选择了商品类目
+}
+
+message AddAfterSaleReq {
+    string name = 1;//售后策略名
+    repeated common.base.NameAndCode label = 2;//标签
+    repeated common.base.NameAndCode document = 3;//文案
+    repeated common.base.NameAndCode detail_picture = 4;//详细图
+    int32 after_sale_restrict = 5;//商品确认收货后，售后申请通AddArrivalPromiseReq道的开放时长
+    common.enum.PledgeEnum.RangeType range_type = 6;//适用范围，1：商品类目，2：商品类型
+    repeated common.enum.ProductEnum.ProductType product_type = 7;//商品类型，若range_type选择了商品类型
+    repeated AfterSaleCategory after_sale_cate = 8;//若range_type选择了商品类目
+    common.enum.PledgeEnum.ShowType show_type = 9;//外显类型，1：只外显商品详细页，2：全部外显，3：不外显
+}
+
+message AddAfterSaleResp {
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+message UpdateAfterSaleReq {
+    string after_sale_id = 1;//售后策略id
+    string name = 2;//售后策略名
+    repeated common.base.NameAndCode label = 3;//标签
+    repeated common.base.NameAndCode document = 4;//文案
+    repeated common.base.NameAndCode detail_picture = 5;//详细图
+    int32 after_sale_restrict = 6;//商品确认收货后，售后申请通道的开放时长
+    common.enum.PledgeEnum.RangeType range_type = 7;//适用范围，1：商品类目，2：商品类型
+    repeated common.enum.ProductEnum.ProductType product_type = 8;//商品类型，若range_type选择了商品类型
+    repeated AfterSaleCategory after_sale_cate = 9;//若range_type选择了商品类目
+    common.enum.PledgeEnum.ShowType show_type = 10;//外显类型，1：只外显商品详细页，2：全部外显，3：不外显
+}
+
+message UpdateAfterSaleResp {
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+message GetAfterSaleReq {
+    string after_sale_id = 1;//售后策略id
+}
+
+message GetAfterSaleResp {
+    string after_sale_id = 1;//售后策略id
+    string name = 2;//售后策略名
+    repeated common.base.NameAndCode label = 3;//标签
+    repeated common.base.NameAndCode document = 4;//文案
+    repeated common.base.NameAndCode detail_picture = 5;//详细图
+    int32 after_sale_restrict = 6;//商品确认收货后，售后申请通道的开放时长
+    int32 range_type = 7;//适用范围，1：商品类目，2：商品类型
+    repeated common.enum.ProductEnum.ProductType product_type = 8;//商品类型，若range_type选择了商品类型
+    repeated AfterSaleCategory after_sale_cate = 9;//商品类目，若range_type选择了商品类目
+    common.enum.PledgeEnum.ShowType show_type = 10;//外显类型，1：只外显商品详细页，2：全部外显，3：不外显
+    string operator_id = 11;//操作者id
+    int32 status = 12;//状态 1-显示，0-隐藏
+    string create_time = 13;//创建时间
+    string update_time = 14;//更新时间
+    common.base.ErrorMessage ret = 15; //返回值
+}
+
+message StartAfterSaleReq {
+    string after_sale_id = 1;//售后策略id
+}
+
+message StartAfterSaleResp {
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+message StopAfterSaleReq {
+    string after_sale_id = 1;//售后策略id
+}
+
+message StopAfterSaleResp {
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+message ListAfterSaleReq {
+    common.base.Pagination page = 1;
+}
+
+message ListAfterSaleResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated AfterSalePledgeUnit after_sale_pledge = 2; //售后策略列表
+    uint32 total = 3; //总数
+}
+
+service AfterSalePledgeService {
+    //增加售后策略
+    rpc AddAfterSale(AddAfterSaleReq) returns (AddAfterSaleResp);
+    //更新售后策略
+    rpc UpdateAfterSale(UpdateAfterSaleReq) returns (UpdateAfterSaleResp);
+    //获取售后策略
+    rpc GetAfterSale(GetAfterSaleReq) returns (GetAfterSaleResp);
+    //启用售后策略
+    rpc StartAfterSale(StartAfterSaleReq) returns (StartAfterSaleResp);
+    //停用售后策略
+    rpc StopAfterSale(StopAfterSaleReq) returns (StopAfterSaleResp);
+    //分页查询售后策略
+    rpc ListAfterSale(ListAfterSaleReq) returns (ListAfterSaleResp);
+}
+
+
+//2 到货承诺服务
+
+message ArrivalPromiseLan {
+    int32 type = 1;//到货承诺字段，1：标签2：文案3：详细图
+    string language_code = 2;//语言代码
+    string translation = 3;//译文
+}
+
+//到货承诺配送时效
+message ArrivalDistribution {
+    repeated string area_code = 1;//地区代码
+    int32 time_limit_min = 2;//最小时效天数
+    int32 time_limit_max = 3;//最大时效天数
+}
+
+message ArrivalPledgeUnit {
+    string arrival_id = 1;//到货承诺id
+    string name = 2;//到货承诺名
+    repeated common.base.NameAndCode label = 3; //标签
+    repeated common.base.NameAndCode document = 4; //文案
+    repeated common.base.NameAndCode detail_picture = 5; //详细图
+    string country_code = 6;//国家码
+    repeated ArrivalDistribution arrival_distribution = 7;//到货承诺配送时效
+    common.enum.PledgeEnum.PaymentType payment = 8;//是否赔付 ，1：系统自动赔付，2：不赔付
+    common.enum.PledgeEnum.ShowType show_type = 9;//外显类型，1：只外显于商品详情页，2：全部外显，3：不外显
+    string operator_id = 10;//最后一次操作者
+    uint32 status = 11;//状态
+    string operator_name = 12;//最后一次操作者名称
+    string update_time = 13;//更新时间
+}
+
+message AddArrivalReq {
+    string name = 1;//到货承诺名
+    repeated common.base.NameAndCode label = 2; //标签
+    repeated common.base.NameAndCode document = 3; //文案
+    repeated common.base.NameAndCode detail_picture = 4; //详细图
+    string country_code = 5;//国家码
+    repeated ArrivalDistribution arrival_distribution = 6;//到货承诺配送时效
+    common.enum.PledgeEnum.PaymentType payment = 7;//是否赔付 ，1：系统自动赔付，2：不赔付
+    common.enum.PledgeEnum.ShowType show_type = 8;//外显类型，1：只外显于商品详情页，2：全部外显，3：不外显
+}
+
+message AddArrivalResp {
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+message UpdateArrivalReq {
+    string arrival_id = 1;//到货承诺id
+    string name = 2;//到货承诺名
+    repeated common.base.NameAndCode label = 3; //标签
+    repeated common.base.NameAndCode document = 4; //文案
+    repeated common.base.NameAndCode detail_picture = 5; //详细图
+    string country_code = 6;//国家码
+    repeated ArrivalDistribution arrival_distribution = 7;//到货承诺配送时效
+    common.enum.PledgeEnum.PaymentType payment = 8;//是否赔付 ，1：系统自动赔付，2：不赔付
+    common.enum.PledgeEnum.ShowType show_type = 9;//外显类型，1：只外显于商品详情页，2：全部外显，3：不外显
+}
+
+message UpdateArrivalResp {
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+message GetArrivalReq {
+    string arrival_id = 1;//到货承诺id
+}
+
+message GetArrivalResp {
+    string arrival_id = 1;//到货承诺id
+    string name = 2;//到货承诺名
+    repeated common.base.NameAndCode label = 3; //标签
+    repeated common.base.NameAndCode document = 4; //文案
+    repeated common.base.NameAndCode detail_picture = 5; //详细图
+    string country_code = 6;//国家码
+    repeated ArrivalDistribution arrival_distribution = 7;//到货承诺配送时效
+    common.enum.PledgeEnum.PaymentType payment = 8;//是否赔付 ，1：系统自动赔付，2：不赔付
+    common.enum.PledgeEnum.ShowType show_type = 9;//外显类型，1：只外显于商品详情页，2：全部外显，3：不外显
+    int32 status = 10;//状态 1-显示，0-隐藏
+    string create_time = 11;//创建时间
+    string update_time = 12;//更新时间
+    string operator_id = 13;//最后一次操作者
+    common.base.ErrorMessage ret = 14; //返回值
+}
+
+message StartArrivalReq {
+    string arrival_id = 1;//到货承诺id
+}
+
+message StartArrivalResp {
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+message StopArrivalReq {
+    string arrival_id = 1;//到货承诺id
+}
+
+message StopArrivalResp {
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+message ListArrivalReq {
+    common.base.Pagination page = 1;
+    string country_code = 2;
+    int32 type = 3;//1:代表为列表展示，2：为商品使用
+}
+
+message ListArrivalResp {
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated ArrivalPledgeUnit arrival_pledge = 2; //售后策略列表
+    uint32 total = 3; //总数
+}
+
+//message ListArrivalForProductReq {
+//    common.base.Pagination page = 1;
+//    string country_code = 2;
+//}
+//
+//message ListArrivalForProductResp {
+//    common.base.ErrorMessage ret = 1; //返回值
+//    repeated ArrivalPledgeUnit arrival_pledge = 2; //售后策略列表
+//    uint32 total = 3; //总数
+//}
+
+service ArrivalPledgeService {
+    //增加到货承诺
+    rpc AddArrival(AddArrivalReq) returns (AddArrivalResp);
+    //编辑到货承诺
+    rpc UpdateArrival(UpdateArrivalReq) returns(UpdateArrivalResp);
+    //获得到货承诺
+    rpc GetArrival(GetArrivalReq) returns(GetArrivalResp);
+    //启用到货承诺
+    rpc StartArrival(StartArrivalReq) returns (StartArrivalResp);
+    //停用到货承诺
+    rpc StopArrival(StopArrivalReq) returns (StopArrivalResp);
+    //分页查询到货承诺
+    rpc ListArrival(ListArrivalReq) returns (ListArrivalResp);
+//    //分页查询到货承诺-为商品服务
+//    rpc ListArrivalForProduct(ListArrivalForProductReq) returns (ListArrivalForProductResp);
+}
+
+//3 地区服务
+
+//地区信息
+message AreaUnit {
+    string area_code = 1;//地区代码
+    string area_name = 2;//地区中文名
+    string country_code = 3;//国家码
+    string area_id = 4;
+}
+
+message AddAreaReq {
+    string area_code = 1;//地区代码
+    string area_name = 2;//地区中文名
+    string country_code = 3;//国家码
+    string area_id = 4;
+}
+
+message AddAreaResp {
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+message DeleteAreaReq {
+    string area_code = 1;//地区代码
+    string area_id = 2;
+}
+
+message DeleteAreaResp {
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+message UpdateAreaReq {
+    string area_code = 1;//地区代码
+    string area_name = 2;//地区中文名
+    string country_code = 3;//国家码
+    string area_id = 4;
+}
+
+message UpdateAreaResp {
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+message GetAreaReq {
+    string country_code = 3;//国家码
+}
+
+message GetAreaResp {
+    repeated AreaUnit area_unit = 1;//地区信息
+    common.base.ErrorMessage ret = 2; //返回值
+}
+
+service AreaService {
+    //增加地区
+    rpc AddArea(AddAreaReq) returns (AddAreaResp);
+    //逻辑删除地区
+    rpc DeleteArea(DeleteAreaReq) returns(DeleteAreaResp);
+    //更新地区
+    rpc UpdateArea(UpdateAreaReq) returns(UpdateAreaResp);
+    //查询地区
+    rpc GetArea(GetAreaReq) returns(GetAreaResp);
+}

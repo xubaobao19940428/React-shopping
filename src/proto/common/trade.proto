@@ -1,0 +1,106 @@
+syntax = "proto3";
+package common.trade;
+import "common/enum.proto";
+option java_multiple_files = false;
+option java_package = "com.fingo.littlec.proto.common";
+option java_outer_classname = "Trade";
+
+
+message TradeDTOPb {
+    message OrderAfterSalesDTOPb {
+        int64 order_id = 1;
+        repeated int64 sku_id = 2;
+        string sale_product_map = 3; //order自用
+    }
+    message OrderProductDTOPb {
+        //商品id
+        int64 product_id = 1;
+        //商品数量
+        int32 count = 2;
+        //商品名称
+        string product_name = 3;
+        //类目名称
+        string category_name = 4;
+        //单种商品实际销售总价 （扣除优惠后分摊到每个spu的价格）
+        string actual_price = 5;
+        //skuId
+        int64 sku_id = 6;
+        //普通商品返佣比例
+        string commission_rate = 7;
+        //直播订单分佣1，小直播主分佣比例
+        string live_order_rate1 = 8;
+        //直播订单分佣2，v5大直播主分佣比例
+        string live_order_rate2 = 9;
+        //售后天数（默认7天）
+        int32 after_sales_days = 10;
+        //礼包id
+        int32 gift_id = 11;
+        //商品类型
+        int32 product_type = 12;
+    }
+    //订单号
+    int64 order_id = 1;
+    //用户id
+    int64 user_id = 2;
+    //分享人ID
+    int64 inviter_id = 3;
+    //订单类型 0 普通 1礼包 2大礼包 3 课程订单
+    common.enum.OrderEnum.OrderType order_type = 4;
+    //国家编码
+    string country_code = 5;
+    //含等级的团队链路
+    string v_path = 6;
+    //申请售后对象
+    OrderAfterSalesDTOPb order_after_sales_dto = 7;
+    //订单商品列表
+    repeated OrderProductDTOPb order_product = 8;
+    //订单ids 确认收货使用（废弃，不用传）
+    repeated int64 order_ids = 9;
+    message OrderConfirmReceivePb {
+        //订单id
+        int64 order_id = 1;
+        int32 after_sales_days = 2;
+        int32 order_type = 3;
+    }
+    //确认收货使用
+    repeated OrderConfirmReceivePb order_confirm_receive = 10;
+    //支付时间
+    string pay_time = 11;
+    //下单时用户等级
+    string member_level = 12;
+}
+
+message TeamOrderDtoPb {
+    string order_id = 1;
+    // 订单创建时间
+    string create_time = 2;
+    // 订单状态
+    common.enum.OrderEnum.OrderStatus order_status = 3;
+    // 支付金额
+    string pay_amount = 4;
+    // 运费总额
+    string total_freight = 5;
+    // 订单国家编码
+    string country_code = 6;
+    message ItemDtoPb {
+        uint64 order_id = 1;
+        string product_id = 2;
+        string product_name = 3; // 多语言
+        int32 count = 4;
+        string price = 5; // 实际支付价格
+        string sku_cover = 6;
+        repeated OrderProductAttr attr = 7; //描述
+    }
+    message OrderProductAttr {
+        uint64 attr_id = 1;
+        string attr_name = 2;
+        uint64 value_id = 3;
+        string value_name = 4;
+    }
+    // 订单里的商品
+    repeated ItemDtoPb item = 7;
+    // 收货时间
+    string receive_time = 8;
+    // 预计解冻时间
+    string pre_unfreezen_time = 9;
+}

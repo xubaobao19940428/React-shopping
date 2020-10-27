@@ -1,0 +1,85 @@
+syntax = "proto3";
+package css.errcode;
+
+option java_multiple_files = false;
+option java_package = "com.fingo.littlec.proto.css";
+option java_outer_classname = "CssErrorCode";
+
+
+enum ErrorCode {
+    OK = 0;
+    SERVER_INNER_ERROR = -1;
+    SUCCESS = 1;
+    HMS_DATABASE_ERROR = 2;
+    HMS_SESSION_NOT_EXIST = 3;
+    HMS_MESSAGE_STORE_ERROR = 4;
+    HMS_ERROR_RETRACT_MESSAGE = 5;
+    HMS_INNER_ERROR = 6;
+    HMS_MESSAGE_NO_ALL_REMOVED = 7;
+    HMS_PARAM_FORMAT_ERROR = 8;
+    HMS_GUID_NULL = 9;
+
+    USER_NOT_LOGIN = 100;
+    SESSION_STATUS_ERROR = 101;
+
+    CHAT_FROM_IS_EMPTY = 201;
+    CHAT_RECEIVER_NOT_EXIST = 202;
+    CHAT_MESSAGE_SAVE_FAILED = 203;
+    CHAT_BUNDLE_BROKEN = 204;
+
+    PUSH_BUNDLEID_EMPYT = 303;
+    PUSH_CREATE_CRTIFICATE_FAILED = 304;
+    PUSH_DELETE_CRTIFICATE_FAILED = 305;
+    PUSH_CLEAR_TOKEN_FAILED = 306;
+    PUSH_SET_TOKEN_FAILED =307;
+    PUSH_SET_BADGE_FAILED = 308;
+
+    CONNECTOR_USER_ALREADY_LOGIN = 401;
+
+    // 请求客服ID空
+    CSS_USER_ID_NULL = 500;
+    // 请求客服国家码空
+    CSS_USER_COUNTRY_CODE_NULL = 501;
+    // 请求客服时语言属性空
+    CSS_USER_LANGUAGE_NULL = 502;
+    // 客服不在线
+    CSS_CS_OFFLINE = 503;
+    // 无可用客服
+    CSS_NO_USABLE_CS = 504;
+    // 绑定关系不存在
+    CSS_BUNDLE_NOT_EXISTS = 505;
+    // 绑定失败
+    CSS_BUNDLE_FAIL = 506;
+    // 绑定超时
+    CSS_BUNDLE_OVERDUE = 507;
+    // FAQ不存在
+    CSS_FAQ_NOT_EXISTS = 508;
+    // 语言没有指定
+    CSS_LANGUAGE_NOT_SPECIFIED = 509;
+    // 客服id空
+    CSS_CS_ID_NULL = 510;
+    // 服务状态空
+    CSS_SERVICE_STATUS_NULL = 511;
+    // 非法的服务状态
+    CSS_ILLEGAL_STATUS = 512;
+    // 客服不存在
+    CSS_CS_NOT_EXISTS = 513;
+    // 不是工作时间
+    CSS_NOT_WORKING_HOURS = 514;
+    // 客服登录时没有传客服名字
+    CSS_NAME_NULL = 515;
+    // 客服登入时没有穿客服手机号
+    CSS_MOBILE_NULL = 516;
+
+    // MC means MessageCenter，用户ID和设备id都为空
+    MC_USER_ID_AND_DEVICE_ID_ALL_NULL = 601;
+    // 设备id空
+    MC_DEVICE_ID_NULL = 602;
+    // 用户id空
+    MC_USER_ID_NULL = 603;
+    MC_ACK_FAIL = 604;
+    CM_PUSH_TIME_NULL = 605;
+    // 已经在队列中
+    ALREADY_IN_QUEUE = 606;
+}
+

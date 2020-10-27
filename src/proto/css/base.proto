@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package css.base;
+
+import "css/enum.proto";
+
+option java_multiple_files = false;
+option java_package = "com.fingo.littlec.proto.css";
+option java_outer_classname = "Base";
+
+message UserInfo {
+	string username = 1;
+	string appkey = 2;
+	string nick = 3;
+	string phone = 4;
+	string original_link = 5;
+	string thumbnail_link = 6;
+	uint64 created = 7;
+	uint64 modified = 8;
+}
+
+// 分页
+message Pagination {
+	int32 page_size = 1;
+	int32 page_num = 2;
+	string order_str = 3;
+	bool paging_switch = 4;
+}
+
+message MobileBase
+{
+    string sdk_version = 1; // sdk 版本号
+	string language_type = 2; // 语言类型 按客户端语言类型
+	css.enum.ENetworkType net_type = 3; // 网络类型
+    string os_version = 4; //操作系统版本
+	css.enum.EClientType client_type = 5; // 设备类型
+    string device = 6; // 设备型号
+    string imei = 7; // 国际移动设备识别码
+    string fire_base_device = 8; // fire base用的设备号
+}
+

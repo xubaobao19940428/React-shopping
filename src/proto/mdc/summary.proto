@@ -1,0 +1,175 @@
+//DESC BACK littlec-datacenter
+syntax = "proto3";
+package mdc.summary;
+
+import "common/errcode.proto";
+import "common/base.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.mdc.summary";
+option java_outer_classname = "Summary";
+
+message PlatformOrderStatusReq {
+    string start_time = 1; // 查询开始时间 yyyy-MM-dd
+    string end_time = 2; // 查询截止时间 yyyy-MM-dd
+}
+message PlatformOrderStatusResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    PlatformOrderStatus data = 2;
+    message PlatformOrderStatus {
+        int32 toPayOrderNum = 1; // 待支付订单数
+        int32  toShipOrderNum = 2; // 待发货订单数
+        int32 toReceiveOrderNum = 3; // 已发货订单数
+        int32 completedOrderNum= 4; // 已完成订单数
+        int32 closedOrderNum = 5; // 已关闭订单数
+        int32 afterSalesOrderNum = 6; // 售后订单数
+    }
+}
+
+message OrderTradeChartReq {
+    string start_time = 1; // 查询开始时间 yyyy-MM-dd
+    string end_time = 2; // 查询截止时间 yyyy-MM-dd
+}
+message OrderTradeChartResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated OrderTradeChart chart = 2;
+    message OrderTradeChart {
+        string date = 1;
+        int32 totalOrderNum = 2; // 订单总计
+        int32 giftOrderNum = 3; // 礼包订单数量
+        string giftOrderAmount = 4; // 礼包销售额
+        int32 ordinaryOrderNum = 5; // 普通订单数
+        string ordinaryOrderAmount = 6; // 普通订单销售额
+    }
+}
+
+message OrderTradeReq {}
+message OrderTradeResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated OrderTradeData data = 2;
+    message OrderTradeData {
+        string code = 1; // TODAY|WEEK|MONTH
+        int32 ordinaryOrderNum = 3; // 普通订单量
+        string ordinaryOrderAmount = 4; // 普通订单成交额
+        int32 totalOrderNum = 8; // 总订单数
+        string totalOrderAmount = 9; // 总成交额
+        int32 giftOrderNum = 5; // 礼包订单量
+        int32 superGiftOrderNum = 6; // 大礼包订单量
+        string giftOrderAmount = 7; // 礼包订订单成交额
+        string ordinaryOrderAmountRate = 10; // 普通商品成交额占比
+        int32 wholesaleOrderNum = 11; // 批发商品订单量
+        string wholesaleOrderAmount = 12; // 批发商品订单交易额
+        string perCustomerTransaction = 13; // 客单价(GMV/订单数，单位美元）
+    }
+}
+
+message OrderTradeCountReq {}
+message OrderTradeCountResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    OrderCount data = 2;
+    message OrderCount {
+        string tradeAmount = 1; // 总交易额
+        int32 orderCount = 2; // 总订单量
+        int32 userCount = 3; // 总用户数
+        int32 productCount = 4; // 总商品数
+    }
+}
+
+message OrderTradeChartCountReq {}
+message OrderTradeChartCountResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    OrderTradeChartCount data = 2;
+    message OrderTradeChartCount {
+        int32 weekCount = 1; // 本周交易数
+        string weekAmount = 2; // 本周交易金额
+        int32 lastWeekCount = 3; // 上周交易数
+        string lastWeekAmount = 4; // 上周交易金额
+        int32 monthCount = 5; // 本月交易数
+        string monthAmount = 6; // 本月交易金额
+        int32 lastMonthCount = 7; // 上月交易数
+        string lastMonthAmount = 8; // 上月交易金额
+    }
+}
+
+message ProductInfoReq {}
+message ProductInfoResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    ProductInfo data = 2;
+    message ProductInfo {
+        int32 offShelfSpu = 1; // 已下架商品
+        int32 spu = 2; // 普通商品数量
+        int32 todaySpu = 3; // 今日上架商品
+        int32 giftSpu = 4; // 礼包商品数量
+        int32 weekSpu = 5; // 本周上架商品
+        int32 monthSpu = 6; // 本月上架商品
+    }
+}
+
+message UserRegistLineReq {
+    string start_time = 1; // 查询开始时间 yyyy-MM-dd
+    string end_time = 2; // 查询截止时间 yyyy-MM-dd
+}
+message UserRegistLineResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated LineData line = 2; // 折线图数据
+    message LineData {
+        string date = 1;
+        int32 userCount = 2; // '新增用户数量',
+        int32 fansCount = 3; // '新增粉丝数量',
+        int32 memberCount = 4; // '新增会员数量',
+        int32 managerCount = 5; // '新增经理数量',
+        int32 generalManagerCount = 6; // '新增总经理数量',
+    }
+}
+
+message UserRegistDataReq { }
+message UserRegistDataResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    UserChart chart = 2; // 折线图数据
+    UserData data = 3; //
+    message UserChart {
+        int32 totalCount = 1; // '用户数量',
+        int32 fansCount = 2; // '粉丝数量',
+        string fansRatio = 3; // '粉丝比例',
+        int32 memberCount = 4; // '会员数量',
+        string memberRati = 5; // '会员比例,
+        int32 managerCount = 6; // '经理数量',
+        string managerRati = 7; // '经理比例',
+        int32 generalManagerCount = 8; // '总经理数量',
+        string generalRati = 9; // '总经理比例',
+    }
+    message UserData {
+        int32 weekCount = 1; // '用户数量',
+        int32 lastWeekCount = 2; // '粉丝数量',
+        int32 monthCount = 4; // '会员数量',
+        int32 lastMonthCount = 6; // '经理数量',
+    }
+}
+
+
+// 首页统计
+service SummaryBossService{
+    // 订单交易数统计-首页表格
+    rpc OrderTrade(OrderTradeReq) returns (OrderTradeResp);
+
+    // 订单交易数统计-首页表格 下面的四块
+    rpc OrderTradeCount(OrderTradeCountReq) returns (OrderTradeCountResp);
+
+    // 平台订单状态 统计
+    rpc PlatformOrderStatus(PlatformOrderStatusReq) returns (PlatformOrderStatusResp);
+
+    // 订单交易数统计-统计折线图 上面的四块
+    rpc OrderTradeChartCount(OrderTradeChartCountReq) returns (OrderTradeChartCountResp);
+
+    // 订单交易数统计-统计折线图
+    rpc OrderTradeChart(OrderTradeChartReq) returns (OrderTradeChartResp);
+
+    //  商品信息统计
+    rpc ProductInfo(ProductInfoReq) returns (ProductInfoResp);
+
+    // 用户动态 折线图
+    rpc UserRegistLine(UserRegistLineReq) returns (UserRegistLineResp);
+
+    // 用户动态 折线图 左右侧数据
+    rpc UserRegistData(UserRegistDataReq) returns (UserRegistDataResp);
+}

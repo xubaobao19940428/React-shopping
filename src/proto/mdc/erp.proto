@@ -1,0 +1,40 @@
+//DESC BACK littlec-datacenter
+syntax = "proto3";
+package mdc.screendata;
+
+import "common/errcode.proto";
+import "common/base.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.mdc.erp";
+option java_outer_classname = "Erp";
+
+message RiskPoReq {
+    common.base.Pagination page = 1;
+    string order_no = 2;
+    int32 un_income_day = 3;
+}
+
+message RiskPoResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    int32 total = 3;
+    message RiskPoInfo {
+        string purchase_order_no = 1; //采购单号
+        string sku_code = 2; //对应的skucode
+        int32 num = 3; //数量
+        string create_time = 4; //创建时间
+        int32 warning = 5; // 1、预警 0、没预警
+    }
+    message RiskOrderInfo {
+        string order_no = 1;
+        repeated RiskPoInfo risk_po_infos = 2; //采购信息列表
+    }
+    repeated RiskOrderInfo risk_order_infos = 4; //风险订单信息
+}
+
+service ErpBossService {
+    //未入库追踪预警订单(订单状态-未发货)
+    rpc GetRiskPo (RiskPoReq) returns (RiskPoResp);
+
+}

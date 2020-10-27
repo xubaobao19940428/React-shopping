@@ -1,0 +1,149 @@
+//DESC BACK littlec-promotion
+syntax = "proto3";
+package boss.boxcard;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.boxcard";
+option java_outer_classname = "Boxcard";
+message BoxcardInfo {
+    string boxcard_id = 1; //Boxcard的id
+    string name = 2; //Boxcard标题
+    repeated common.base.NameAndCode image = 3; //Boxcard图片
+    repeated common.base.NameAndCode banner_image = 4; //Boxcard图片
+    common.enum.PromotionEnum.BoxCardType type = 5;
+    uint32 sort_no = 6; //排序
+    string country_code = 7; //国家码
+    int32 card_type = 8; //类型(5->营销card(跟随上腰封),7->广告card(跟随中腰封))
+    common.enum.PromotionEnum.PromotionAppUrlType url_type = 9; //跳转类型
+    string url = 10; //跳转地址
+    int32 click_num = 11; //点击次数
+    string update_time = 12; //修改时间
+    int32 sort = 13; //排序
+    int64 start_time = 14; //开始时间
+    int64 end_time = 15; //结束时间
+    //    string background = 11;//背景
+    common.enum.MarketingEnum.ActiveCrowdType activeCrowdType = 16; //人群类型
+
+}
+
+message BoxcardSaveReq {
+    BoxcardInfo boxcard_info = 1;
+}
+message BoxcardSaveResp {
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+}
+
+message ListBoxcardReq {
+    common.base.Pagination page = 1;
+    string country_code = 2;
+    int32 card_type = 3; //类型(5->营销card(跟随上腰封),7->广告card(跟随中腰封))
+}
+
+message ListBoxcardResp {
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+    repeated BoxcardInfo list = 3;
+    uint32 total = 4; //商品结果总数
+}
+
+message ListProductsReq {
+    common.base.Pagination page = 1;
+    string boxcard_id = 2; //Boxcard的id
+    string product_id = 3; //商品的spuid
+    string product_name = 4; //商品名称
+}
+
+message ListProductsResp {
+    message ListProductsInfo {
+        string name = 1; //商品名称
+        string cover = 2; //商品图片
+        uint32 sort_no = 3; //排序
+        string product_id = 4; //商品的spuid
+    }
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+    repeated ListProductsInfo list = 3;
+    uint32 total = 4; //商品结果总数
+}
+
+message InsetProductsReq {
+    string product_ids = 1; // 商品id，多个用逗号隔开
+    string boxcard_id = 2; // Boxcard的id
+}
+
+message InsetProductsResp {
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+}
+
+message BatchDeleteBoxcardReq {
+    repeated string boxcard_id = 1; // Boxcard的id
+}
+message BatchDeleteBoxcardResp {
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+}
+message BatchDeleteProductsReq {
+    string product_ids = 1; // 商品id，多个用逗号隔开
+    string boxcard_id = 2; // Boxcard的id
+}
+
+message BatchDeleteProductsResp {
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+}
+
+message ProductsSortChangeReq {
+    string product_id = 1; // 商品id，多个用逗号隔开
+    string boxcard_id = 2; // Boxcard的id
+    uint32 sort_no = 3; //排序
+}
+
+message ProductsSortChangeResp {
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+}
+
+message BoxcardSortChangeReq {
+    string boxcard_id = 1; // Boxcard的id
+    uint32 sort_no = 2; //排序
+}
+
+message BoxcardSortChangeResp {
+    common.base.ErrorMessage ret = 1;
+    string message = 2;
+}
+
+
+service BoxcardBossService {
+    //新增或者编辑Boxcard信息，若传入的数据中带有Boxcard_id则为编辑
+    rpc SaveBoxcard (BoxcardSaveReq) returns (BoxcardSaveResp);
+
+    //分页查询Boxcard信息
+    rpc ListBoxcard (ListBoxcardReq) returns (ListBoxcardResp);
+    //批量删除boxcard
+    rpc BatchDeleteBoxcard (BatchDeleteBoxcardReq) returns (BatchDeleteBoxcardResp);
+    //cardbox排序
+    rpc BoxcardSortChange (BoxcardSortChangeReq) returns (BoxcardSortChangeResp);
+    //卡片商品关系搜索
+    rpc ListProducts (ListProductsReq) returns (ListProductsResp);
+
+    //新增商品关系
+    rpc InsetProducts (InsetProductsReq) returns (InsetProductsResp);
+
+    //批量删除商品关系
+    rpc BatchDeleteProducts (BatchDeleteProductsReq) returns (BatchDeleteProductsResp);
+
+    //改变商品排序
+    rpc ProductsSortChange (ProductsSortChangeReq) returns (ProductsSortChangeResp);
+}
+
+
+
+
+

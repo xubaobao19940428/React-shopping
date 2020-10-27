@@ -1,0 +1,829 @@
+//DESC BACK littlec-member
+syntax = "proto3";
+package boss.member;
+
+
+import "common/base.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.member";
+option java_outer_classname = "Member";
+
+message UserIdReq {
+    string user_id = 1;
+}
+
+message BooleanResp {
+    common.base.ErrorMessage ret = 1;
+    bool success = 2;
+}
+
+message StringResp {
+    common.base.ErrorMessage ret = 1;
+    string str = 2;
+}
+
+message TeamMemberCountPb {
+    // 团队总人数
+    int32 team_total_num = 1;
+    // 团队粉丝数量
+    int32 team_v2_num = 2;
+    // 团队会员数量
+    int32 team_v3_num = 3;
+    // 团队经理数量
+    int32 team_v4_num = 4;
+    // 团队总经理数量
+    int32 team_v5_num = 5;
+}
+
+message LowerUserPb {
+    string user_id = 1;
+    string nickname = 2;
+    // 绑定上级时间
+    string binding_time = 3;
+    // 成为会员时间
+    string member_time = 4;
+    int32 member_type = 5;
+    string upgrade_at_time = 6;
+    int32 lower_count = 7;
+    // 关系，1=直接，2=间接
+    int32 relation = 8;
+    string head_picture = 9;
+    int32 member_level = 10;
+    string mobile = 11;
+    int32 country_area_code = 12;
+    string email = 13;
+    // 邀请时间
+    string invite_time = 14;
+    // 团队人数统计
+    TeamMemberCountPb team_member_count = 15;
+    //升级am时间
+    string upgrade_am_time = 16;
+}
+
+message ListTeamMemberByPageResp {
+    common.base.ErrorMessage ret = 1;
+    int32 total = 2;
+    repeated LowerUserPb lower_user_pb = 3;
+}
+
+message ListTeamMemberByPageReq {
+    common.base.Pagination page = 1;
+    string user_id = 2;
+    //1直接 2间接
+    int32 relation = 3;
+    int32 member_level = 4;
+    string member_id = 5;
+    string mobile = 6;
+    string nick_name = 7;
+}
+
+message ListUserOrderByPageReq {
+    common.base.Pagination page = 1;
+    string user_id = 2;
+}
+
+message ListUserOrderByPageResp {
+    common.base.ErrorMessage ret = 1;
+    int32 total = 2;
+    repeated UserOrdersRespPb data = 3;
+}
+
+message UserOrdersRespPb {
+    // 用户id
+    string user_id = 1;
+    // 昵称
+    string order_no = 2;
+    // 创建订单时间
+    string create_order_time = 3;
+    // 订单状态
+    int32 status = 4;
+    // 订单商品
+    repeated OrdersProductsPb orders_product = 5;
+}
+
+message OrdersProductsPb {
+    //
+    string id = 1;
+    // 订单号
+    string order_no = 2;
+    // 商品编号
+    string products_id = 3;
+    // 商品下单时价格
+    int32 price = 4;
+    // 商品skuID
+    string sku_id = 5;
+    // 商品数量
+    int32 count = 6;
+    // 商品名称-中文
+    string products_name_cn = 7;
+    // 商品缩略图-中文
+    string products_cover_cn = 8;
+    // 商品名称-英文
+    string product_name_en = 9;
+    // 商品缩略图-英文
+    string product_cover_en = 10;
+    // 商品sku描述
+    string sku_desc_cn = 11;
+    // 商铺sku描述-英文
+    string sku_desc_en = 12;
+    // 创建时间
+    string create_time = 13;
+    // 商品编码
+    string products_code = 14;
+    // 商品识别码
+    string products_identification_code = 15;
+    // 第三方订单号
+    string third_order_no = 16;
+    // 第三方物流单号
+    string third_logistics_no = 17;
+    // 供货价
+    int32 price_supply = 18;
+    // 商品类型 关闭订单使用
+    string product_type = 19;
+    // 商品唯一编码
+    string fingo_sku_code = 20;
+}
+
+message UserManagePb {
+    //用户id
+    string user_id = 1;
+    //国家区号
+    int32 country_area_code = 2;
+    //昵称
+    string nick_name = 3;
+    //用户手机号
+    string mobile = 4;
+    //头像
+    string head_img = 5;
+    //邮箱
+    string email = 6;
+    //创建时间
+    string create_time = 7;
+    //国家编码
+    string country_code = 8;
+    //绑定上级的时间
+    string invite_time = 10;
+    //成为会员的时间
+    string member_time = 11;
+    //升级At的时间
+    string upgrade_at_time = 12;
+    //会员类型 0 普通会员 1 小礼包会员 2 大礼包会员 5 直播会员 7 断绑跃迁会员
+    int32 member_type = 13;
+    //该用户自己的邀请码
+    string invite_code = 14;
+    //账户余额
+    string commission_amount = 15;
+    //提现金额
+    string cash_out_amount = 16;
+    //会员等级
+    int32 member_level = 17;
+    //上次购买时间
+    string last_buy_time = 18;
+    //上级邀请码
+    string parent_invite_code = 19;
+    //上级昵称
+    string parent_nick_name = 20;
+    //上级手机号
+    string parent_mobile = 21;
+    //上级邮箱
+    string parent_email = 22;
+    //上级ID
+    string parent_id = 23;
+    //运营备注
+    string operating_content = 24;
+    //微信账号
+    string wechat_id = 25;
+    //微信二维码
+    string wechat_qr = 26;
+    //上次登录时间
+    string last_login_time = 27;
+    //升级Am的时间
+    string upgrade_am_time = 28;
+    //facebook 有/无
+    string facebook = 29;
+    //googleplay 有/无
+    string googleplay = 30;
+    //linekey 三方key
+    string line_key = 31;
+    //会员签约时间
+    string signing_agreement_time = 32;
+    //品牌馆会员等级
+    int32 brand_level = 33;
+}
+
+message ListUserByPageResp {
+    common.base.ErrorMessage ret = 1;
+    int32 total = 2;
+    repeated UserManagePb user_manage_pb = 3;
+}
+
+message ListUserByPageReq {
+    common.base.Pagination page = 1;
+    //userId
+    string user_id = 2;
+    //手机号
+    string mobile = 3;
+    //邀请码
+    string invite_code = 4;
+    //昵称
+    string nick_name = 5;
+    //邮箱
+    string email = 6;
+    //会员等级
+    int32 member_level = 7;
+    //上级id
+    string parent_id = 8;
+    //上级手机号
+    string parent_mobile = 9;
+    //上级昵称
+    string parent_nick_name = 10;
+    //创建开始时间
+    string start_time = 11;
+    //创建结束时间
+    string end_time = 12;
+    //国家编码
+    string country_code = 13;
+}
+
+message UserManageInfoResp {
+    common.base.ErrorMessage ret = 1;
+    UserManagePb user_manage_pb = 2;
+}
+
+message SaveUserOperatingContentReq {
+    string user_id = 1;
+    //备注信息
+    string operating_content = 2;
+}
+
+message SaveUserOperatingContentResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message AddressDoPb {
+    //主键id
+    string addressId = 1;
+    //用户id
+    string user_id = 2;
+    //收货人姓名
+    string name = 3;
+    //电话
+    string mobile = 4;
+    //详细收货地址
+    string detail_address = 5;
+    //市对应的编码
+    string city_code = 6;
+    //市名
+    string city_name = 7;
+    //州对应的编码
+    string state_code = 8;
+    //州名
+    string state_name = 9;
+    //是否为默认地址（0否，1是）
+    int32 is_default = 10;
+    //状态（0废弃，1可用）
+    int32 status = 11;
+    //创建时间
+    string create_time = 12;
+    //更新时间（默认与创建时间一致）
+    string update_time = 13;
+    //州名
+    string postcode = 14;
+    //国家区号
+    int32 country_area_code = 15;
+    // 国家编码
+    string country_code = 16;
+}
+
+message ListAddressResp {
+    common.base.ErrorMessage ret = 1;
+    repeated AddressDoPb address_do = 2;
+}
+
+message MemberInformationDoPb {
+    //memberinfo主键自增长
+    string id = 1;
+    //用户id
+    string user_id = 2;
+    //会员等级
+    int32 member_level = 3;
+    //手机号
+    string mobile = 4;
+    //邀请人数
+    int32 invite_number = 5;
+    //总返利
+    string total_commission = 6;
+    //总提现
+    string cash_amount = 7;
+    //邀请码
+    string invite_code = 8;
+    //被邀请码
+    string parent_invite_code = 9;
+    //邀请时间
+    string invite_time = 10;
+    //成为Bo时间
+    string member_time = 11;
+    //状态0废弃1可用
+    int32 status = 12;
+    //创建时间
+    string create_time = 13;
+    //更新时间
+    string update_time = 14;
+    //m线上级userId
+    string superior_id = 15;
+    //1主动绑定 2 被动绑定
+    int32 bind_type = 16;
+    //邀请人
+    string inviter_id = 17;
+    //会员类型：1普通会员 2大礼包会员 3课程会员
+    int32 member_type = 18;
+    //最近升级时间
+    string upgrade_at_time = 19;
+}
+
+message UserFatherPb {
+    //memberinfo主键自增长
+    string id = 1;
+    //用户id
+    string user_id = 2;
+    //会员等级
+    int32 member_level = 3;
+    //手机号
+    string mobile = 4;
+    //邀请人数
+    int32 invite_number = 5;
+    //总返利
+    string total_commission = 6;
+    //总提现
+    string cash_amount = 7;
+    //邀请码
+    string invite_code = 8;
+    //被邀请码
+    string parent_invite_code = 9;
+    //邀请时间
+    string invite_time = 10;
+    //成为Bo时间
+    string member_time = 11;
+    //状态0废弃1可用
+    int32 status = 12;
+    //创建时间
+    string create_time = 13;
+    //更新时间
+    string update_time = 14;
+    //m线上级userId
+    string superior_id = 15;
+    //1主动绑定 2 被动绑定
+    int32 bind_type = 16;
+    //邀请人
+    string inviter_id = 17;
+    //会员类型：1普通会员 2大礼包会员 3课程会员
+    int32 member_type = 18;
+    //最近升级时间
+    string upgrade_at_time = 19;
+    string nick_name = 20;
+    string head_img = 21;
+}
+
+message GetFatherChainResp {
+    common.base.ErrorMessage ret = 1;
+    repeated UserFatherPb user_father_pb = 2;
+}
+
+message UserTeamMemberInfoPb {
+    //近30天收益
+    string one_month_earnings = 1;
+    //累积收益
+    string total_earnings = 2;
+    //账号余额
+    string account_balance = 3;
+    //30天邀请人数
+    int32 one_month_invite_num = 4;
+    //直邀人数
+    int32 direct_invite_num = 5;
+    //团队人数
+    int32 team_member_total_count = 6;
+    //团队人数统计
+    TeamMemberCountPb team_member_count = 7;
+}
+
+message TeamMemberInfoResp {
+    common.base.ErrorMessage ret = 1;
+    UserTeamMemberInfoPb user_team_member_info = 2;
+}
+
+message UserConsumeInfoPb {
+    //近7天消费额
+    string one_week_consume_amount = 1;
+    //近30天消费额
+    string one_month_consume_amount = 2;
+    //总消费额
+    string total_consume_amount = 3;
+    //近7天订单数
+    int32 one_week_order_count = 4;
+    //近30天订单数
+    int32 one_month_order_count = 5;
+    //总订单数
+    int32 total_order_count = 6;
+    //消费金额数组（分）
+    repeated string pay_amount = 7;
+}
+
+message UserConsumeInfoResp {
+    common.base.ErrorMessage ret = 1;
+    UserConsumeInfoPb user_consume_info = 2;
+}
+
+message UserConsumeInfoReq {
+    //开始时间
+    string start_time = 1;
+    //结束时间
+    string end_time = 2;
+    //用户id
+    string user_id = 3;
+}
+
+message SetMsgCodeReq {
+    string mobile = 1;
+    int32 country_area_code = 2;
+    //type 1 老用户 2 新用户
+    int32 type = 3;
+    string biz_code = 4;
+}
+
+message UserQuestionDoPb {
+    //主键id
+    string id = 1;
+    //问题类型(1功能异常，2商品问题，3订单问题，4返利积分问题，5产品建议，6其他)
+    int32 type = 2;
+    //问题描述
+    string question_desc = 3;
+    //联系方式
+    string connect_mode = 4;
+    //用户状态（0：废弃，1可用）
+    int32 status = 5;
+    //创建时间
+    string create_time = 6;
+    //更新时间（默认与创建时间一致）
+    string update_time = 7;
+    //用户id
+    string user_id = 8;
+}
+
+message ListQuestionByPageResp {
+    common.base.ErrorMessage ret = 1;
+    int32 total = 2;
+    repeated UserQuestionDoPb user_question_do = 3;
+}
+
+message ListQuestionByPageReq {
+    common.base.Pagination page = 1;
+    //用户id
+    string user_id = 2;
+    //问题类型(1功能异常，2商品问题，3订单问题，4返利积分问题，5产品建议，6其他
+    int32 type = 3;
+    //开始时间
+    string start_time = 4;
+    //结束时间
+    string end_time = 5;
+}
+//
+//message CashOutRecordDoPb {
+//    //主键自增长
+//    int32 id = 1;
+//    //用户提现编号
+//    string cash_out_code = 2;
+//    //用户名称
+//    string user_name = 3;
+//    //银行卡号
+//    string bank_no = 4;
+//    //银行名称
+//    string bank_name = 5;
+//    //邮箱
+//    string authcode = 6;
+//    //用户id
+//    int32 user_id = 7;
+//    //手机号
+//    string tel_no = 8;
+//    //提现金额
+//    int32 cash_amount = 9;
+//    //手续费
+//    int32 fee = 10;
+//    //到账金额
+//    int32 cash_account_amount = 11;
+//    //提现状态
+//    int32 cash_status = 12;
+//    //状态0废弃1可用
+//    int32 status = 13;
+//    //备注
+//    string remark = 14;
+//    //创建时间
+//    string create_time = 15;
+//    //更新时间
+//    string update_time = 16;
+//    //银行编号
+//    string bank_code = 17;
+//}
+//
+//message ListUserWithdrawalByPageResp {
+//    common.base.ErrorMessage ret = 1;
+//    int32 total = 2;
+//    repeated CashOutRecordDoPb cash_out_record_do = 3;
+//}
+//
+//message ListUserWithdrawalByPageReq {
+//    common.base.Pagination page = 1;
+//    //用户id
+//    string user_id = 2;
+//    //用户名称
+//    string user_name = 3;
+//    //银行卡号
+//    string bank_no = 4;
+//    //银行名称
+//    string bank_name = 5;
+//    //邮箱
+//    string authcode = 6;
+//    //手机号
+//    string tel_no = 7;
+//    //提现状态 UNPAYED(0,"未打款"),PAYED(1,"已打款"),FAILED(2,"打款失败");
+//    int32 cash_status = 8;
+//    //开始时间
+//    string start_time = 9;
+//    //结束时间
+//    string end_time = 10;
+//}
+//
+//message ListBanksOfCountryReq {
+//    string country_code = 1;
+//}
+//
+//message BankSimplePb {
+//    string bankCode = 1;
+//    string bankName = 2;
+//}
+//
+//message ListBanksOfCountryResp {
+//    common.base.ErrorMessage ret = 1;
+//    repeated BankSimplePb bank_simple = 2;
+//}
+//
+//message ConfirmUserWithdrawalApplyReq {
+//    string cash_out_code = 1;
+//    //提现状态 UNPAYED(0,"未打款"),PAYED(1,"已打款"),FAILED(2,"打款失败");
+//    int32 cash_status = 2;
+//    //备注
+//    string remark = 3;
+//}
+
+//>>>>>message_end>>>>>>>>>>>>UserManageService 后台用户扩展功能>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+message AddMoneyReq {
+    string user_id = 1;
+    //打钱金额
+    string amount = 2;
+    string memo = 3;
+    //后台操作人
+    string operator = 4;
+    //国家编码（币种 MY SG TH ID）
+    string country_code = 5;
+    // 9 系统奖励 （默认9就行）20 活动积分 29 微商月销售奖励（人工发放）
+    int32 source_type = 6;
+}
+
+message PublishUpgradeEventReq {
+    string user_id = 1;
+    //后台操作人
+    string operator = 2;
+}
+
+message BindDisconnectReq {
+    string user_id = 1;
+    //后台操作人
+    string operator = 2;
+}
+
+message BindChangeReq {
+    string user_id = 1;
+    string parent_code = 2;
+    //后台操作人
+    string operator = 3;
+}
+
+message TestCreateOrderCommissionReq {
+    string orderNo = 1;
+    //后台操作人
+    string operator = 2;
+}
+
+message OrderCommissionRespPb {
+    string member_level_desc = 1;
+    //订单号
+    string order_no = 3;
+    //得钱用户ID
+    string user_id = 4;
+    //会员等级
+    int32 member_level = 5;
+    //返佣状态
+    int32 commission_status = 8;
+    //创建时间
+    string create_time = 9;
+    //买家ID
+    string buyer_id = 10;
+    //返佣类型
+    int32 commission_type = 11;
+    //返佣状态描述
+    string commission_status_desc = 12;
+    //返佣类型描述
+    string commission_type_desc = 13;
+    //订单金额
+    string order_sum_yuan = 14;
+    //返佣金额
+    string commission_amount_yuan = 15;
+}
+
+message TestCreateOrderCommissionResp {
+    common.base.ErrorMessage ret = 1;
+    repeated OrderCommissionRespPb order_commission_resp = 2;
+}
+
+message AddMoneyByOrderNoReq {
+    string orderNo = 1;
+    int32 commission_status = 2;
+    int32 commission_type = 3;
+    //后台操作人
+    string operator = 4;
+}
+
+message UpdateFingoMasterInfoReq {
+    common.base.FingoMasterInfoPb fingo_master_info = 1;
+    //后台操作人
+    string operator = 2;
+}
+
+message ListFingoMasterInfoReq {
+    string code = 1; // 导师类型
+    string nick_name = 2; // 导师昵称
+    string country_code = 3; // 导师国家
+}
+
+message ListFingoMasterInfoResp {
+    common.base.ErrorMessage ret = 1;
+    repeated common.base.FingoMasterInfoPb fingo_master_info = 2;
+}
+
+message ListOrderCommissionByPageReq {
+    common.base.Pagination page = 1;
+    //订单号
+    string order_no = 2;
+    //用户id
+    int32 user_id = 3;
+    //返佣类型
+    int32 commission_type = 4;
+    //返佣状态
+    int32 commission_status = 5;
+    //订单的买家id
+    int32 buyer_id = 6;
+    //筛选创建时间的开始时间
+    string start_time = 7;
+    //筛选创建时间的结束时间
+    string end_time = 8;
+}
+
+message ListOrderCommissionByPageResp {
+    common.base.ErrorMessage ret = 1;
+    int32 total = 2;
+    repeated OrderCommissionRespPb order_commission_resp = 3;
+}
+
+message UpdateUserMobileReq {
+    string user_id = 1;
+    string mobile = 2;
+    int32 country_area_code = 3;
+    // 操作人
+    string operator = 4;
+}
+
+message RemoveUserMobileReq {
+    string mobile = 1;
+    int32 country_area_code = 2;
+}
+
+message UplevelReq {
+    string user_id = 1;
+    // 0、普通 1、小礼包 2、大礼包 3、虚拟 4、课程 5、直播
+    int32 member_type = 2;
+    // 原来的等级
+    int32 source = 3;
+    // 要升到的等级
+    int32 target = 4;
+    // 操作人
+    string operator = 5;
+}
+
+message BatchAddMoneyReq {
+    string url = 1;
+}
+
+message BatchAddMoneyResp {
+    common.base.ErrorMessage ret = 1;
+    string url = 2;
+}
+
+message BatchRegisterReq {
+    string url = 1;
+}
+
+message BatchRegisterResp {
+    common.base.ErrorMessage ret = 1;
+    string url = 2;
+}
+
+message ChangeUserCountryReq {
+    string user_id = 1;
+    string org_country_code = 2; // 原国家码
+    string new_country_code = 3; // 新国家码
+}
+
+message ChangeUserCountryResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message GetBrandSalesInfoReq {
+    string user_id = 1;
+}
+
+message GetBrandSalesInfoResp {
+    common.base.ErrorMessage ret = 1;
+    string selfBuying = 2; // 自购
+    string selfSales = 3; // 自售
+    string effTeamSales = 4; // 有效团队销售额
+    string totalTeamSales = 5; // 全部团队销售额
+    string effTeamUsd = 6; // 有效团队销售额（美金）
+}
+
+//>>>>>message_end>>>>>>>>>>>>UserManageExtendService 后台用户扩展功能>>>>>>>>>>>>>>>>>>>>>>>
+
+service UserBossService {
+    //查询粉丝
+    rpc ListTeamMemberByPage (ListTeamMemberByPageReq) returns (ListTeamMemberByPageResp);
+    //查询用户订单
+    rpc ListUserOrderByPage (ListUserOrderByPageReq) returns (ListUserOrderByPageResp);
+    //后台分页查用户列表
+    rpc ListUserByPage (ListUserByPageReq) returns (ListUserByPageResp);
+    //后台获取用户基本信息
+    rpc GetUserManageInfo (UserIdReq) returns (UserManageInfoResp);
+    //保存用户备注信息
+    rpc SaveUserOperatingContent (SaveUserOperatingContentReq) returns (SaveUserOperatingContentResp);
+    //查询用户地址信息
+    rpc ListAddress (UserIdReq) returns (ListAddressResp);
+    //查询用户上级链路
+    rpc GetFatherChain (UserIdReq) returns (GetFatherChainResp);
+    //用户本人团队信息
+    rpc TeamMemberInfo (UserIdReq) returns (TeamMemberInfoResp);
+    //用户使用信息（消费信息）
+    rpc UserConsumeInfo (UserConsumeInfoReq) returns (UserConsumeInfoResp);
+    //手动塞验证码:成功返回6位验证码
+    rpc SetMsgCode (SetMsgCodeReq) returns (StringResp);
+    //用户分页获取问题列表
+    rpc ListQuestionByPage (ListQuestionByPageReq) returns (ListQuestionByPageResp);
+}
+
+service UserExtendBossService {
+    //后台打款功能
+    rpc AddMoney (AddMoneyReq) returns (BooleanResp);
+    //手动触发升级事件
+    rpc PublishUpgradeEvent (PublishUpgradeEventReq) returns (BooleanResp);
+    //断绑
+    rpc BindDisconnect (BindDisconnectReq) returns (BooleanResp);
+    //重新绑定（需要无上级的情况下才能绑定）
+    rpc BindChange (BindChangeReq) returns (BooleanResp);
+    //未执行分佣的订单重新执行分佣
+    rpc TestCreateOrderCommission (TestCreateOrderCommissionReq) returns (TestCreateOrderCommissionResp);
+    // 根据订单佣金记录打钱
+    rpc AddMoneyByOrderNo (AddMoneyByOrderNoReq) returns (BooleanResp);
+    // 修改Fingo导师信息
+    rpc UpdateFingoMasterInfo (UpdateFingoMasterInfoReq) returns (BooleanResp);
+    // Fingo导师列表
+    rpc ListFingoMasterInfo (ListFingoMasterInfoReq) returns (ListFingoMasterInfoResp);
+    // 分页查询订单分佣记录
+    rpc ListOrderCommissionByPage (ListOrderCommissionByPageReq) returns (ListOrderCommissionByPageResp);
+    // 手动预设用户等级
+    rpc Uplevel (UplevelReq) returns (BooleanResp);
+    // 注销手机号
+    rpc RemoveUserMobile (RemoveUserMobileReq) returns (BooleanResp);
+    // 为用户重新设置手机号
+    rpc UpdateUserMobile (UpdateUserMobileReq) returns (BooleanResp);
+    // 批量打款
+    rpc BatchAddMoney (BatchAddMoneyReq) returns (BatchAddMoneyResp);
+    // 批量注册
+    rpc BatchRegister (BatchRegisterReq) returns (BatchRegisterResp);
+    // 修改用户国家
+    rpc ChangeUserCountry (ChangeUserCountryReq) returns (ChangeUserCountryResp);
+    // 查品牌馆数据
+    rpc GetBrandSalesInfo (GetBrandSalesInfoReq) returns (GetBrandSalesInfoResp);
+}
+
+
+
+

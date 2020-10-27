@@ -1,0 +1,77 @@
+// 供应链 - 物流
+syntax = "proto3";
+package erp.address;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.erp.address";
+option java_outer_classname = "Address";
+
+message AddressInfo {
+    int32 id = 1; //唯一标示，新增数据时不传
+    string country_code = 2; //国家码
+    string state = 3; //省
+    string state_en = 4;
+    string city = 5; //市
+    string city_en = 6;
+    string area = 7; //区
+    string postcode = 8; //邮编
+    string superior_postcode = 9; //上级邮编
+}
+message GetAddressReq {
+    common.base.Pagination page = 1; //分页
+    string country_code = 2; //国家码
+    string state = 3; //省
+    string state_en = 4;
+    string city = 5; //市
+    string city_en = 6;
+    string area = 7; //区
+    string postcode = 8; //邮编
+    string superior_postcode = 9; //上级邮编
+}
+message GetAddressResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated AddressInfo address_info = 2;
+    int32 total=3;
+}
+
+message UpdateAddressReq {
+    AddressInfo address_info = 1;
+}
+message UpdateAddressResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message DeleteAddressReq {
+    int32 id = 1;
+}
+message DeleteAddressResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+message ImportAddressReq {
+    string file_url = 1; // 导入文件地址
+}
+
+message ImportAddressResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+// 地址后台接口
+service AddressBossService {
+
+    // 地址查询
+    rpc GetAddress (GetAddressReq) returns (GetAddressResp);
+
+    // 新增/更新地址
+    rpc UpdateAddress (UpdateAddressReq) returns (UpdateAddressResp);
+
+    // 删除地址
+    rpc DeleteAddress (DeleteAddressReq) returns (DeleteAddressResp);
+
+    //导入地址
+    rpc ImportAddress (ImportAddressReq) returns (ImportAddressResp);
+
+}

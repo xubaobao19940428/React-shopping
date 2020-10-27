@@ -1,0 +1,512 @@
+// 供应链 - 物流
+syntax = "proto3";
+package erp.logistics;
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.erp.logistics";
+option java_outer_classname = "Logistics";
+
+message AddressLogiInfo {
+    int32 id = 1; //唯一标示，新增数据时不传
+    string company_code = 2; //物流公司码
+    string country_code = 3; //国家码
+    string logi_country_code = 4; //物流公司国家码
+    string state = 5; //省
+    string city = 6; //市
+    string area = 7; //区
+    string postcode = 8; //邮编
+    string company_name = 9; //物流公司
+}
+message GetAddressLogiReq {
+    common.base.Pagination page = 1; //分页
+    string company_code = 2; //物流公司码
+    string country_code = 3; //国家码
+    string logi_country_code = 4; //物流公司国家码
+    string state = 5; //省
+    string city = 6; //市
+    string area = 7; //区
+    string postcode = 8; //邮编
+}
+message GetAddressLogiResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated AddressLogiInfo address_info = 2;
+    int32 total=3;
+
+}
+
+message UpdateAddressLogiReq {
+    AddressLogiInfo address_info = 1;
+}
+message UpdateAddressLogiResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message DeleteAddressLogiReq {
+    int32 id = 1;
+}
+message DeleteAddressLogiResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message SyncAddressLogiReq {
+    string country_code = 1;//国家码
+    string company_code = 2; //物流公司码
+}
+message SyncAddressLogiResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message ImportAddressLogiReq {
+    string file_url = 1; // 导入文件地址
+}
+
+message ImportAddressLogiResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+
+
+message LogiCompanyListReq {
+    common.base.Pagination page = 1; //分页
+    common.enum.ErpEnum.LogiCompanyType type = 2; // 物流公司类型
+    string country_code = 3; //国家码
+    string logi_company = 4; //物流公司码
+    string company_name = 5; //国家码
+    common.enum.ErpEnum.CooperateStatus cooperate_status = 6; // 合作状态
+}
+message LogiCompanyListResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    int32 total = 2;
+    repeated LogiCompanyList logiCompany = 3;
+    message LogiCompanyList{
+        int32 id = 1;
+        common.enum.ErpEnum.LogiCompanyType type = 2; // 物流公司类型
+        string country_code = 3;
+        string logi_company = 4;
+        string company_name = 5;
+        string logi_country_code = 6;
+        int32 priority =7; // 优先级
+        string config = 8; // API配置
+        common.enum.ErpEnum.CooperateStatus cooperate_status = 9; // 合作状态
+        string update_time=10;//最后修改时间
+        string postcodes=11;
+        string tracking_url = 12;
+    }
+}
+
+message LogiCompanyDetailReq {
+    int32 id = 1;
+}
+
+message LogiCompanyDetailResp {
+    common.base.ErrorMessage ret = 11; // 返回值
+    int32 id = 1;
+    common.enum.ErpEnum.LogiCompanyType type = 2; // 物流公司类型
+    string country_code = 3;
+    string logi_company = 4;
+    string company_name = 5;
+    string logi_country_code = 6;
+    int32 priority =7; // 优先级
+    string config = 8; // API配置
+    common.enum.ErpEnum.CooperateStatus cooperate_status = 9; // 合作状态
+    string postcodes = 10; // 配送邮编
+}
+
+
+message LogiCompanyPostcodesReq {
+    int32 id = 1;
+}
+
+message LogiCompanyPostcodesResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string postcodes = 2; // 配送邮编
+}
+
+message SaveLogiCompanyReq {
+    int32 id = 1;
+    common.enum.ErpEnum.LogiCompanyType type = 2; // 物流公司类型
+    string country_code = 3;
+    string logi_company = 4;
+    string company_name = 5;
+    string logi_country_code = 6;
+    int32 priority =7; // 优先级
+    string config = 8; // API配置
+    common.enum.ErpEnum.CooperateStatus cooperate_status = 9; // 合作状态
+    string postcodes = 10; // 配送邮编
+    string tracking_url = 11;
+}
+
+message SaveLogiCompanyResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+//------------物流时效配置---------------
+message LogiAgingAddReq {
+    string aging_type = 1;//时效类型.SHIPPING_AGENT:货代；SHIPPING_HOME:宅配
+    string country_code = 2;//适用国家
+    repeated AgingInfo country_aging_info = 3;//全国信息
+    repeated AreaInfo area_info = 4;//地区信息
+}
+message AreaInfo {
+    repeated AgingInfo aging_info = 1;//时效信息
+    repeated StateInfo state_info = 2;//省信息
+}
+message StateInfo {
+    string area = 1;//地区
+    string state = 2;//省
+    string state_en = 3;//省-英文
+}
+message AgingInfo {
+    string nature = 1;//货物属性。宅配传:NATURE_NULL。货代传(GENERAL:普货;SENSITIVE:敏感货)
+    int32 min_day = 2;//最短时间
+    int32 max_day = 3;//最长时间
+}
+message LogiAgingAddResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message LogiAgingUpdateReq {
+    string aging_type = 1;//时效类型.SHIPPING_AGENT:货代；SHIPPING_HOME:宅配
+    string country_code = 2;//适用国家
+    repeated AgingInfo country_aging_info = 3;//全国信息
+    repeated AreaInfo area_info = 4;//地区信息
+}
+message LogiAgingUpdateResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message QueryLogiAgingPageReq {
+    common.base.Pagination page = 1; //分页
+}
+message QueryLogiAgingPageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    int32 total = 2;
+    repeated LogiAging aging_list = 3;
+    message LogiAging{
+        string aging_type = 1;//时效类型.SHIPPING_AGENT:货代；SHIPPING_HOME:宅配
+        string country_code = 2;//适用国家
+        int32 min_day = 3;//最短时间
+        int32 max_day = 4;//最长时间
+        string create_time = 5;
+        string update_time = 6;
+    }
+}
+
+message QueryLogiUpdateInfoReq {
+    string aging_type = 1;//时效类型.SHIPPING_AGENT:货代；SHIPPING_HOME:宅配
+    string country_code = 2;//适用国家
+}
+message QueryLogiUpdateInfoResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated AgingInfo country_aging_info = 2;//全国信息
+    repeated AreaInfo area_info = 3;//数据信息
+}
+
+message QueryTimeoutInfoReq {
+
+}
+message QueryTimeoutInfoResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated TimeoutInfo timeout_info = 2; //时效信息
+    message TimeoutInfo {
+        string timeout_config_no = 1;
+        string sys_name = 2; //ORDER("ORDER","订单"),PURCHASE("PURCHASE","采购"),WAREHOUSE("WAREHOUSE","仓库"),
+        string time_name = 3; //sys_name+time_name:ORDER+DELIVERY--超时发货；PURCHASE+PURCHASE--超时采购；PURCHASE+DELIVERY--超时发货；PURCHASE+INCOME--超时入库；WAREHOUSE+OUT--超时出库
+        string time_type = 4; //时效类型。CUSTOM:自定义；LOGI:物流时效
+        int32 min_day = 5; //时效类型自定义显示
+        int32 max_day = 6; //时效类型自定义显示
+    }
+}
+
+message TimeoutUpdateReq {
+    string timeout_config_no = 1;
+    int32 min_day = 3;
+    int32 max_day = 4;
+}
+message TimeoutUpdateResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+message FreightForwarderListReq{
+    common.base.Pagination page = 1; //分页
+    string order_no=2;//订单号
+    string logi_no =3;//物流单号
+    string job_no = 4;//货代号
+    string bl_no = 5;//BL单号
+    string start_time =6;//开始时间
+    string end_time = 7;//结束时间
+    string req_type =8;//1：costGo数据导出 2：采购单数据导出
+    string marks = 9;//唛头
+}
+message FreightForwarderListResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    int32 total =3;//总数
+    repeated FreightForwarderPB pbList =2;
+}
+message FreightForwarderPB{
+    string id = 34;
+    string job_no =1;//货代号
+    string order_no =2;//订单号
+    string out_no = 3;//出库单号
+    string logi_no = 4;//物流单号
+    string bgd_no =5;//报关单号
+    string shipper =6;//发货人
+    string consignee =7;//收货人
+    string trade_type =8;//贸易方式
+    string pol_name=9;//起运港
+    string pod_name =10;//目的港
+    string master_no =11;//BL单号
+    string vessel =12;//船名航次
+    repeated string marks =13;//唛头信息
+    string req_pick_date=14;//提货日期
+    string sku_name= 15;//品名
+    string pkg_num =16;//件数
+    string gross_weight =17;//毛重
+    string measurement =18;//体积
+    string etd=19;//开航日期
+    string eta =20;//到港日期
+    string last_pass_date =21;//截关日期
+    string truck_no =22;//车牌号
+    string truck_type =23;//车型
+    string loading_type =24;//装载方式
+    string invoice_date=25;//invoice Date
+    string send_port_date=26;//送仓日期
+    string cycle_day_num =27;//门到门物流天数
+    string qty = 28;//QTY
+    string qty_unit =29;//QTY UNIT
+    string port_clearance_date=30;//目的港清关日期
+    string invoice_no = 31;//invoice no
+    string arrival_date =32; //到仓日期
+    string expected_arrival_date =33;//预期到港日期
+}
+message ImportB2BFreightForwarderReq{
+    string file_url=1;
+
+}
+
+message ImportB2BFreightForwarderResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    string file_url = 2;//文件地址
+}
+message QueryFreightForwarderInfoReq{
+    string job_no = 1;//查询
+}
+message FreightForwarderInfoResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+message EditFreightForwarderReq{
+    string job_no =1;//货代号
+    string logi_no =2;//物流单号
+    string out_no =3;//出库单号
+}
+message B2BOutOrderInfoReq{
+    string out_no = 1;//出库单号
+}
+message B2BOutOrderInfoResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated OutOrderSkuInfo skuInfo = 2;//出库单商品详情
+    message OutOrderSkuInfo{
+        string out_no =1;//出库单号
+        string sku_cover =2;//sku图片
+        string sku_id = 3;//商品ID
+        string sku_name = 4;//商品名称
+        string sku_code =5;//sku_code
+        string values = 6;//规格
+        int32 count =7;//
+    }
+}
+message B2BImportTemplateReq{
+    string req_type = 1;//1：costGo 2：采购单
+}
+message B2BImportTemplateResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    string file_url = 2;//文件地址
+}
+
+//------------跨境物流单详情---------------
+message CrossBorderDetailDTO{
+    string id = 1;//主键id
+    string logistics_no = 2;//物流单号
+    string thrid_logistics_no = 3;//第三方物流单号
+    string out_no = 4;//出库单号
+    string bag_no = 5;//袋号
+    int32 logistics_company_no = 6;//物流公司编号
+    string logistics_company_name = 7;//物流公司名称
+    int32 transport_way = 8;//运输方式编码
+    string transport_way_name = 9;//运输方式名称
+    string from_place = 10;//出发地
+    string to_place = 11 ;//目的地
+    int32 status = 12;//物流单状态
+    string status_name = 13;//物流单状态名称
+    string deadline_time = 14;//状态时效截止时间(时间戳)
+    int32 exception_type = 15;//异常类型
+    string exception_type_name = 16;//异常类型名称
+    string exception_record_time = 17;//异常记录时间
+    string logistics_info = 18;//物流信息
+    string declared_amount = 19;//申报价值
+    string declared_weight = 20;//申报重量
+    repeated string time_info_list= 21;//时间信息
+    string comment = 22;//备注信息
+}
+
+message CrossBorderListReq {
+    common.base.Pagination page = 1; //分页
+    string logistics_no = 2;//物流单号
+    string thrid_logistics_no = 3;//第三方物流单号
+    string out_no = 4;//出库单号
+    int32 status = 5;//物流单状态
+    int32 logistics_company_no = 6;//物流公司
+    int32 transport_way = 7;//运输方式
+    int32 exception_type = 8;//异常类型
+    int32 from_place = 9;//出发地
+    int32 to_place = 10 ;//目的地
+    int32 time_type = 11 ;//时间类型
+    string start_time = 12 ;//开始时间
+    string end_time = 13 ;//结束时间
+}
+
+message CrossBorderListResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    int32 total_count = 2;//总记录数
+    int32 total_page = 3;//总页数
+    repeated CrossBorderDetailDTO data_list = 4;//实体类集合
+}
+
+message CrossBorderExportResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    string file_url = 2;//文件地址
+}
+
+message SingleCrossBorderReq {
+    string thrid_logistics_no = 1;//第三方物流单号
+}
+
+message SingleCrossBorderResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    CrossBorderDetailDTO data = 2;//单条记录详情
+}
+
+message ConfirmArriveBatchReq {
+    repeated string thrid_logistics_nos = 1;//第三方物流单号
+}
+
+message ConfirmArriveBatchResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message EnumConfigResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string enum_json = 2;//多个枚举值对应的json
+}
+
+message EnumConfigReq {
+}
+
+
+
+//B2B货代跟踪
+service B2BFreightForwarderService{
+    //货代跟踪列表
+    rpc GetB2BFreightForwarderList (FreightForwarderListReq) returns (FreightForwarderListResp);
+    //CostGo货代号导入
+    rpc ImportCostGoFreightForwarder (ImportB2BFreightForwarderReq) returns (ImportB2BFreightForwarderResp);
+    //采购单货代跟踪导入
+    rpc ImportPurchaseFreightForwarder (ImportB2BFreightForwarderReq) returns (ImportB2BFreightForwarderResp);
+    //货代导出
+    rpc ExportCostGoFreightForwarder (FreightForwarderListReq) returns (ImportB2BFreightForwarderResp);
+    //查询信息
+    rpc QueryFreightForwarderInfo (QueryFreightForwarderInfoReq) returns (FreightForwarderInfoResp);
+    //编辑货代详情
+    rpc EditFreightForwarderInfo (EditFreightForwarderReq) returns (FreightForwarderInfoResp);
+    //出库单关联B2B货代信息
+    rpc EditOutNoFreightForwarder (EditFreightForwarderReq) returns (FreightForwarderInfoResp);
+    //出库单商品详情
+    rpc B2BFreightForwarderSkuInfo (B2BOutOrderInfoReq) returns (B2BOutOrderInfoResp);
+    //获取导入模板
+    rpc B2BImportTemplates (B2BImportTemplateReq) returns (B2BImportTemplateResp);
+}
+// 物流公司地址后台接口
+service AddressLogiBossService {
+
+    // 物流公司地址查询
+    rpc GetAddressLogi (GetAddressLogiReq) returns (GetAddressLogiResp);
+
+    // 物流公司新增/更新地址
+    rpc UpdateAddressLogi (UpdateAddressLogiReq) returns (UpdateAddressLogiResp);
+
+    // 物流公司删除地址
+    rpc DeleteAddressLogi (DeleteAddressLogiReq) returns (DeleteAddressLogiResp);
+
+    // 同步物流公司地址
+    rpc SyncAddressLogi (SyncAddressLogiReq) returns (SyncAddressLogiResp);
+
+    //导入物流公司地址
+    rpc ImportAddressLogi (ImportAddressLogiReq) returns (ImportAddressLogiResp);
+}
+
+// 物流公司后台接口
+service LogiCompanyBossService {
+
+    // 物流公司列表查询
+    rpc GetLogiCompanyList (LogiCompanyListReq) returns (LogiCompanyListResp);
+
+    // 物流公司详情-编辑使用
+    rpc GetLogiCompanyDetail (LogiCompanyDetailReq) returns (LogiCompanyDetailResp);
+
+    // 获取物流公司配送邮编
+    rpc GetLogiCompanyPostcodes (LogiCompanyPostcodesReq) returns (LogiCompanyPostcodesResp);
+
+    // 保存物流公司邮编
+    rpc SaveLogiCompany (SaveLogiCompanyReq) returns (SaveLogiCompanyResp);
+}
+
+service LogiConfigBossService {
+
+    // 新增物流时效配置
+    rpc LogiAgingAdd (LogiAgingAddReq) returns (LogiAgingAddResp);
+
+    // 编辑物流时效配置
+    rpc LogiAgingUpdate (LogiAgingUpdateReq) returns (LogiAgingUpdateResp);
+
+    //获取物流时效配置列表
+    rpc QueryLogiAgingPage (QueryLogiAgingPageReq) returns (QueryLogiAgingPageResp);
+
+    //物流编辑-获取编辑前信息
+    rpc QueryLogiUpdateInfo (QueryLogiUpdateInfoReq) returns (QueryLogiUpdateInfoResp);
+
+    //超时时效获取
+    rpc QueryTimeoutInfo (QueryTimeoutInfoReq) returns (QueryTimeoutInfoResp);
+
+    //超时时效更新
+    rpc TimeoutUpdate (TimeoutUpdateReq) returns (TimeoutUpdateResp);
+
+}
+
+service CrossBorderService {
+
+    // 查询跨境物流单列表
+    rpc CrossBorderList (CrossBorderListReq) returns (CrossBorderListResp);
+
+    // 导出数据
+    rpc ExportCrossBorderData (CrossBorderListReq) returns (CrossBorderExportResp);
+
+    // 同步物流信息(单笔)
+    rpc SyncCrossBorderLogisticsInfo (SingleCrossBorderReq) returns (SingleCrossBorderResp);
+
+    // 取消物流单(单笔)
+    rpc CancelCrossBorder (SingleCrossBorderReq) returns (SingleCrossBorderResp);
+
+    // 手动下单
+    rpc ManualOrder (SingleCrossBorderReq) returns (SingleCrossBorderResp);
+
+    // 确认到达
+    rpc ConfirmArrive (SingleCrossBorderReq) returns (SingleCrossBorderResp);
+
+    // 跨境订单列表界面,查询条件-下拉框枚举值返回接口
+    rpc GetSelectEnum (EnumConfigReq) returns (EnumConfigResp);
+
+    // 确认到达
+    rpc ConfirmArriveBatch (ConfirmArriveBatchReq) returns (ConfirmArriveBatchResp);
+}

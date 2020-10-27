@@ -1,0 +1,1357 @@
+syntax = "proto3";
+package common.enum;
+
+option java_multiple_files = false;
+option java_package = "com.fingo.littlec.proto.common";
+option java_outer_classname = "LittlecEnum";
+//通用枚举
+message CommonEnum {
+    //通用状态枚举
+    enum StatusEnum {
+        //异常状态
+        ABNORMAL = 0;
+        //正常
+        NOURMAL = 1;
+        //失效
+        LOSE_EFFICACY = 2;
+        //删除
+        DELETE = 3;
+    }
+}
+//活动枚举
+message MarketingEnum {
+
+    //拆红包类型SuperLuckyOrderStatus
+    enum OpenRedbagType {
+        CREATE_OPEN_REDBAG = 0; //开红包
+        JOIN_OPEN_REDBAG = 1; //拆红包
+        SHARE_OPEN_REDBAG = 2; //分享
+    }
+    //人群类型
+    enum ActiveCrowdType {
+        ALL = 0; //全部
+        NEW_USER = 1; //新用户
+        OLD_USER = 2; //老用户
+        SPECIFIED_USER = 3; //指定用户
+    }
+    enum ActiveStatus {
+        DEFAULT = 0; //默认全部
+        PREHEATING = 1; //预热中
+        IN_PROGRESS = 2; //进行中
+        FINISHED = 3; //已结束
+        NOT_STARTED = 4; //未开始
+    }
+    enum ActiveType {
+        OTHER = 0; //其他活动
+        HOT_SALE = 1; //爆款好物
+        MARKETING_ACTIVE = 2; //特卖会场
+        TIME_PRICE = 3; //限时特价
+        LIVE = 4; //直播
+        GROUP_ACTIVITY = 5; //拼团
+        HIGH_PROFIT_PRODUCT = 6; //高利润产品
+        HOT_PRODUCT = 7; //热卖商品
+        ZERO_SALE = 8; //0元购
+    }
+    enum PreheatType {
+        NOT_PREHEAT = 0; //不预热
+        PREHEAT = 1; //预热
+    }
+    enum PageStatus {
+        PAGE_STATUS_NULL = 0; //不存在状态，不使用
+        PAGE_VALID = 1; //生效中
+        PAGE_INEFFECTIVE = 2; //未生效
+        PAGE_INVALID = 3; //失效中
+    }
+
+    enum PageHistoryStatus {
+        PAGE_HISTORY_STATUS_NULL = 0; //不存在状态，不使用
+        PAGE_HISTORY_VALID = 1; //生效中
+        PAGE_HISTORY_INEFFECTIVE = 2; //未生效
+        PAGE_HISTORY_DELETED = 3; //已删除
+    }
+    //拼团活动类型(针对专题区分)
+    enum GroupActivityType {
+        GENERAL = 0; //普通拼团
+        ONE_BUYER = 1; //一元购
+        FIVE_DISCOUNT = 2; //半价购
+    }
+    //拼团活动类型(针对拼团本身的活动类型)
+    enum GroupActivityByItemType {
+        GROUP_ACTIVITY_ITEM_TYPE_NO_USE = 0; //不使用
+        GROUP_ACTIVITY_ITEM_TYPE_GENERAL = 1; //普通
+        GROUP_ACTIVITY_ITEM_TYPE_DRAW = 2; //抽奖团
+    }
+    enum RefundType {
+        REFUND_TYPE_NO_NULL = 0;
+        REFUND_TYPE_POINT = 1; //积分
+    }
+    //显示状态
+    enum ItemShowStatus {
+        SHOW_UN_USE = 0;
+        SHOW = 1; //显示
+        HIDE = 2; //隐藏
+    }
+    enum RobotType {
+        NO = 0; //否
+        YES = 1; //是
+    }
+    enum ShopProductType {
+        HIGH_PROFIT_PRODUCT_TYPE = 0; //高佣商品
+        HOT_PRODUCT_TYPE = 1; //热卖商品
+        HALF_FARE_PRODUCT_TYPE = 3; //半价购商品
+    }
+    //幸运购商品活动状态
+    enum SuperLuckyProductActivityStatus {
+        //未开始
+        WAIT_START = 0;
+        //进行中
+        UNDERWAY = 1;
+        //待开奖
+        WAIT_LOTTERY = 2;
+        //已结束
+        LOTTERY_END = 3;
+    }
+    //幸运购订单状态
+    enum SuperLuckyOrderStatus {
+        //未支付
+        NO_PAY = 0;
+        //已支付
+        PAID = 1;
+        //已退款
+        REFUND = 2;
+        //支付中
+        PENDING = 3;
+    }
+    //幸运购退款状态REFUND
+    enum SuperLuckyRefundStatus {
+        //未退款
+        NO_REFUND = 0;
+        //已退款
+        REFUNDED = 1;
+    }
+    //幸运购退款类型
+    enum SuperLuckyRefundTypeName {
+        //未中奖
+        LOSING_LOTTERY = 0;
+        //中奖码已领完
+        NO_LUCKY_NUMBER = 1;
+    }
+    //幸运购中奖码类型
+    enum SuperLuckyNumberType {
+        SUPER_LUCKY_NUMBER_NO_USE = 0;
+        //订单
+        SUBMIT_ORDER = 1;
+        //邀请老用户
+        INVITE_OLD_USER = 2;
+        //邀请新用户
+        INVITE_NEW_USER = 3;
+    }
+    //幸运购中奖用户类型
+    enum SuperLuckyUserType {
+        //真实用户
+        USER = 0;
+        //机器人
+        ROBOT = 1;
+    }
+    enum SuperLuckRefundType {
+        SUPER_LUCK_REFUND_NO_USE = 0; //不使用
+        SUPER_LUCK_REFUND_POINTS = 1; //退积分
+    }
+    enum BigPrizeUserStatusType {
+        BIG_PRIZE_USER_STATUS_NO_USE = 0; //不使用
+        BIG_PRIZE_USER_STATUS_NOT_INVOLVED = 1; //未参与
+        BIG_PRIZE_USER_STATUS_NOT_WINNING = 2; //未中奖
+        BIG_PRIZE_USER_STATUS_ALREADY_WINNING = 3; //已经中奖
+    }
+
+    //活动报名-商品审批状态
+    enum ActiveProductApprovalStatus {
+        WAITING_SIGN_UP = 0; //待报名
+        WAITING_HIRE = 1; //待录用
+        HIRED = 2; //录用
+    }
+    //活动报名-筛选枚举类
+    enum ListProductEnterFilterNullType {
+        NONE_SPU_PREHEAT_TIME = 0; //预热时间为空
+        NONE_START_TIME = 1; //开始时间为空
+        NONE_END_TIME = 2; //结束时间为空
+        NONE_GROUP = 3; //分组为空
+        NONE_ACTIVE_PRICE = 4; //活动价为空
+        NONE_ACTIVE_RATE = 5; //活动佣金率为空
+        NONE_ACTIVE_STOCK = 6; //活动库存为空
+    }
+    //活动报名-查看商品校验失败类型
+    enum ListProductEnterLookType {
+        NONE_SELECT = 0; //不选择
+        PRICE_VIOLATE = 1; //查看价格校验不通过
+        TIME_CONFLICT = 2; //查看活动时间冲突
+    }
+    //活动报名-用户操作类型
+    enum ActiveProductEnterUserType {
+        NONE = 0;//未选择
+        SIGN_UP_OPERATOR = 1; //提报人
+        GATHER_OPERATOR = 2; //采集人
+    }
+    //活动报名-活动价自动定价模式
+    enum ActivePriceAutoSettingType {
+        EQUAL_ADVISE_ACTIVE_PRICE = 0;//等于建议活动价
+        DISCOUNT_BY_ADVISE_ACTIVE_PRICE=1;//按建议活动价打折
+        DISCOUNT_BY_VIP_PRICE = 2;//按VIP价打折
+        CUSTOMIZE_PRICE = 3;//自定义
+
+        UN_SELECT_PRICE = -1;//未选择
+    }
+    //活动报名-佣金率自动定价模式
+    enum CommissionRateAutoSettingType {
+        EQUAL_NORMAL_COMMISSION = 0;//等于日常佣金率
+        RATION_BY_NORMAL_COMMISSION = 1;//按日常佣金率打折
+        CUSTOMIZE_COMMISSION = 2;//自定义
+
+        UN_SELECT_RATE = -1;//未选择
+    }
+    //活动报名-价格冲突状态
+    enum PriceConflictStatus {
+        SAFE = 0; //安全
+        REMIND = 1; //提醒
+        FORBID = 2; //禁止
+    }
+
+    //是否商品时间是是否跟随活动时间
+    enum ProductFellowActivityStatus {
+        UN_SELECT_FELLOW = 0;//未选择
+        FELLOW = 1;//跟随活动
+        CUSTOMIZE_TIME = 2;//自定义活动时间
+    }
+
+}
+
+//营销枚举
+message PromotionEnum {
+    enum PromotionStatusType {
+        //促销状态
+        ALL = 0; //全部活动
+        ABOUT_TO_START = 1; //即将开始
+        PROCESSING = 2; //进行中
+        END = 3; //已结束
+    }
+    enum PromotionType {
+        FULL_REDUCTION = 0; //满额减
+        EVERY_FULL_REDUCTION = 1; //每满额减
+        M_YUAN_N_PIECE = 2; //M元N件
+        M_PIECE_N_DISCOUNT = 3; //M件N折
+        ONLY_M_PIECE_N_YUAN = 4; //第M件N元
+        ONLY_M_PIECE_N_DISCOUNT = 5; //第M件N折
+        FREE_SHIPPING = 6; //包邮
+        FULL_PIECE_REDUCTION = 7; //满件减
+        EVERY_FULL_PIECE_REDUCTION = 8; //每满件减
+        FULL_FORWARD_COUPON = 9; //满额发券
+    }
+    enum PromotionProductType {
+        MANUAL_ENTRY = 0; //人工录入，商品ID
+        BIND_ACTIVE = 1; //绑定活动，活动ID
+        PRODUCT_GROUP_LABEL = 2; //商品分组标签
+        APP_CATEGORY = 3; //前台类目
+        BACKGROUND_CATEGORY = 4; //后台类目
+        BRAND_ID = 5; //品牌
+    }
+    enum DiscountMutexType {
+        NOT_MUTEX = 0; //不互斥
+        PROMOTION_MUTEX = 1; //促销活动互斥
+        COUPON_MUTEX = 2; //与优惠券互斥
+        FREE_SHIPPING_NOT_MUTEX = 3; //与包邮以外的互斥
+    }
+    enum FreeShippingType {
+        PIECE_UNIT = 0; //件单位，件
+        MONEY_UNIT = 1; //钱单位，元
+    }
+
+    enum CouponReceivingChannelEnum {
+        BUY_GIFT = 0; //购买礼包
+        BUY_GIFT_REISSUE = 1; //购买礼包-定时任务补发
+        REGISTER = 2; //注册
+        INVITED_REGISTRAR_TO_FIRST_ORDER = 3; //邀新首单奖励
+        PASSWORD = 4; //口令
+        ACTIVE_LINKS = 5; //活动链接
+        PRODUCT_BINDING = 6; //商品绑定
+        MANUAL_REISSUE = 7; //手动补发
+        OVERTIME_COMPENSATE = 8; //慢必赔
+    }
+
+    enum CouponUniqueCodeEnum {
+        INVITER_U = 0; //邀请
+        REGISTER_U = 1; //注册
+    }
+
+    enum BannerTypeEnum {
+        //banner类型（1：banner 2：闪屏广告 3:PS店铺 4:个人中心）
+        BANNER_TYPE_NULL = 0;
+        BANNER = 1;
+        FLASH_SCREEN = 2;
+        PS_STORE = 3;
+        PERSONAL_CENTER = 4;
+    }
+
+    enum BuyTypeEnum {
+        //购买类型（0:新人购买腰封；1:礼包购买腰封）
+        NEW_BUY = 0;
+        GIFT_BUY = 1;
+    }
+
+    enum TimeTypeEnum {
+        //        时间类型（0:无时间限制；1:有时间限制）
+        NOT_TIME_LIMIT = 0;
+        TIME_LIMIT = 1;
+    }
+    enum BoxCardType {
+        //        类型（1:运营分类 ）
+        BOX_CARD_TYPE_NULL = 0;
+        OPERATION_CATEGORY = 1;
+    }
+    enum PromotionFunctionType {
+        //背景类型
+        DEFAULT_NULL = 0; //默认空
+        BANNERS = 1; //banner
+        SERVICE_DESC = 2; //服务文案
+        FUNCTIONAL_AREA = 3; //功能区
+        GIRDLE = 4; //腰封
+        PROMOTION_BOX_CARD = 5; //营销card
+        GIRDLE_ADVERTISE = 6; //平台广告位
+        ADVERTISE_BOX_CARD = 7; // 广告card
+        MARKETING_GRID = 8; //宫格区
+        CATEGORY_BANNER = 9; //类目运营banner
+        PS_STORE_BANNER = 10; //PS店铺banner
+        PERSONAL_CENTER_BANNER = 11; //个人中心banner
+    }
+
+    enum PromotionFunctionCanDeleteType {
+        //功能区是否可以删除
+        PROMOTION_FUNCTION_CAN_DELETE_NULL = 0; //默认空
+        CAN_DELETE = 1; //能删除
+        CAN_NOT_DELETE = 2; //不能删除
+    }
+
+    enum PromotionAppUrlType {
+        //跳转类型
+        DEFAULT_NOT_JUMP = 0; //默认空,不跳转
+        H5_URL = 1; //h5链接
+        APPLICATION = 2; //应用内
+    }
+
+    enum PromotionMarketingGridType {
+        PROMOTION_MARKETING_GRID_TYPE_NULL = 0; //默认空
+        LIMITED_TIME_SPECIAL = 1; //限时特惠
+        OTHER_GRID = 2; //其他宫格区
+        NEW_COMER_EXCLUSIVE = 3; //新人专属
+        FADDISH_GOOD_MATERIAL = 4; //爆款好物
+    }
+
+    enum PurchaseLimitRuleType {
+        PURCHASE_LIMIT_RULE_TYPE_NULL = 0; //不使用
+        PURCHASE_LIMIT_RULE_MAX_BUY = 1; //指定人群在限购期间累计最多购买
+        PURCHASE_LIMIT_RULE_MIN_BUY = 2; //指定人群在限购期间每单最小购买
+    }
+
+    //奖品类型
+    enum PromotionLuckDrawType {
+        LUCK_DEFAULT = 0; //默认空，格式要求，实际没有空
+        LUCK_COUPON = 1; //优惠券
+        LUCK_PRIZE = 2; //自定义奖品
+        LUCK_NONE_PRIZE = 3; //非奖品
+        LUCK_SAFE_BOLT = 4; //保险栓
+        POINTS = 5; //积分
+    }
+
+    //提示方式
+    enum PromotionTipsType {
+        DEFAULT_Tips = 0; //默认空，格式要求，实际没有空
+        POPUP = 1; //弹窗
+        COPY_WRITING = 2; //文案
+    }
+
+    //投放频率
+    enum PromotionIncreaseFrequencyType {
+        DEFAULT_INCREASE = 0; //默认空，格式要求，实际没有空
+        TIMING_INCREASE = 1; //定时投放
+        LOOP_INCREASE = 2; //循环投放
+    }
+
+    //投放类型
+    enum PromotionIncreaseType {
+        DEFAULT_INCREASE_NULL = 0; //默认空，格式要求，实际没有空
+        ADD_INCREASE = 1; //增量投放
+        CLEAN_INCREASE = 2; //清空投放
+    }
+
+    //无条件抽奖类型
+    enum PromotionFreeType {
+        DEFAULT_N_BULL = 0; //默认空，格式要求，实际没有空
+        FREE_N_DATE = 1; // N次/自然日
+        FREE_N_ALL = 2; // N次/活动全程
+    }
+
+    enum LuckDrawActiveStatus {
+        LUCK_STATUS_DEFAULT = 0; //默认全部
+        //        PREHEATING = 1; //预热中
+        LUCK_IN_PROGRESS = 1; //进行中
+        LUCK_FINISHED = 2; //已结束
+        LUCK_NOT_STARTED = 3; //未开始
+    }
+
+    enum AppIconType {
+        APP_ICON_DEFAULT = 0; //APP icon 默认值
+        TAB_INDEX = 1; //首页
+        TAB_ACADEMY = 2; //学院
+        TAB_AFFILIATE_PREFERRED = 3; //PS店铺
+        TAB_CART = 4; //购物车
+        TAB_MY = 5; //我的
+    }
+
+    //转赠领取方式
+    enum GiftGivingReceiveWay {
+        LIMITED_TIME = 0; //限时领取
+        PERMANENT = 1; // 永久领取
+    }
+
+    //转赠赠送方式
+    enum GiftGivingWay {
+        ACCOUNT = 0; //账号分享
+        QR_CODE = 1; //二维码分享
+        SOCIAL_PLATFORM = 2; //社交平台分享
+    }
+
+    //转赠赠送方式
+    enum GivingStatus {
+        WAITTING = 0; //已赠送待领取
+        TAKABACK = 1; //已退回
+        RECEIVED = 2; //已领取
+        NONE = 3; //无人领取
+    }
+
+    enum CouponUseStatus {
+        NOTUSED = 0; //未使用
+        USED = 1; //已使用
+        EXPIRED = 2; //已过期
+        USELESS = 3; //已废弃
+        GIVING = 4; //正在转赠
+    }
+
+}
+
+//订单枚举
+message OrderEnum {
+    //订单总类目
+    enum OrderCategory {
+        COMMON = 0; //常规
+        CHARGE = 1; //充值
+        BILL = 2; //账单
+    }
+    enum OrderType {
+        ORDINARY = 0; //普通商品订单
+        SMALL_GIFT = 1; //小礼包商品订单
+        BIG_GIFT = 2; //大礼包商品订单
+        GROUP = 4; //拼团订单
+        LIVE = 5; //直播订单
+        VIRTUAL = 8; //虚拟商品订单
+        COSTGO = 9; //批发商品订单
+        MICRO_BOSS = 10; //微商商品订单
+        LITE_GIFT = 11; //99青春版礼包
+        SUPER_LUCKY_GIFT = 12; //1元夺宝
+        WEBUSINESS_GIFT = 13; //微商礼包
+        TOPUP_CHARGE = 14; //固定充值
+        BILL_CHARGE = 15; //账单充值
+    }
+    enum GiftType {
+        GITF_TYPE0 = 0;
+        NOT_GIFT = 1; //非礼包
+        PRIME = 2;
+        SMALL = 3;
+        BIG = 4;
+    }
+    enum DeliveryType {
+        DELIVERY_TYPE0 = 0;
+        SELF_PICK_UP = 1; //自提
+        EXPRESS = 2; //快递
+    }
+    enum OrderStatus {
+        WAIT_FOR_PAY = 0; //待支付
+        WAIT_FOR_SHIPPING = 1; //待发货
+        WAIT_FOR_RECEIVING = 2; //待收货
+        TRADE_SUCCESS = 3; //交易成功
+        TRADE_CLOSED = 4; //交易关闭
+        PARTLY_SHIPPED = 5; //部分发货
+    }
+    enum DiscountType {
+        COUPON = 0; //优惠劵
+        PROMOTION = 1; //促销
+        ACTIVITY = 2; //运营活动
+    }
+    enum AfterStatus {
+        UNDER_REVIEW = 0; //审核中
+        APPROVED = 1; //审核通过
+        AFTER_SUCCESS = 2; //售后成功
+        AFTER_CLOSE = 3; //售后关闭(用户取消)
+        AFTER_REFUSED = 4; //售后驳回(拒绝)
+        AFTER_FAILED = 5; //售后失败(信息有误，重新填写)
+        NO_AFTER = -1; //没有售后
+    }
+    //售后类型
+    enum AfterSaleType {
+        CANCEL_ORDER = 0; //取消订单
+        RETURN = 1; //退货退款
+        EXCHANGE = 2; //换货
+        IMMEDIATE_AFTER = 3; //后台直接退款
+        APPLY_FOR_AFTER = 4; //后台申请售后
+        CUSTOMER_REFUND = 5; //客服仅退款
+        CUSTOMER_RETURN = 6; //客服退货退款
+        USER_REFUND = 7; //客户仅退款
+
+
+    }
+    //退款类型
+    enum RefundType {
+        TO_BANK_CARD = 0; //退到银行卡
+        TO_POINTS = 1; //退到积分
+        CREDIT = 2; //退回信用卡
+    }
+    //商品售后状态
+    enum ProductStatus {
+        SHOPPING = 0; //可申请售后
+        REFUND = 1; //售后中
+        REFUND_SUCCESS = 2; //售后成功
+        NOT_SHOPPING = -1; //不能申请售后
+    }
+    enum OrderSource {
+        APP = 0;
+        FACEBOOK = 1;
+    }
+    enum GroupStatus {
+        GROUP_UNUSED = 0;
+        GROUPPING = 1;
+        SUCCESS = 2;
+        FAILED = 3;
+    }
+    enum GroupMemberStatus {
+        WATI_FOR_PAY = 0; //待支付
+        PAIED = 1; //已支付
+        CANCLED = 2; //已取消
+        GROUP_REFUND = 3; //拼团退款
+        UNDRAW_GROUP_REFUND = 4; //抽奖拼团未中奖退款
+    }
+    enum GroupMemberRefundStatus {
+        GROUP_NOURMAL = 0; //无需退款
+        GROUP_REFUND_SUCCESS = 1; //退款成功
+        GROUP_REFUND_ERROR = 2; //退款失败
+    }
+    enum GroupMemberRole {
+        LEADER = 0; //团长
+        FOLLOWER = 1; //团员
+    }
+
+    enum SubStatus {
+        SUB_STATUS_NULL = 0; //不存在子状态
+        PAYING = 1; //支付中
+    }
+
+    enum PointPayEnum {
+        NOT_POINT_PAY = 0;
+        POINT_PAY = 1; //纯积分支付
+        PARTLY_POINT_PAY = 2; //部分用积分
+    }
+
+    enum OutStockSource {
+        OUT_STOCK_SOURCE_NULL = 0;
+        PUR = 1; //采购
+    }
+
+    enum JudgeSubOrderSkuAfterEnum {
+        JUDGE_VALID = 0; //审核中、审核通过、售后成功
+        JUDGE_AFTER_SUCCESS = 1; //售后成功
+    }
+}
+
+message PolyPayEnum {
+    enum PayWay {
+        PAY_WAY_UNKNOWN = 0;
+        CREDIT = 3; //信用卡支付
+        INTEGRAL = 2; //积分支付
+        MOLPAY = 1; //molpay
+        OMISE = 4; //omise
+        OnlineBanking = 5; //OnlineBanking
+        COD = 6; //支付方式
+        COMPOSITE = 7; //组合支付（积分+其他）
+    }
+    enum PayStatus {
+        SUCCESS = 0;
+        FAIL = 1;
+        PENDING = 2;
+        WAIT_PAY = 3;
+        REVERSAL_SUCCESS = 4;
+        REVERSAL_FAIL = 5;
+        SETTLEMENT_DAY_REVERSAL_FAIL = 6;
+        REVERSAL_PENDING = 7;
+        REVERSAL_DEAL = 8;
+    }
+
+    enum AccountDetailType {
+        ACCOUNT_DETAIL_TYPE_NULL = 0;
+        INCOME = 1; //"income", "收入"
+        EXPENSE = 2; // "expense", "支出"
+    }
+
+    //业务类型枚举
+    enum BnsTypeEnum {
+        BnsTypeEnum_NULL = 0;
+        //订单
+        ORDER = 1;
+        GROUP_ORDER = 2;
+        //一元夺宝
+        SUPER_LUCKY = 3;
+    }
+}
+
+message ProductAdvanceSearchEnum {
+    enum MarkEnum {
+        EQUAL = 0;
+        NOT = 1;
+        GT = 2;
+        GTE = 3;
+        LT = 4;
+        LTE = 5;
+        CONTAIN = 6;
+        RANGE = 7;
+    }
+
+    enum OperatorEnum {
+        AND = 0;
+        OR = 1;
+    }
+
+}
+
+//商品相关枚举
+message ProductEnum {
+
+    //显示状态
+    enum ItemShowStatus {
+        SHOW_UN_USE = 0;
+        SHOW = 1; //显示
+        HIDE = 2; //隐藏
+    }
+
+    //上下架状态
+    enum ShelveStatus {
+        SHELF_STATUS_NULL = 0; //不使用
+        ON_SHELVE = 1; //上架
+        OFF_SHELVE = 2; //下架
+    }
+
+    //销售状态
+    enum SaleStatus {
+        SALE_NULL = 0; //不使用
+        ON_SALE = 1; // 在售
+        OFF_SALE = 2; // 停售
+    }
+
+    //商品类型
+    enum ProductType {
+        COMMON_GOODS = 0; //普通商品 , 重构使用, 为实物商品
+        SMALL_GIFT_PACKAGE = 1; //小礼包 重构使用
+        BIG_GIFT_PACKAGE = 2; //大礼包 重构使用
+        COURSE_PRODUCT = 3; //课程商品 废弃
+        GROUP_PRODUCT = 4; //拼团商品 废弃
+        LIVE_PRODUCT = 5; //直播商品  废弃
+        ACTIVE_PRODUCT = 6; //活动商品 废弃
+        PRIME_PRODUCT = 7; //prime商品 废弃
+        COMPOSITE_PRODUCT = 8; //组合商品 废弃
+        VIRTUAL_PRODUCT = 9; //虚拟商品 重构使用
+        WHOLESALE_PRODUCT = 10; //批发商品
+        WEBUSINESS_PRODUCT = 11; //微商商品
+        LITE_GIFT = 12; //青春版礼包
+        SUPER_LUCKY_PRODUCT = 13; //青春版礼包
+        WEBUSINESS_GIFT = 14; //微商礼包
+        TOPUP_CHARGE = 15; //固定充值
+        BILL_CHARGE = 16; //账单充值
+        TYPE_NULL = -1; //字段不填的情形, 用于搜索时的条件
+    }
+
+    //商品形态
+    enum ProductPattern {
+        PATTERN_NULL = 0; //不使用
+        COMMON = 1; //实物
+        VIRTUAL = 2; //虚拟
+        SERVICE = 3; //服务
+    }
+
+    //nature 货物性质
+    enum Nature {
+        NATURE_NULL = 0; //不使用
+        GENERAL = 1; // 普货
+        SENSITIVE = 2; //敏感货
+        CONTRABAND = 3; //违禁品
+    }
+
+    enum FreightType {
+        FREE_SHIPPING = 0; //卖家包邮
+        //FIXED_SHIPPING_FEE = 1; //固定费用
+        SHIPPING_TEMPLATE = 2; //运费模板
+    }
+
+    //    enum ProductLabel {
+    //        LABEL_NULL = 0; //不使用
+    //        FREE_SHIP = 1; //包邮
+    //        HOT = 2; //爆款
+    //        HIGH_COMMISSION = 3; //高佣
+    //        NEW = 4; // 新品
+    //    }
+
+    //销售方式
+    enum SaleWay {
+        SALE_WAU_NULL = 0; //不使用
+        SALE_OUT_STOP = 1; //售完即止
+        SALE_PURCHASE = 2; //边售边买
+    }
+
+    //发货方式
+    enum DeliveryWay {
+        DELIVERY_NULL = 0; //不使用
+        PLATFORM_DELIVERY = 1; //平台发货
+        DIRECT_SHIPMENT = 2; //直邮
+    }
+
+    //货币
+    enum Currency {
+        CURRENCY_NULL = 0; //不使用
+        USD = 1; //美元
+        CNY = 2; //人民币
+        MYR = 3; //马来西亚令吉
+        THB = 4; //泰铢
+        IDR = 5; //印尼盾
+    }
+
+    enum QueryTimeType {
+        TIME_TYPE_NULL = 0;
+        CREATE_TIME = 1;
+        UPDATE_TIME = 2;
+    }
+
+    enum LabelType {
+        LABEL_TYPE_NULL = 0; //不使用
+        FREE_SHIP = 1; //包邮
+        HOT = 2; //爆款
+        HIGH_COMMISSION = 3; //高佣
+        NEW = 4; //新品
+        FAST_DELIVERY = 5; //极速达
+    }
+
+    enum DraftStatusType {
+        DRAFT_STATUS_TYPE_NULL = 0; //不使用
+        CHECK_FAILED = 1; //失败
+        CHECK_TO_CONFIRM = 2; //待确认
+        CHECK_PENDING = 3; //待审核
+        CHECK_FINISHED = 4; //审核完成
+    }
+
+    enum AutoFetchStatus {
+        FETCH_NULL = 0; // 不使用
+        FETCH_FAILED = 1; //失败
+        FETCH_TO_CONFIRM = 2; //待确认
+        FETCH_SUCCESS = 3; // 成功
+    }
+
+    enum ProductSource {
+        SOURCE_NULL = 0; //不使用
+        SOURCE_MANUAL = 1; //手工录入/自营
+        SOURCE_SHUAIBAO = 2; //甩宝
+        SOURCE_1688 = 3; //1688
+        SOURCE_PDD = 4; //拼多多
+        SOURCE_ROBOT = 5; //机器上货
+        SOURCE_SUPPLIER = 6; //商家平台
+    }
+
+    enum OneKeyPublishType {
+        PUBLISH_NULL = 0; //不使用
+        PUBLISH_MANUAL = 1; //手工录入
+        PUBLISH_ONE_KEY = 2; //一键上传
+        PUBLISH_SUPPLIER = 3; //供应商上传
+    }
+
+    enum StockSuggest {
+        SUGGEST_NULL = 0; //默认
+        SUGGEST_ON_SHELVE = 1; //建议上架
+        SUGGEST_OFF_SHELVE = 2; //建议下架
+        SUGGEST_ON_SALE = 3; //建议在售
+        SUGGEST_OFF_SALE = 4; //建议停售
+        SUGGEST_SALE_PURCHASE = 5; //边售边采
+        SUGGEST_ADVANCE_PRODUCT = 6; //预售商品
+    }
+
+    enum OffShelveReason {
+        REASON_NULL = 0; //默认
+        TEMPORARILY_SHORT_OF_STOCK = 1; //暂时缺货
+        PERMANENTLY_OUT_OF_STOCK = 2; //永久缺货
+        PROHIBITED = 3; //侵权/违禁/敏感产品
+        UNSALABLE = 4; //滞销
+        QUALITY_ISSUE = 5; //质量/色差/尺码等产品问题
+        SUPPLIER_NOT_COOPERATE = 6; //供应商不合作
+        OTHER = 7; //其他原因
+        SUPPLIER_SELF = 8; //商家自行下架
+    }
+
+    enum DraftType {
+        DRAFT_UNKNOWN = 0; //默认
+        DRAFT_NEW = 1; //新增
+        DRAFT_EDIT = 2; //编辑
+        DRAFT_STATUS = 3; //修改状态
+    }
+
+    //排序字段
+    enum SortColumn {
+        DEFAULT = 0; // 默认
+        SALES = 1; // 销量
+        MANUAL = 2; // 人工
+        CART = 3; // 加购
+        ACTIVE = 4; // 活动
+    }
+
+    //排序类型
+    enum SortType {
+        ASC = 0; // 正序
+        DESC = 1; // 倒序
+    }
+
+}
+
+//类目相关枚举
+message CategoryEnum {
+
+    //显示状态
+    enum ShowStatus {
+        SHOW_UN_USE = 0;
+        SHOW = 1; //显示
+        HIDE = 2; //隐藏
+    }
+
+    //排序方向
+    enum SortDirection {
+        UN_USE = 0;
+        SORT_UP = 1; //上移
+        SORT_DOWN = 2; // 下移
+
+    }
+
+    //类目类型
+    enum CateType {
+        CATE_TYPE_NULL = 0; //不使用
+        FRONT = 1; //前台类目
+        BACKEND = 2; //后台类目
+    }
+
+    //类目级别
+    enum CateLevel {
+        CATE_LEVEL_NULL = 0; //不使用
+        CATE_LEVEL_ONE = 1; //一级
+        CATE_LEVEL_TWO = 2; //二级
+        CATE_LEVEL_THREE = 3; //三级
+    }
+
+    enum CateProdTop {
+        NORMAL = 0; //不置顶
+        TOP = 1; //置顶
+    }
+
+    //优选类目类型
+    enum PreferredCateType {
+        PRE_CATE_TYPE_NULL = 0; //不使用
+        PREFERRED_TYPE = 1; //优选类目
+        GENERAL_TYPE = 2; //普通前台一级类目
+    }
+
+}
+
+//属性相关枚举
+message AttributeEnum {
+    enum Customize {
+        NOT_ALLOW_CUSTOMIZE = 0; //不允许自定义
+        ALLOW_CUSTOMIZE = 1; //允许自定义
+    }
+
+    //显示状态
+    enum ShowStatus {
+        SHOW_UN_USE = 0;
+        SHOW = 1; //显示
+        HIDE = 2; //隐藏
+    }
+
+    //属性值类型 1 属于属性模板中的属性值, 2 属于自定义属性值
+    enum ValueType {
+        VALUE_TYPE_UN_USER = 0;
+        NORMAL = 1; //模板中的属性值
+        CUSTOMIZE = 2; //自定义属性
+    }
+
+    //属性类型
+    enum AttrType {
+        TYPE_NULL = 0;
+        PARAM_ATTR = 1; //参数属性
+        STANDARD_ATTR = 2; //规格属性
+    }
+
+    enum ContentType {
+        CONTENT_NULL = 0;
+        ATTR_NAME = 1; //属性名
+        VALUE_NAME = 2; //属性值
+    }
+}
+
+message MsggwEnum {
+    // 推送类型
+    enum PushType {
+        NULL_PUSH_TYPE = 0;
+        // 手动
+        MANUAL_PUSH = 1;
+        // 定时
+        TIMING_PUSH = 2;
+        // 立即推送
+        IMMEDIATELY_PUSH = 3;
+        // 批量定时推送
+        BATCH_TIMING_PUSH = 4;
+    }
+
+    // 读取状态
+    enum ReadStatus {
+        NULL_READ_STATUS = 0;
+        // 未读
+        UNREAD = 1;
+        // 已读
+        READ = 2;
+    }
+
+    enum DeviceType {
+        UNKNOWN = 0;
+        ANDROID = 1;
+        IOS = 2;
+    }
+}
+
+//APP更新类型
+message AppVersion {
+    enum AppVersionUpdateTypeEnum {
+        AppVersionUpdateType_NULL = 0;
+        //非强制更新
+        Optional = 1;
+        //强制更新
+        Mandatory = 2;
+    }
+    enum AppVersionStatusEnum {
+        AppVersionStatus_NULL = 0;
+        //待发布
+        wait_released = 1;
+        //已发布
+        released = 2;
+    }
+    enum AppVersionUpdateDownloadTypeEnum {
+        AppVersionUpdateDownloadTypeEnum_NULL = 0;
+        //H5 链接下载
+        Web = 1;
+        //H5 AppStore
+        AppStore = 2;
+    }
+}
+
+message PurchaseOrderEnum {
+    enum UseFingoSystem {
+        //默认2不使用 1-使用,2-不使用
+        NULL_USE_FINGO = 0;
+        USE = 1;
+        NOT_USE = 2;
+
+    }
+
+    enum DeliveWay {
+        //发货方式 默认2空运（1-海运,2-空运）
+        NULL_DELIVE = 0;
+        OCEAN = 1;
+        AIR = 2;
+
+    }
+}
+
+//服务承诺枚举
+message PledgeEnum {
+    //赔付类型
+    enum PaymentType {
+        PAYMENT_NULL = 0; //不使用
+        SYSTEM_PAY = 1; //系统赔付
+        NOT_PAY = 2; // 不赔付
+    }
+
+    //外显类型
+    enum ShowType {
+        SHOE_NULL = 0; //不使用
+        SHOW_PRODUCT_DETAIL = 1; //只外显于商品详情页
+        SHOW_ALL = 2; // 全部外显
+        SHOW_NOTHING = 3; // 不外显
+    }
+
+    //适用范围
+    enum RangeType {
+        RANGE_NULL = 0; //不使用
+        RANGE_CATEGORY = 1; //商品类目
+        RANGE_PRODUCT_TYPE = 2; //商品类型
+    }
+}
+
+//供应链枚举
+message ErpEnum {
+    enum YesNo {
+        NULL_YES_NO = 0; //不使用
+        YES = 1; // 是
+        NO = 2; // 否
+    }
+
+    enum InventoryOperType {
+        NULL_INVENTORY_OPER_TYPE = 0;
+        ADD = 1; // 加
+        REDUCE = 2; // 减
+        REPLACE = 3; //替换
+    }
+
+    // 影响库存变动的操作类型
+    enum InventoryRecordType {
+        NULL_INVENTORY_RECORD_TYPE = 0;
+        CONFIRM_PURCHASE = 1; // 确认采购
+        STOCKOUT = 2; // 采购缺货
+        LOGI_INCOME = 3; // 物流单入库
+        ORDER_DELIVER = 4; // 发货出库
+        CREATE_ORDER = 5; // 创建订单
+        CANNEL_ORDER = 6; // 取消订单
+        ADMIN_UPDATE = 7; // 后台更新
+        MATCH_COMPLETE = 8; //配货完成
+
+    }
+
+    // 库存类型
+    enum QtyType {
+        NULL_QTY_TYPE = 0;
+        IN_STOCK_QTY = 1; // 在库库存
+        RESERVE_QTY = 2; // 备货库存
+        BOOKED_QTY = 3; // 预占库存
+        VIRTUAL_QTY = 4; // 虚拟库存
+        SUPPLIER_QTY = 5; //商家库存
+        MATCH_QTY = 6; //配货-可分配库存
+        MATCH_BOOKED_QTY = 7; //配货-已占用库存
+
+    }
+
+    // 库存类型
+    enum QtySourceType {
+        NULL_Qty_Source_Type = 0;
+        INCOME_ORDER = 1; // 入库单
+        OUT_ORDER = 2; // 出库单
+        ORDER = 3; // 订单
+        PURCHASE_ORDER = 4; // 采购单
+        SUPPLIER_OPT = 5; //商家手动修改
+        SUPPLIER_JIT_SHIP = 6; //JIT订单发货
+        STOCK_OUT = 7; //缺货
+        CANCEL = 8; //取消
+    }
+
+    enum OutOrderStatus {
+        NULL_OUT_ORDER_STATUS = 0;
+        OUT = 1; // 已出库
+        UNOUT = 2; // 待满足库存(原未出库)
+        CANNELT = 3; // 已取消
+        MATCH = 4; // 库存已满足
+    }
+
+    enum SyncStatus {
+        NULL_SYNC_STATUS = 0;
+        SYNC = 1; // 已同步
+        UNSYNC = 2; // 未同步
+        SYNC_FAIL = 3; // 同步失败
+    }
+
+    enum SignStatus {
+        NULL_SIGN_STATUS = 0;
+        SIGN = 1; // 已签收
+        UNSIGN = 2; // 未签收
+    }
+
+    enum IncomeStatus {
+        NULL_INCOME_STATUS = 0;
+        INCOME = 1; // 已入库
+        UNINCOME = 2; // 未入库
+    }
+
+    enum ExternalStatus {
+        NULL_EXTERNAL_STATUS = 0;
+        PURCHASE_WAIT = 1; //1:待自动下单
+        PURCHASE_WAIT_PAY = 2; //2:已下单未付款
+        PURCHASE_SUCCESS = 3; //3:采购成功
+        PURCHASE_FAIL = 4; //4:采购失败
+        PURCHASE_CANCEL = 5; //5:采购取消
+    }
+
+    enum LogiType { //物流类型(是否经济物流)
+                    NULL_LOGI_TYPE = 0;
+                    COMMON_EXPRESS = 1; //普通物流
+                    ECONOMY_EXPRESS = 2; //经济物流
+    }
+
+    enum CooperateStatus { // 合作状态
+                           NULL_COOPERATE_STATUS = 0;
+                           NORMAL = 1; // 正常合作
+                           STOP = 2; // 终止合作
+                           BLACKLIST = 9; // 黑名单
+    }
+
+    enum LogiCompanyType { // 合作状态
+                           NULL_LOGI_COMPANY_TYPE = 0;
+                           SYSTEM = 1; // 系统对接
+                           GENERAL_DELIVER = 2; // 普通发货
+    }
+
+    enum BizType {
+        ALL = 0;
+        JIT = 1;
+        ADVANCE = 2;
+        NOW = 3;
+        COSTGO = 4;
+    }
+
+    enum JitOrderStatus {
+        NULL_JIT_ORDER_STATUS = 0;
+        UN_SHIP = 1; // 待发货
+        PART_SHIP = 2; //部分发货
+        SHIPPED = 3; //已发货
+        CANCELED = 4; //已取消
+    }
+
+    enum QueryTimeType {
+        TIME_TYPE_NULL = 0;
+        CREATE_TIME = 1;
+        UPDATE_TIME = 2;
+        PAY_TIME = 3;
+        SHIP_TIME = 4;
+        MATCH_TIME = 5;
+        SYNC_TIME = 6;
+        CANCEL_TIME = 7;
+    }
+
+    //请求来源系统
+    enum ReqSourceType {
+        REQ_SOURCE_TYPE_NULL = 0;
+        BOSS = 1; //运营后台
+        SUPPLIER = 2; //商家系统
+    }
+}
+
+//定价模板枚举类
+message PriceTemplateEnum {
+
+    enum EffectStatus {
+        EFFECT_NULL = 0;
+        EFFECT = 1;
+        DISABLE = 2;
+    }
+
+
+}
+
+// cms 枚举
+message CmsEnum {
+    //文章内容组件类型
+    enum ArticleComponentTypeEnum {
+        COMPONENT_TYPE_NULL = 0;
+        //文本
+        TEXT = 1;
+        //图片
+        PIC = 2;
+        //音频
+        AUDIO = 3;
+        //视频
+        VIDEO = 4;
+        //链接
+        URL = 5;
+    }
+    //文章内容类型
+    enum ArticleContentTypeEnum {
+        ARTICLE_CONTENT_TYPE_NULL = 0;
+        //图文
+        IMAGE_TEXT = 1;
+        //Feed
+        FEED = 2;
+        //瀑布流
+        WATERFALL = 3;
+    }
+    //文章状态
+    enum ArticleStatusEnum {
+        ARTICLE_STATUS_NULL = 0;
+        //待发送
+        WAIT_SEND = 1;
+        //已发送
+        SENDED = 2;
+        //已撤回
+        RECALL = 3;
+    }
+    //文章数据统计类型
+    enum ArticleDataCountTypeEnum {
+        ARTICLE_DATA_COUNT_TYPE_NULL = 0;
+        //分享数据
+        SHARE = 1;
+        //浏览数据
+        BROWSE = 2;
+    }
+
+}
+
+//购物车枚举CommissionTypeEnum
+message CartEnum {
+    enum ItemLabelType {
+        ITEM_LABEL_TYPE_NULL = 0; //不使用
+        ACTIVITY = 1; //活动标签
+        SERVICE_TEMPLATE = 2; //服务标签
+    }
+
+    enum SelectedType {
+        SELECTED_NULL = 0; //不使用
+        NOT_SELECTED = 1; //不选中
+        SELECTED = 2; //选中
+    }
+
+
+}
+
+message Push {
+    enum MessageBizCodeEnum {
+        MESSAGE_BIZ_CODE_NULL = 0; //空
+        ORDER_CODE = 1; //订单
+        MEMBER_CODE = 2; //会员
+        PROMOTION_CODE = 3; //活动通知
+        REVENUE_CODE = 4; //收益
+        CUSTOMER_CODE = 5; //客服
+    }
+}
+
+message Member {
+    enum OrderCommissionTypeEnum {
+        ORDER_COMMISSION_TYPE_NULL = 0; //空
+        SELF_BUY_COMMISSION = 1; // "商品返利", "Cash back" 自购返利
+        FANS_BUY_ORDER = 4; // "Affiliate购买返利", "Preferred shopper cash back" 粉丝购物奖励
+        TEAM_SELL_ORDER = 5; // "团队销售返利", "Team cash back" 普通商品伯乐奖
+        LEADERSHIP2 = 10; // "销售培训津贴", "Affiliate training incentive" 普通商品伯乐奖
+        //礼包相关奖励 2，6，7，8
+        GIFT_COMMISSION1 = 2; // "介绍费", "Referral fee" 礼包奖励1
+        LEADERSHIP1 = 6; // "培训津贴", "Training incentive" 礼包伯乐
+        TEAM_GIFT = 7; // "介绍费+培训津贴", "Referral fee+Training incentive" 礼包团队
+        GIFT_COMMISSION2 = 8; // "团队培训津贴", "Team training incentive" 礼包二次奖
+        //系统打款补偿
+        SYSTEM_COMMISSION = 9; // "系统奖励", "System reward"
+        //大礼包奖（已废弃）
+        SUPER_GIFT_COMMISSION1 = 11; // "大礼包奖励", "Leadership pack incentive"
+        SUPER_GIFT_COMMISSION2 = 12; // "大礼包团队启动奖", "Leadership Pack Team Activation Bonus"
+        SUPER_TEAM_GIFT = 13; // "大礼包团队管理奖励", "Leadership Pack Team Incentive"
+        SUPER_LEADERSHIP1 = 14; // "大礼包伯乐奖", "Leadership Pack Development Bonus"
+        LUCKY_DRAW_POINTS = 19; // 抽奖积分
+        ACTIVITY_POINTS = 20; // "活动积分", "Activity Points"
+        MICRO_BOSS_SELF_BUY_COMMISSION = 21; //"微商自购返利", "Cash back"
+        MICRO_BOSS_FANS_BUY_ORDER = 22; //"微商粉丝购物奖励", "Preferred shopper cash back"
+        MICRO_BOSS_TEAM_SELL_ORDER = 23; //"微商团队奖", "Team cash back"
+        MICRO_BOSS_LEADERSHIP = 24; //"微商伯乐奖", "Affiliate training incentive"
+        WEEK_SETTLEMENT = 25; // "周结算佣金", "Week settlement commission"
+        TASK_COMMISSION_PS_ORDINARY = 26; // 普通商品PS奖励
+        TASK_COMMISSION_PS_GIFT = 27; //礼包PS奖励
+        TASK_COMMISSION_PS_MICRO = 28; //微商PS奖励
+        MICRO_MONTH_SALES = 29; // 微商月销售奖励（人工发放）
+        //提现，订单支付相关
+        CASH = 100; //"提现", "Withdrawal"
+        CASH_OUT_FAILURE = 99; // "提现失败", "Withdrawal of Failure"
+        ORDER_PAY = 101; // "订单支付", "Order Payment"
+        ORDER_REFUND = 102; //"订单退款","Order Refund"
+        GROUP_ORDER_PAY = 103; //"拼团订单退款","Group Order Refund"
+        ORDER_COMMISSION_DEDUCTION = 104; //订单退款佣金扣除
+        ORDER_AFTER_REFUND = 110; //订单售后单退款
+        SYSTEM_DEDUCTION = 111; //"系统扣款","Syetem Chargeback"
+        SUPER_LUCKY_REFUND = 120; //"一元夺宝退款","super lucky refund"
+    }
+
+    enum MemberLevelEnum {
+        MEMBER_LEVEL_NULL = 0; //空
+        V2 = 2; // 粉丝 fans，新叫法："Shopper",  "SH"
+        V3 = 3; // 会员 Bo，新叫法："Preferred Shopper",  "PS"
+        V4 = 4; // 经理 M，新叫法："Affiliate Marketer", "AM"
+        V5 = 5; // 总经理 GM，新叫法："Affiliate Trainer",  "AT"
+    }
+
+    enum RegisterChannelEnum {
+        REGISTER_WAY_NULL = 0; // 空
+        OPEN_RED_ENVELOPE = 1; // 拆红包
+        GROUP_BOOKING = 2; // 拼团
+    }
+
+}
+
+
+message AdvanceSaleEnum {
+    //预售状态
+    enum AdvanceType {
+        ADVANCE_TYPE_NULL = 0; //不使用
+        ADVANCE_ON = 1; //预售
+        ADVANCE_OFF = 2; //不预售
+    }
+
+    //预售期后设置
+    enum EndConfig {
+        END_CONFIG_NULL = 0; //不使用
+        END_CONFIG_AUTO_OFF_SHELVE = 1; //自动下架
+        END_CONFIG_KEEP = 2; //维持原样
+    }
+
+    //预售采购控制
+    enum PurchaseConfig {
+        PURCHASE_CONFIG_NULL = 0; //不使用
+        PURCHASE_CONFIG_AUTO = 1; //自动推单
+        PURCHASE_CONFIG_MANUAL = 2; //手动推单
+    }
+
+    enum AdvanceStatus {
+        ADVANCE_STATUS_NULL = 0; //不使用
+        ADVANCE_STATUS_NOT_STARTED = 1; //未开始
+        ADVANCE_STATUS_IN_PROCESS = 2; //进行中
+        ADVANCE_STATUS_FINISHED = 3; //已结束
+    }
+
+}
+message FreightEnum {
+
+    enum ShippingType {
+        SHIPPING_NULL = 0; //不使用, 若收到此认为是普通物流
+        SHIPPING_NORMAL = 1; // 普通物流
+        //NOT_SHIPPING = 2; //不配送
+        // 经济物流
+        SHIPPING_ECONOMY = 3;
+        //FREE_SHIPPING = 4; //包邮
+    }
+
+}
+message DataCenterEnum {
+    enum DimensionType {
+        DIMENSION_TYPE_NULL = 0; //不使用
+        PRODUCT_TYPE = 1; //商品类型
+        COUNTRY_CODE = 2; //国家
+        MEMBER_LEVEL = 3; //会员等级
+        SOURCE = 4; //渠道来源
+        PAGE = 5; //收入页面来源
+        SITE = 6; //站点
+    }
+}
+
+//客服枚举
+message ImEnum {
+    enum EvaluationSatisfiedEnum {
+        EvaluationSatisfiedEnum_NULL = 0; //不使用
+        SATISFIED = 1; //满意
+        DISSATISFIED = 2; //不满意
+    }
+}
+

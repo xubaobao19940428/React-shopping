@@ -1,0 +1,101 @@
+syntax = "proto3";
+package boss.csstaff;
+
+
+import "common/base.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.csstaff";
+option java_outer_classname = "CsStaff";
+
+message BooleanResp {
+    common.base.ErrorMessage ret = 1;
+    bool success = 2;
+}
+
+message CsStaffAddOrUpdateReq {
+    //客服Id
+    int32 cs_id = 1;
+    //客服手机
+    string cs_mobile = 2;
+    //姓名
+    string cs_name = 3;
+    //国家
+    string cs_country_code = 4;
+    //语言
+    string cs_language = 5;
+    //是否失效
+    int32 is_delete = 8;
+}
+
+message DeleteCsStaffReq {
+    int32 cs_id = 1; //客服编号
+}
+
+message ListCsStaffByPageReq {
+    //客服Id
+    int32 cs_id = 1;
+    //客服手机
+    string operation_name = 2;
+    //姓名
+    string cs_name = 3;
+    //国家
+    string cs_country_code = 4;
+    //语言
+    string cs_language = 5;
+    //创建日期-开始
+    string create_time_start = 6;
+    //创建日期-结束
+    string create_time_end = 7;
+    //是否失效
+    int32 is_delete = 10;
+    common.base.Pagination page = 11;
+}
+
+message CsStaffPb {
+    //客服Id
+    int32 cs_id = 1;
+    //客服手机
+    string cs_mobile = 2;
+    //姓名
+    string cs_name = 3;
+    //国家
+    string cs_country_code = 4;
+    //语言code
+    string cs_language_code = 5;
+    //语言
+    string cs_language = 6;
+    //是否在线
+    int32 is_online = 7;
+    //客服状态
+    int32 cs_status = 8;
+    //是否失效
+    int32 is_delete = 9;
+    //操作者id
+    string operation_name = 10;
+    //创建时间
+    string create_time = 11;
+    //更新时间（默认与创建时间一致）
+    string update_time = 12;
+}
+
+message ListCsStaffByPageResp {
+    common.base.ErrorMessage ret = 1;
+    int32 total = 2;
+    repeated CsStaffPb cs_staff_pb = 3;
+}
+
+
+//>>>>>>>>>CsStaffBossService message end>>>>>>>>>>>>>>>>>
+
+
+service CsStaffBossService {
+    //添加后台客服人员
+    rpc AddCsStaff (CsStaffAddOrUpdateReq) returns (BooleanResp);
+    //分页查询后台客服人员
+    rpc ListCsStaffByPage (ListCsStaffByPageReq) returns (ListCsStaffByPageResp);
+    //修改客服人员支持语言
+    rpc UpdateCsStaff (CsStaffAddOrUpdateReq) returns (BooleanResp);
+    //删除客服人员
+    rpc DeleteCsStaff (DeleteCsStaffReq) returns (BooleanResp);
+}

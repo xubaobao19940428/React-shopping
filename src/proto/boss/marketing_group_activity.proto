@@ -1,0 +1,303 @@
+//DESC BACK littlec-marketing
+syntax = "proto3";
+package boss.market;
+
+import "common/enum.proto";
+import "common/base.proto";
+import "common/errcode.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.market";
+option java_outer_classname = "MarketingGroupActivityBoss";
+
+
+
+//查询拼团列表参数
+message QueryListReq {
+    string country_code = 10; //国家code
+    string subject_serial_id = 1; //专题id
+    string serial_id = 2; //活动id
+    string productName = 3; //商品名称
+    string group_num = 4; //成团人数
+    string create_start_time = 5; //创建开始时间
+    string create_end_time = 6; //创建结束时间
+    string start_time = 7; //拼团开始时间
+    string end_time = 8; //拼团结束时间
+    //分页
+    common.base.Pagination page = 9;
+}
+//拼团分级规则
+message GroupGradeVo {
+    int32 type = 1; //分级类型:1等级,2用户id,3全量用户
+    int32 group_type = 2; //用户类型:1发团用户,2参团用户
+    string gdesc = 3; //值，用英文逗号隔开,如用户id:1,2,3,4 等级:SH,PS
+}
+//message SpecialDiscount {
+//    string discount = 1; //折扣
+//}
+message GroupListVo {
+    string id = 1;
+    string images = 2; //商品图片
+    string name = 3; //商品名称
+    string vip_price = 4; //vip价
+    string activity_price = 5; //活动价
+    int32 activity_stock = 6; //活动库存
+    int32 group_num = 7; //成团人数
+    string leader_discount = 8; //团长折扣
+    string follow_discount = 9; //其它折扣
+    repeated SpecialDiscount special_discount = 10; //特殊折扣
+    GroupGradeVo create_group_grade = 11; //发团分级
+    GroupGradeVo join_group_grade = 12; //参团分级
+    string start_time = 13; //活动开始时间
+    string end_time = 14; //活动结束时间
+    int32 valid_time_out = 15; //拼团有限时间
+    int32 pay_time_out = 16; //拼团支付有效时间
+    string create_time = 17; //创建时间
+    int32 sort = 18; //排序
+    string recommend = 19; //推荐,1:已推荐,0:未推荐
+    string serial_id = 20; //序号id
+    string product_id = 21; //商品id
+    string subject_name = 22; //专题名称
+    string price = 23; //商品原价
+}
+message QueryListResp {
+    common.base.ErrorMessage ret = 1;
+    repeated GroupListVo groupListVo = 2;
+    int32 total = 3;
+}
+
+message GroupActivityParam {
+    //专题序号
+    string subject_serial_id = 1;
+    //商品id
+    repeated string product_id = 2;
+}
+message GroupActivityDeleteParam {
+    //序号id
+    repeated string item_serial_id = 1;
+}
+message SaveSortParam {
+    string item_serial_id = 1; //序号id
+    int32 sort = 2; //排序
+}
+message SerialIdParam {
+    string item_serial_id = 1; //序号id
+}
+message SpecialDiscount {
+    string discount = 1; //折扣
+}
+
+message ProductSkuListVo {
+    string sku_id = 1; //skuId
+    string activity_price = 2; //拼团活动价
+    string activity_commission_rate = 3; //活动比率
+    int32 activity_stock = 4; //活动库存
+    string serial_id = 5; //序号id
+    string sku_code = 6; //sku code
+}
+//message ProductSampleVo {
+//    string id = 1; //商品id
+//    string name = 2; //商品名称
+//    string product_img = 3; //商品图片
+//}
+message GroupActivityResp {
+    string countryName = 1; //国家名称
+    string subjectName = 2; //专题名称
+    string start_time = 3; //开始时间
+    string end_time = 4; //结束时间
+    int32 group_num = 5; //成团人数
+    string leader_discount = 6; //团长折扣
+    string follow_discount = 7; //团员折扣
+    repeated SpecialDiscount specialDiscount = 8; //特殊折扣
+    int32 valid_time_out = 9; //拼团有限时间
+    int32 pay_time_out = 10; //拼团支付有效时间
+    GroupGradeVo create_group_grade = 11; //发团分级
+    GroupGradeVo join_group_grade = 12; //参团分级
+    repeated ProductSkuListVo productSkuListVo = 13; //sku列表
+    //    ProductSampleVo ProductSampleVo = 14; //商品信息
+    common.base.ErrorMessage ret = 15;
+    string product_id = 16; //商品id
+    string country_code = 17; //国家码
+    common.enum.MarketingEnum.GroupActivityType group_activity_type = 18; //拼团类型
+    int32 num_of_winners = 19; //中奖人数
+    int32 num_of_new_users = 20; //新用户人数
+    common.enum.MarketingEnum.GroupActivityByItemType group_activity_item_type = 21; //拼团商品的活动类型,1:普通拼团，2:抽奖团
+    common.enum.MarketingEnum.RefundType refund_type = 22; //退款类型
+}
+message GroupActivityUpdateParam {
+    string serial_id = 1; //序号id
+    string start_time = 3; //开始时间
+    string end_time = 4; //结束时间
+    int32 group_num = 5; //成团人数
+    string leader_discount = 6; //团长折扣
+    string follow_discount = 7; //团员折扣
+    repeated SpecialDiscount specialDiscount = 8; //特殊折扣
+    int32 valid_time_out = 9; //拼团有限时间
+    int32 pay_time_out = 10; //拼团支付有效时间
+    GroupGradeVo create_group_grade = 11; //发团分级
+    GroupGradeVo join_group_grade = 12; //参团分级
+    repeated ProductSkuListVo productSkuListVo = 13; //sku列表
+    int32 num_of_winners = 14; //中奖人数
+    int32 num_of_new_users = 15; //新用户人数
+    common.enum.MarketingEnum.GroupActivityByItemType group_activity_item_type = 16; //拼团商品的活动类型,1:普通拼团，2:抽奖团
+    common.enum.MarketingEnum.RefundType refund_type = 19; //退款类型
+}
+
+
+message GroupActivitySubject {
+    string serial_id = 1; //序号 id
+    string name = 2; // 专题的多语言名称，以JSON形式传递 key:语言 value:该语言版本名称
+    string country_code = 3; //国家码
+    common.enum.MarketingEnum.GroupActivityType group_activity_type = 4; //拼团类型
+}
+
+message GroupActivitySubjectResp {
+    string serial_id = 1; //serial id
+    string name = 2; // 专题的多语言名称，以JSON形式传递 key:语言 value:该语言版本名称
+    string cn_name = 3; // 专题的中文名
+    common.enum.MarketingEnum.GroupActivityType group_activity_type = 4; //拼团类型
+}
+
+message GroupActivitySubjectsListResp {
+    common.base.ErrorMessage ret = 1; //返回error code
+    repeated GroupActivitySubjectResp groupActivitySubjectResp = 2; //返回值
+}
+
+message CountryCode {
+    string country_code = 1;
+}
+
+message GroupActivityListParam {
+    string country_code = 1;
+}
+
+message SerialId {
+    int64 serial_id = 1;
+    string name = 2;
+}
+
+message StatusResp {
+    int32 status = 1;
+    string url = 2;
+    common.base.ErrorMessage ret = 3;
+    string msg = 4;
+}
+message MarketingSuccessResp{
+        //操作成功数
+        int32 success = 1;
+        common.base.ErrorMessage ret = 2;
+        string msg = 3; //返回提示
+}
+//
+//message FindAllSubjectsReq {
+//    string subject_name = 1;//拼团专题名称，若为空，返回全部数据
+//    string country_code = 2; //页面搭建所属国家
+//    common.base.Pagination page = 3;//分页
+//}
+message GetSubjectsForPageReq {
+    string subject_name = 1;//拼团专题名称，若为空，返回全部数据
+    string country_code = 2; //页面搭建所属国家
+    common.base.Pagination page = 3;//分页
+}
+
+message GetSubjectsForPageResp {
+    //返回结构体unit
+    message GroupSubjectUnit {
+        string subject_serial_id = 1;//专题id
+        string subject_name_cn = 2;//专题中文
+//        int32 spu_num = 3;//该专题下拼团商品数目
+    }
+    repeated GroupSubjectUnit group_subject_unit = 1;
+    common.base.ErrorMessage ret = 2;
+    int32 total = 3;
+}
+
+message GetGroupProductForPageReq {
+    repeated string spu_id = 1;//拼团商品id
+    string country_code = 2; //页面搭建所属国家
+    common.base.Pagination page = 3;//分页
+}
+
+message GetGroupProductForPageResp {
+    message GroupProductUnit {
+        string spu_id = 7;//商品id
+        string group_item_serial_id = 8;//拼团商品序列号
+        string group_spu_title_cn = 1;//商品中文title
+        string group_spu_cover = 2;//商品缩略图
+        string group_subject_name_cn = 3;//专题中文
+        string group_spu_start_time = 4;//拼团商品开始时间
+        string group_spu_end_time = 5;//拼团商品结束时间
+        string group_spu_activity_price = 6;//拼团spu最低拼团价
+    }
+    repeated GroupProductUnit group_product_unit = 1;//拼团商品集合
+    common.base.ErrorMessage ret = 2;
+    int32 total = 3;
+}
+
+message GetGroupSpuBossReq {
+   repeated string subject_serial_id = 1;//专题id
+   repeated string group_item_serial_id = 2;//拼团商品序列号
+   string country_code = 3; //页面搭建所属国家
+   repeated int32 product_status = 4; // 1-未开始，2-进行中，3-已结束，有几个状态就传几个值
+}
+
+message GetGroupSpuBossResp {
+    message GroupProductDetailUnit {
+        string group_item_serial_id = 11;//拼团商品序列号
+        string spu_id = 10;//商品id
+        string group_spu_title_cn = 1;//商品中文title
+        string group_spu_cover = 2;//商品缩略图
+        string group_subject_name_cn = 3;//专题中文
+        string group_spu_start_time = 4;//拼团商品开始时间
+        string group_spu_end_time = 5;//拼团商品结束时间
+        string group_spu_activity_price = 6;//拼团spu最低拼团价
+        string group_spu_price = 7;//划线价
+        string group_spu_price_vip = 8;//vip价格
+        int32 num = 9;//成团人数
+    }
+    repeated GroupProductDetailUnit group_product_detail_unit = 1;
+    common.base.ErrorMessage ret = 2;
+}
+
+service GroupActivitySubjectStatusService {
+    //查询状态
+    rpc Check (CountryCode) returns (StatusResp);
+    //更新状态
+    rpc Update (CountryCode) returns (MarketingSuccessResp);
+}
+
+service GroupActivitySubjectBossService {
+    //插入主题
+    rpc Insert (GroupActivitySubject) returns (MarketingSuccessResp);
+    //更新主题
+    rpc Update (GroupActivitySubject) returns (MarketingSuccessResp);
+    //获取主题列表
+    rpc FindAllSubjects (CountryCode) returns (GroupActivitySubjectsListResp);
+    //删除专题
+    rpc Delete (GroupActivitySubject) returns (MarketingSuccessResp);
+}
+service GroupActivityBossService {
+    //查询拼团活动列表
+    rpc FindPageList (QueryListReq) returns (QueryListResp);
+    //批量添加关联商品
+    rpc BatchSave (GroupActivityParam) returns (MarketingSuccessResp);
+    //批量删除
+    rpc BatchDelete (GroupActivityDeleteParam) returns (MarketingSuccessResp);
+    //保存排序
+    rpc SaveSort (SaveSortParam) returns (MarketingSuccessResp);
+    //推荐
+    rpc Recommend (SerialIdParam) returns (MarketingSuccessResp);
+    //编辑页数据查询
+    rpc ViewById (SerialIdParam) returns (GroupActivityResp);
+    //修改
+    rpc Update (GroupActivityUpdateParam) returns (MarketingSuccessResp);
+}
+
+service GroupActivityForPageBossService {
+    //根据拼团专题名称搜索拼团专题
+    rpc GetSubjectsForPage(GetSubjectsForPageReq) returns (GetSubjectsForPageResp);
+    //根据拼团商品id搜索拼团商品简单信息
+    rpc GetGroupProductForPage (GetGroupProductForPageReq) returns (GetGroupProductForPageResp);
+    //根据拼团商品序列号集合或者拼团专题id集合搜索拼团商品详细信息
+    rpc GetGroupSpuBoss (GetGroupSpuBossReq) returns (GetGroupSpuBossResp);
+}

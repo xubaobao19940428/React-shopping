@@ -1,0 +1,517 @@
+//DESC APP littlec-chat
+syntax = "proto3";
+
+package css.chat;
+
+import "css/msg.proto";
+import "css/errcode.proto";
+import "css/enum.proto";
+import "css/base.proto";
+import "common/errcode.proto";
+import "common/enum.proto";
+import "common/base.proto";
+
+option java_multiple_files = false;
+option java_package = "com.fingo.littlec.proto.css";
+option java_outer_classname = "Chat";
+
+// 单聊请求，发起于终端
+message ChatMessageRequest {
+    string from_username = 1; // 发送方username
+    string appkey = 2; // appkey, 各应用在官网申请
+    string from_nick = 3; // 发送方昵称，选填
+    string to_username = 4; // 接收方username
+    css.msg.EMsgContentType msg_content_type = 5; // 消息类型，文本、图片、语音、视频等
+    bytes data = 6; // 业务层根据msg_content_type解析具体消息内容
+    string msg_id = 7; // 终端生成，便于发送方重发&接收方去重
+    bool burn_after_read = 8; // 是否阅后即焚
+    css.enum.EClientType from_client_type = 9; // 发送者终端类型
+    bool is_jimao = 10; // 是否鸡毛信
+}
+
+// 单聊响应
+message ChatMessageResponse {
+    css.errcode.ErrorCode ret = 1; // 返回码 参见ErrorCode
+    uint64 guid = 2; // 消息guid
+    string msg_id = 3; // 终端生成，便于发送方重发&接收方去重
+    string jimao_left_num = 4; // 企业剩余能发送的鸡毛信的数量
+}
+
+// 单聊消息，用于拉取消息&平台内部交互
+message ChatMessage {
+    string from_username = 1; // 发送方username
+    string appkey = 2; // appkey, 各应用在官网申请
+    string from_nick = 3; // 发送方昵称，选填
+    css.msg.EMsgContentType msg_content_type = 4; // 消息类型，文本、图片、语音、视频等
+    bytes data = 5; // 业务层根据msg_content_type解析具体消息内容
+    uint64 guid = 6; // 全局唯一标识码，由chat服务生成
+    string msg_id = 7; // 终端生成，便于发送方重发&接收方去重
+    bool burn_after_read = 8; // 是否阅后即焚
+    string to_username = 9; // 接收者username
+    bool is_jimao = 10; // 是否鸡毛信
+    string biz_code = 11;
+}
+
+// inner的msggw的SendPointMsg接口 消息推送
+message SendPointMessageReq {
+    // 消息的目标用户
+    repeated int64 user_id = 1;
+    // 推送类型 1手动推送 2定时推送 3立即推送
+    common.enum.MsggwEnum.PushType push_type = 2;
+    // 推送时间，定时任务使用
+    int64 push_time = 3;
+    //多语言消息内容
+    repeated common.base.I18nmsg msg = 4;
+    // 调用方业务码 如：订单，会员，商品等
+    string biz_code = 5;
+    // 打开方式：0-全部，1——安卓 ,2-ios
+    common.enum.MsggwEnum.DeviceType device_type = 6;
+    string channel_enum = 7;// 推送渠道
+    int32 isSave = 8;      // 是否保存 1不保存，0保存
+    //推送任务编号 非推送任务忽略
+    string push_task_code = 9;
+    //推送任务分片编号
+    string push_user_info_code = 10;
+}
+
+message SendPointMessageResp {
+    css.errcode.ErrorCode ret = 1;
+}
+
+// 单聊请求，发起于终端
+message PrivateMessageRequest {
+    string from_username = 1; // 发送方username
+    string appkey = 2; // appkey, 各应用在官网申请
+    string from_nick = 3; // 发送方昵称，选填
+    string to_username = 4; // 接收方username
+    css.msg.EMsgContentType msg_content_type = 5; // 消息类型，文本、图片、语音、视频等
+    bytes data = 6; // 业务层根据msg_content_type解析具体消息内容
+    string msg_id = 7; // 终端生成，便于发送方重发&接收方去重
+    bool burn_after_read = 8; // 是否阅后即焚
+    css.enum.EClientType from_client_type = 9; // 发送者终端类型
+    bool is_jimao = 10; // 是否鸡毛信
+}
+
+enum CType { //消息类型
+             COMMON = 0; //普通消息
+             RECEIVED = 1; //回执消息
+             RETRACT = 2; //撤回消息
+             CUSTOM = 9; // 自定义
+}
+
+message ChatMessageStoreRequest {
+    css.msg.MessageUnit unit = 1;
+    uint64 guid = 2;
+    string appkey = 3;
+    string from_username = 4;
+    string to_username = 5;
+    CType type = 6;
+    uint64 retract_guid = 7;
+    uint64 received_guid = 8;
+    string biz_code = 9;
+}
+
+message ChatCustomMessageStoreRequest {
+    repeated ChatMessageStoreUnit request = 1;// list
+}
+
+message ChatMessageStoreUnit {
+    css.msg.MessageUnit unit = 1;
+    uint64 guid = 2;
+    string appkey = 3;
+    string from_username = 4;
+    string to_username = 5;
+    CType type = 6;
+    uint64 retract_guid = 7;
+    uint64 received_guid = 8;
+    string biz_code = 9;
+}
+
+message ChatMessageStoreResponse {
+    css.errcode.ErrorCode ret = 1; //错误码
+    uint64 newest_guid = 2; //最新的guid
+}
+
+//message ChatCustomMessageStoreRequest {
+//    css.msg.MessageUnit unit = 1;
+//    uint64 guid = 2;
+//    string appkey = 3;
+//    string from_username = 4;
+//    string to_username = 5;
+//    CType type = 6;
+//    uint64 retract_guid = 7;
+//    uint64 received_guid = 8;
+//}
+//
+//message ChatCustomMessageStoreResponse {
+//    css.errcode.ErrorCode ret = 1; //错误码
+//    uint64 newest_guid = 2; //最新的guid
+//}
+
+//终端类型
+enum END_TYPE {
+    MOBILE = 0; //移动端
+    WEB = 1; //网页端
+}
+
+//单聊历史消息查询
+message ChatHistoryMessageGetRequest {
+    string from_username = 1; //请求方username
+    string to_username = 2; //单聊会话另一端username
+    uint64 begin_guid = 3; // 从哪条消息开始拉取(可选)
+    uint32 limit = 4; // 拉取消息条数上限
+    string appkey = 5; //appkey
+    END_TYPE type = 6; //终端类型
+}
+
+//message GetHistoryCustomMsgBatchRequest {
+//    string from_username = 1; //请求方username
+//    string to_username = 2; //单聊会话另一端username
+//    uint64 begin_guid = 3; // 从哪条消息开始拉取(可选)
+//    uint32 limit = 4; // 拉取消息条数上限
+//    string appkey = 5; //appkey
+//    END_TYPE type = 6; //终端类型
+//}
+
+//message GetHistoryCustomMsgBatchResponse {
+//    css.errcode.ErrorCode ret = 1; // 错误码
+//    repeated css.msg.CustomSystemMessage data = 2;
+//}
+
+//message SingleGetHistoryCustomMsgRequest {
+//    uint64 guid = 1; // 从哪条消息开始拉取(可选)
+//}
+
+//message SingleGetHistoryCustomMsgResponse {
+//    css.errcode.ErrorCode ret = 1; // 错误码
+//    css.msg.CustomSystemMessage data = 2;
+//}
+
+//消息同步
+message MessageSyncRequest {
+    uint64 guid = 1; //根据GUID查询消息(可选)
+    string username = 2; //用户ID
+    string appkey = 3; //appkey
+    bool sor = 4; //false : 接收消息，true： 发送消息
+    END_TYPE type = 5; //终端类型
+
+}
+
+message MsgGetResponse {
+    css.errcode.ErrorCode ret = 1; // 错误码
+    repeated css.msg.MessageUnit data = 2; // 消息列表
+}
+
+//同步单聊会话已读位置
+message SyncChatSessionReadRequest {
+    string appkey = 1;
+    string from_username = 2; //消息发送者
+    string to_username = 3; //消息接收者
+}
+
+message SyncChatSessionReadResponse {
+    css.errcode.ErrorCode ret = 1; // 错误码
+    int64 read_guid = 2;
+}
+
+//单聊删除历史消息
+message ChatMessageRemoveRequest {
+    string appkey = 1;
+    string from_username = 2;
+    string to_username = 3;
+    repeated uint64 guid = 4;
+    bool remove_session = 5;
+}
+
+message MessageRemoveResponse {
+    css.errcode.ErrorCode ret = 1; // 错误码
+}
+
+//同步发送GUID
+message SyncSendGUIDRequest {
+    string username = 1;
+    string appkey = 2;
+}
+
+message SyncSendGUIDResponse {
+    css.errcode.ErrorCode ret = 1; // 错误码
+    uint64 send_guid = 2;
+}
+
+// FAQ信息的请求
+message FAQListReq {
+    string user_id = 1;
+    string faq_id = 2; // 用户起初进来的时候不传，后来传
+    string input = 3; // 用户输入
+    string language = 4; // 多语言字段
+}
+// FAQ信息的响应
+message FAQListResp {
+    css.errcode.ErrorCode ret = 1;
+    int32 faq_type = 2; // faq类型，1分类2具体问题
+    repeated FAQListItem data = 3; // FAQ信息
+    string main_title = 4; // 主标题
+}
+message FAQListItem {
+    string faq_id = 1;
+    string faq_title = 2; // faq分类的名字或者具体问题的名字
+    string faq_desc = 3; // faq
+    int32 type = 4; // 1纯文本 2文本加图片 3文本加视频
+    string img_url = 5; // 图片
+    string video = 6; // 视频
+    string video_cover = 7; // 视频封面
+}
+// 用户请求分配客服
+message CustomerServiceReq {
+    string user_id = 1; // 发起请求的用户id
+    string country_code = 2; // 国家码
+    string language = 3; // 语言
+    string app_version = 4; //app版本号
+}
+// 客服请求的响应，客户端存下客服id
+message CustomerServiceResp {
+    css.errcode.ErrorCode ret = 1;
+    string cs_id = 2; // 客服id
+    string cs_name = 3; // 客服名字
+}
+// 客服服务状态
+enum ServiceStatus {
+    NULL = 0;
+    BUSY = 1; // 忙碌
+    AT_REST = 2; // 在休息
+    LEISURE = 3; // 空闲（可接待）
+}
+// 客服设置服务状态
+message SetServiceStatusReq {
+    string cs_id = 1; // 客服id
+    ServiceStatus status = 2; // 状态（1忙碌2休息3可接待）
+}
+// 客服设置状态响应
+message SetServiceStatusResp {
+    css.errcode.ErrorCode ret = 1;
+}
+// 客服结束服务的请求(Customer Service Staff Stop Service)
+message CSStopServiceReq {
+    string user_id = 1;
+    string cs_id = 2; // 客服id
+}
+// 客服结束服务的响应，然后去触发评价
+message CSStopServiceResp {
+    css.errcode.ErrorCode ret = 1;
+}
+// 提交工单后修改会话状态
+message SetSessionTypeAfterSubmittedWorkOrderReq {
+    string user_id = 1;
+    string cs_id = 2; // 客服id
+}
+message SetSessionTypeAfterSubmittedWorkOrderResp {
+    css.errcode.ErrorCode ret = 1;
+}
+// 客服拉黑用户请求
+message PullUserToBlackListReq {
+    string user_id = 1;
+    string cs_id = 2; // 客服id
+}
+// 客服拉黑用户响应
+message PullUserToBlackListResp {
+    css.errcode.ErrorCode ret = 1;
+}
+// 客服取消拉黑用户
+message PullUserOutOfBlackListReq {
+    string user_id = 1;
+    string cs_id = 2; // 客服id
+}
+// 客服取消拉黑用户响应
+message PullUserOutOfBlackListResp {
+    css.errcode.ErrorCode ret = 1;
+}
+// 用户提交评价
+message SubmitEvaluationReq {
+    string user_id = 1;
+    string cs_id = 2; // 咨询的客服的id
+    // 具体评价内容
+}
+message SubmitEvaluationResp {
+    css.errcode.ErrorCode ret = 1;
+}
+// 客服登录
+message CustomerServiceSignInReq {
+    string cs_id = 1; // 客服id
+    string cs_name = 2; // 客服名字
+    string cs_mobile = 3; // 客服手机号
+    //string cs_country_code = 3; // 客服服务的国家
+    //string cs_language = 4; // 客服服务的语种cd
+}
+message CustomerServiceSignInResp {
+    css.errcode.ErrorCode ret = 1;
+    string cs_id = 2;
+    int32 service_status = 3; // 客服登陆后返回服务上次的服务状态
+}
+// 客服登出
+message CustomerServiceSignOutReq {
+    string cs_id = 1; // 客服id
+}
+message CustomerServiceSingOutResp {
+    css.errcode.ErrorCode ret = 1;
+}
+// 客服获得和谁聊过天的列表，分页
+message GetSessionWithPageReq {
+    string cs_id = 1; // 客服id
+    css.base.Pagination page = 2; // 分页
+}
+message GetSessionWithPageResp {
+    css.errcode.ErrorCode ret = 1;
+    int32 total = 2;
+    repeated SessionItem session_item = 3;
+}
+// 会话列表的中的一条的信息
+message SessionItem {
+    string user_id = 1;
+    string head_img = 2; // 头像
+    string nick_name = 3;
+    string last_chat_time = 4; // 上次聊天的时间
+    int32 message_type = 5; // 会话状态（1未处理：建立连接后但是未结束咨询，2已结束：客服点击结束或者超时结束，3已提交：结束服务且提交了工单）客服拉取历史消息时用
+}
+//
+message GetBlackListByQueryWithPageReq {
+    string user_id = 1;
+    string nick_name = 2;
+    string create_time = 3;
+    css.base.Pagination page = 4; // 分页
+}
+message GetBlackListByQueryWithPageResp {
+    css.errcode.ErrorCode ret = 1;
+    int32 total = 2;
+    repeated css.base.UserInfo data = 3;
+}
+message CheckBundleExistsReq {
+    string user_id = 1;
+}
+message CheckBundleExistsResp {
+    css.errcode.ErrorCode ret = 1;
+    string cs_id = 2; // 客服id
+    string cs_name = 3; // 客服名字
+}
+
+message CheckBundleOverdueReq {
+    string user_id = 1;
+    string cs_id = 2;
+}
+
+message CheckBundleOverdueResp {
+    css.errcode.ErrorCode ret = 1;
+}
+
+// App搜索消息列表
+//message AppGetSingleMessage {
+//    string guid = 1; //消息编号
+//    string language = 2; //语言
+//}
+//
+//message AppGetSingleMessageResp {
+//    css.errcode.ErrorCode ret = 1; //错误码
+//    SingleMessageInfo message = 2; //消息
+//}
+
+//message AppSearchMessageListResp {
+//    css.errcode.ErrorCode ret = 1; //错误码
+//    repeated Message message = 2; //消息
+//    common.base.Pagination page_info = 3; //分页信息
+//    string total = 4; //总记录数
+//}
+
+//message AppSearchMessageListReq {
+//    string biz_code = 1; //业务码
+//    common.base.Pagination page_info = 5; //分页信息
+//}
+
+//message Message {
+//    string biz_code = 1; //业务码
+//    string time = 2; //消息时间
+//    string message_title = 3; //消息title
+//    string message_body = 4; //消息body
+//    string message_data = 5; //消息data
+//}
+
+message SingleMessageInfo {
+    string biz_code = 1; //业务码
+    string message_title = 2; //消息标题
+    string message_body = 3; //消息体
+    string message_data = 4; //消息数据
+}
+
+//message AppGetUnreadMessagesReq {
+//    string guid = 1; //消息guid
+//}
+
+//message AppGetUnreadMessagesResp {
+//    common.errcode.ErrorCode ret = 1; //错误码
+//    repeated UnreadMessage unread_msg = 2; //未读信息
+//    string total_unread = 3; //所有未读消息数量
+//}
+
+//message UnreadMessage {
+//    common.enum.Push.MessageBizCodeEnum biz_code = 1; //业务类型
+//    string unread_num = 2; //未读数量
+//}
+
+// 单聊服务
+service ChatService {
+    // 发送单聊消息
+    rpc SendChat (ChatMessageRequest) returns (ChatMessageResponse);
+    // 用户获取客服
+    rpc CustomerServiceRequest (CustomerServiceReq) returns (CustomerServiceResp);
+    // 用户获取FAQ的请求，type1表示是问题分类，2表示是具体问题
+    rpc FAQListRequest (FAQListReq) returns (FAQListResp);
+    // 客服设置服务状态
+    rpc SetServiceStatus (SetServiceStatusReq) returns (SetServiceStatusResp);
+    // 客服结束服务(Customer service staff stop service)
+    rpc CSStopService (CSStopServiceReq) returns (CSStopServiceResp);
+    // 客服拉黑用户
+    rpc PullUserToBlackList (PullUserToBlackListReq) returns (PullUserToBlackListResp);
+    // 客服取消拉黑
+    rpc PullUserOutOfBlackList (PullUserOutOfBlackListReq) returns (PullUserOutOfBlackListResp);
+    // 分页获取黑名单列表
+    rpc GetBlackListByQueryWithPage (GetBlackListByQueryWithPageReq) returns (GetBlackListByQueryWithPageResp);
+    // 客服登录
+    rpc CustomerServiceSignIn (CustomerServiceSignInReq) returns (CustomerServiceSignInResp);
+    // 客服登出
+    rpc CustomerServiceSingOut (CustomerServiceSignOutReq) returns (CustomerServiceSingOutResp);
+    // 用户提交评价
+    rpc SubmitEvaluation (SubmitEvaluationReq) returns (SubmitEvaluationResp);
+    // 客服获取历史会话（和谁聊过天）
+    rpc GetSessionWithPage (GetSessionWithPageReq) returns (GetSessionWithPageResp);
+    // 客户端判断绑定是否断开的接口
+    rpc CheckBundleExists (CheckBundleExistsReq) returns (CheckBundleExistsResp);
+    // 给web端用的检查绑定是否超时的接口
+    rpc CheckBundleOverdue (CheckBundleOverdueReq) returns (CheckBundleOverdueResp);
+    // 单点消息通知推送  在线走通知，离线走firebase
+    rpc SendPointMessage (SendPointMessageReq) returns (SendPointMessageResp);
+    // 提交工单后改变会话状态
+    rpc SetSessionTypeAfterSubmittedWorkOrder (SetSessionTypeAfterSubmittedWorkOrderReq) returns (SetSessionTypeAfterSubmittedWorkOrderResp);
+}
+//历史消息服务
+service HistoryService {
+    //消息存储
+    rpc ChatMessageStore (ChatMessageStoreRequest) returns (ChatMessageStoreResponse);
+    // 存自定义消息，为了不影响原有的开的接口
+    rpc ChatCustomMessageStore (ChatCustomMessageStoreRequest) returns (ChatMessageStoreResponse);
+    //离线、在线同步消息
+    rpc MessageSync (MessageSyncRequest) returns (MsgGetResponse);
+    //获取历史消息记录
+    rpc ChatHistoryMessageGet (ChatHistoryMessageGetRequest) returns (MsgGetResponse);
+    //同步消息记录标识
+    rpc SyncSendGUID (SyncSendGUIDRequest) returns (SyncSendGUIDResponse);
+    //删除历史消息
+    rpc ChatMessageRemove (ChatMessageRemoveRequest) returns (MessageRemoveResponse);
+    //同步回话列表
+    rpc SyncChatSessionRead (SyncChatSessionReadRequest) returns (SyncChatSessionReadResponse);
+    // 批量获取自定义推送 msg_type=9
+    //rpc BatchGetHistoryCustomMsg (GetHistoryCustomMsgBatchRequest) returns (GetHistoryCustomMsgBatchResponse);
+    // 获取单条自定义推送
+    //rpc SingleGetHistoryCustomMsg (SingleGetHistoryCustomMsgRequest) returns (SingleGetHistoryCustomMsgResponse);
+    // app搜索消息列表
+    //rpc AppSearchMessageList (AppSearchMessageListReq) returns (AppSearchMessageListResp);
+    // app获取未读消息数量
+    //rpc AppGetUnreadMessages (AppGetUnreadMessagesReq) returns (AppGetUnreadMessagesResp);
+}

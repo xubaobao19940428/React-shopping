@@ -1,0 +1,339 @@
+//DESC BACK littlec-marketing
+syntax = "proto3";
+package boss.active;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.active";
+option java_outer_classname = "Active";
+
+//功能放在 marketing 服务中, 需请求marketing 服务
+
+//活动管理
+message ActiveInfo {
+    string active_id = 1; // 活动ID
+    string active_name = 2; //活动名称（中文）	全局唯一
+    string country_code = 3; //国家码
+    common.enum.MarketingEnum.ActiveType active_type = 4; // 活动类型
+    int64 start_time = 5; //活动开始时间
+    int64 end_time = 6; //活动结束时间
+    common.enum.MarketingEnum.ActiveStatus active_status = 7; // 活动状态
+    repeated common.base.NameAndCode active_icon = 8; //活动图标
+    repeated common.base.NameAndCode active_cover = 9; //活动主图
+    repeated common.base.NameAndCode active_base_cover = 13; //活动价格底图
+    common.enum.MarketingEnum.PreheatType preheat = 10; // 是否预热	0-不预热，1-预热
+    int64 preheat_time = 11; //预热开始时间
+    uint32 status = 12; // 数据生效状态	0-失效，1-有效
+    common.enum.MarketingEnum.ActiveCrowdType activeCrowdType = 14; //人群类型
+    string active_bc_url = 15; //活动价格底图跳转地址
+    repeated ActiveGroupInfo group_info = 16; // 活动分组信息
+    int32 active_base_cover_type = 17;//价格底图类型 0->不含价格,1->含价格
+}
+
+
+message ActiveAddReq {
+    ActiveInfo activeInfo = 1; //活动信息
+}
+
+message ActiveAddResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message ActiveUpdateReq {
+    ActiveInfo activeInfo = 1; //活动信息
+}
+
+message ActiveUpdateResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message ActiveListInfo {
+    string active_id = 1; // 活动ID
+    string active_name = 2; //活动名称（中文）	全局唯一
+    string country_code = 3; //国家码
+    common.enum.MarketingEnum.ActiveType active_type = 4; // 活动类型
+    int64 start_time = 5; //活动开始时间
+    int64 end_time = 6; //活动结束时间
+    common.enum.MarketingEnum.ActiveStatus active_status = 7; // 活动状态
+    common.enum.MarketingEnum.PreheatType preheat = 10; // 是否预热	0-不预热，1-预热
+    int64 preheat_time = 11; //预热开始时间
+    uint32 status = 12; // 数据生效状态	0-失效，1-有效
+    string operation_name = 13; //更新人名称
+    int64 update_time = 14; //更新时间
+    repeated common.base.NameAndCode active_icon = 17; //活动图标
+    repeated common.base.NameAndCode active_cover = 15; //活动主图
+    repeated common.base.NameAndCode active_base_cover = 16; //活动价格底图
+    common.enum.MarketingEnum.ActiveCrowdType activeCrowdType = 18; //人群类型
+    string active_bc_url = 19; //活动价格底图跳转地址
+    int32 active_base_cover_type = 20;//价格底图类型 0->不含价格,1->含价格
+}
+
+message ActiveListReq {
+    string active_id = 1; // 活动ID
+    string active_name = 2; //活动名称（中文）	全局唯一
+    string country_code = 3; //国家码
+    int64 start_time = 5; //活动开始时间
+    int64 end_time = 6; //活动结束时间
+    common.enum.MarketingEnum.ActiveStatus active_status = 7; // 活动状态
+    common.base.Pagination page = 8; //分页信息
+}
+
+message ActiveListResp {
+    repeated ActiveListInfo activeInfo = 1; //返回列表信息
+    uint32 total = 2; //商品结果总数
+    common.base.ErrorMessage ret = 3; // 返回值
+    string message = 4;
+}
+
+message ActivePageListReq {
+    string active_id = 1; // 活动ID
+    common.base.Pagination page = 2; //分页信息
+}
+
+message ActivePageListResp {
+    //todo 需要引入活动页面的对象
+    repeated ActiveListInfo activeInfo = 1; //返回列表信息
+    common.base.ErrorMessage ret = 2; // 返回值
+    common.base.Pagination page = 3; //分页信息
+    string message = 4; //错误信息
+}
+
+message ActiveSelectInfo {
+    string active_id = 1; // 活动ID
+    string active_name = 2; // 活动名称
+    string country_code = 3; // 国家码
+    int64 start_time = 5; //活动开始时间
+    int64 end_time = 6; //活动结束时间
+    int64 preheat_time = 7; //活动预热时间
+    int32 preheat = 8 ;//是否预热 0-不预热 1-预热
+}
+
+message ActiveSelectReq {
+    string active_name = 1; // 活动名称
+}
+
+message ActiveSelectResp {
+    repeated ActiveSelectInfo activeSelectInfo = 1;
+    common.base.ErrorMessage ret = 2; // 返回值
+    string message = 3; //错误信息
+}
+
+message ActiveAndGroupLabelInfo {
+    string active_id = 1; // 活动ID
+    string active_name = 2; // 活动名称
+    int32 product_count = 3; // 商品数量
+    string group_label_id = 4; // 活动分组标签ID
+    string group_label_name = 5; // 活动分组标签名称
+}
+
+message SelectActiveAndGroupLabelReq {
+    repeated string active_id = 1; // 活动ID
+    string active_name = 2; // 活动名称
+    repeated string group_label_id = 3; // 活动分组标签ID
+    string group_label_name = 4; // 活动分组标签名称
+    int32 query_type = 5; // 必填 搜索类型，1-通过活动ID或活动名称搜索，2-通过分组标签ID或分组标签名称
+    string country_code = 6; // 必填 搜索活动的所在国家
+    common.base.Pagination page = 7; //分页信息
+}
+
+message SelectActiveAndGroupLabelResp {
+    repeated ActiveAndGroupLabelInfo active_and_group_label_info = 1; //结果
+    common.base.ErrorMessage ret = 2; // 返回值
+    common.base.Pagination page = 3; //分页信息
+    uint32 total = 4; //结果总数
+
+}
+
+service ActiveService {
+    //添加活动
+    rpc InsertActive (ActiveAddReq) returns (ActiveAddResp);
+
+    //修改活动
+    rpc UpdateActive (ActiveUpdateReq) returns (ActiveUpdateResp);
+
+    //管理后台条件查询接口（分页）
+    rpc ListActive (ActiveListReq) returns (ActiveListResp);
+
+    //管理后台查询页面接口
+    rpc ListActivePage (ActivePageListReq) returns (ActivePageListResp);
+
+    //查询活动接口（添加活动商品时使用）
+    rpc SelectActive (ActiveSelectReq) returns (ActiveSelectResp);
+
+    //查询活动和活动分组标签接口（页面搭建时使用）
+    rpc SelectActiveAndGroupLabel (SelectActiveAndGroupLabelReq) returns (SelectActiveAndGroupLabelResp);
+}
+
+message ActiveGroupInfo {
+    int32 id = 1; //分组ID
+    repeated common.base.NameAndCode name = 2; // 分组名称
+    int32 sort = 3; //排序
+}
+
+message ActiveAddOrUpdateGroupReq {
+    string active_id = 1; // 活动ID
+    repeated ActiveGroupInfo group_info = 2; // 活动分组信息
+}
+
+message ActiveAddOrUpdateGroupResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message ActiveGroupListReq {
+    string active_id = 2; // 活动ID
+}
+
+message ActiveGroupListResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated ActiveGroupInfo group_info = 2; // 活动分组信息
+}
+
+service ActiveGroupBossService {
+    //添加或修改活动分组
+    rpc InsertOrUpdateGroup (ActiveAddOrUpdateGroupReq) returns (ActiveAddOrUpdateGroupResp);
+
+    //管理后台查询 指定 活动的分组标签信息
+    rpc ListActiveGroup (ActiveGroupListReq) returns (ActiveGroupListResp);
+
+    //管理后台查询 所有 活动的分组标签信息
+    rpc ListAllActiveGroup (ActiveGroupListReq) returns (ActiveGroupListResp);
+}
+
+message GiveResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message GiveQueryDetailReq{
+    //买赠活动ID
+    int32 id = 1;
+}
+message GiveQueryDetailResp{
+    //活动买赠信息
+     GiveQuery giveQuery = 1;
+    //返回错误信息
+    common.base.ErrorMessage ret = 3;
+}
+
+
+// 买赠活动
+service GiveBossService {
+    //添加或修改买赠活动
+    rpc GiveAddOrEdit (GiveAddOrEditReq) returns (GiveResp);
+    //查询活动列表
+    rpc Query (GiveQueryReq) returns (GiveQueryResp);
+    //查询详情接口
+    rpc QueryDetail(GiveQueryDetailReq) returns (GiveQueryDetailResp);
+    //修改状态
+    rpc EditStatus(GiveEditStatusReq) returns (GiveResp);
+}
+
+message GiveEditStatusReq{
+    //id
+    int32  id = 1;
+    //状态
+    int32 status = 2;
+    //操作人
+    string operation = 3;
+}
+
+message GiveQueryReq {
+
+    //app活动展示标签
+    string label = 1;
+    //国家码
+    string countryCode = 2;
+    //活动商品spu
+    string spuId  = 3;
+    //赠品skuId
+    string skuId  = 4;
+    //活动ID
+    int32  id = 5;
+    //状态1。生效，2。失效
+    int32 status = 6;
+    //分页信息
+    common.base.Pagination page = 7;
+}
+
+
+message GiveQuery{
+    //买赠sku列表
+    repeated GiveProductInfo giveProductInfo = 1;
+    //spuId列表
+    repeated int64 spuIds = 2;
+    //活动名称
+    string name = 3;
+    //国家码
+    string countryCode = 4;
+    //app活动展示标签
+    string label = 5;
+    //类型
+    int32 ruleType = 6;
+    //规则值
+    string ruleContent = 7;
+    //规则说明
+    string note = 8;
+    //开始时间
+    int64 startTime = 9;
+    //结束时间
+    int64 endTime = 10;
+    //操作人
+    string operation = 11;
+    //id
+    int32  id = 12;
+    //状态
+    int32 status = 13;
+    //更新时间
+    int64 updated = 14;
+    //创建时间
+    int64 created = 15;
+}
+
+message GiveQueryResp{
+    //活动买赠信息
+    repeated GiveQuery giveQuery = 1;
+    //分页信息
+    uint32 total = 2;
+    //返回错误信息
+    common.base.ErrorMessage ret = 3;
+}
+
+
+message  GiveProductInfo {
+    //skuId
+    int64 skuId = 1;
+    //数量
+    int32 stock = 2;
+}
+
+//买赠活动，添加或修改
+message GiveAddOrEditReq {
+    //买赠sku列表
+    repeated GiveProductInfo giveProductInfo = 1;
+    //spuId列表
+    repeated int64 spuIds = 2;
+    //活动名称
+    string name = 3;
+    //国家码
+    string countryCode = 4;
+    //app活动展示标签
+    string label = 5;
+    //类型 1.数量，2.金额'
+    int32 ruleType = 6;
+    //规则值
+    string ruleContent = 7;
+    //规则说明
+    string note = 8;
+    //开始时间
+    int64 startTime = 9;
+    //结束时间
+    int64 endTime = 10;
+    //操作人
+    string operation = 11;
+    //id
+    int32  id = 12;
+}

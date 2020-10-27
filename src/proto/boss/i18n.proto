@@ -1,0 +1,463 @@
+//DESC BACK littlec-i18n
+syntax = "proto3";
+package boss.i18n;
+
+
+import "common/base.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.i18n";
+option java_outer_classname = "I18n";
+
+//功能放在 i18n 服务中, 需请求 i18n 服务
+
+// message start I18nCountryLanguageService
+message CountryInfo{
+    string code = 1; //国家编码
+    string short_code = 2; //简码
+    string name_cn = 3; //国家中文名
+    string name_en = 4; //国家英文名
+    string name_local = 5; //国家当地名
+    string area_code = 6; //地区编码
+    string jet_lag = 7; //时区差
+    string image = 8 ; //国家图片
+    repeated LanguageInfo language_info = 9;//国家使用的语言列表
+    string currency_code = 10; //国家使用的货币
+    string currency_unit = 11; //货币单位
+    string time_zone = 12; //时区
+}
+
+message LanguageInfo{
+    string code = 1; //语言简码
+    string name = 2; //语言文字
+    string desc = 3; //中文描述
+}
+
+//获取国家列表
+message GetCountryListReq{
+    int32 page_size = 1; //每页大小
+    int32 page_num = 2; //第几页
+}
+
+message GetCountryListResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated CountryInfo country_info = 2;//国家信息列表, 包含语言
+}
+
+//获取语言列表
+message GetLanguageListReq{
+
+}
+
+message GetLanguageListResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated LanguageInfo language_info = 9;//国家使用的语言列表
+}
+
+// message end I18nCountryLanguageService
+
+
+//message start I18nModulePageService
+//添加模块
+message ModuleAddReq{
+    string module_name = 1; //模块名
+    string platform = 2; //渠道 APP, SCS, WMS
+}
+
+message ModuleAddResp{
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+//更新模块
+message ModuleUpdateReq{
+    string module_name = 1; //模块名
+    string module_id = 2; //待更新模块id
+    string platform = 3; //渠道 APP, SCS, WMS
+}
+
+message ModuleUpdateResp{
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+//模块下页面添加
+message ModulePageAddReq{
+    string page_name = 1;
+    string module_id = 2;
+}
+
+message ModulePageAddResp{
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+//更新模块下页面信息
+message ModulePageUpdateReq{
+    string page_name = 1;
+    string page_id = 2;
+}
+
+message ModulePageUpdateResp{
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+message ModuleInfo{
+    string module_id  = 1; //模块id
+    string module_name = 2; //模块名
+    uint32 page_sum = 3; //页面数量
+    uint32 variable_item_sum = 4; //变量数量
+    string create_time = 5; //模块创建时间戳
+    string update_time = 6; //页面修改时间戳
+    repeated PageInfo page_info = 7; //模块下页面信息
+    string platform = 8; //渠道 APP, SCS, WMS
+}
+
+message PageInfo{
+    string module_id = 1; //模块id
+    string page_id = 2; //页面id
+    string page_name = 3; //页面名
+    string create_time = 4; //页面创建时间戳
+    string update_time = 5; //页面修改时间戳
+    uint32 variable_item_count = 6; //翻译项数量
+}
+
+//获取模块及页面
+message GetModulePagesReq{
+    string platform = 1; //渠道 APP, SCS, WMS
+}
+
+message GetModulePagesResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated ModuleInfo module_info = 2; //模块信息列表
+}
+
+//添加页面变量
+message PageVariableAddReq{
+    string page_id = 1; //页面id
+    string name_cn = 2; //变量中文名
+    string name_en = 3; //变量英文名
+    uint32 variable_length = 4; //变量长度
+    string variable_code = 5; //变量码
+    string language_code = 6; //语言简码
+    string translation = 7; //语言对应翻译内容
+    string platform = 8; //渠道 APP, SCS, WMS
+}
+
+message PageVariableAddResp{
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+//更新页面变量
+message PageVariableUpdateReq{
+    string variable_id = 1; //变量id
+    string pageId = 2; //页面id
+    string name_cn = 3; //变量中文名
+    string name_en = 4; //变量英文名
+    uint32 variable_length = 5; //变量长度
+    string variable_code = 6; //变量码
+    string platform = 8; //渠道 APP, SCS, WMS
+}
+
+message PageVariableUpdateResp{
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+
+// message start i18nTranslationService
+//添加语言翻译项
+message LanguageTranslationAddReq{
+    string variable_id = 1; //变量id
+    string language_code = 2; //语言简码
+    string translation = 3; //语言对应的翻译
+    string platform = 4;
+}
+
+message LanguageTranslationAddResp{
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+//失效语言翻译项
+message DisableTranslationReq{
+    string variableRefId = 1; //翻译项id
+    string platform = 2;
+}
+
+message DisableTranslationResp{
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+//生效语言翻译项
+message ReEnableTranslationReq{
+    string variableRefId = 1; //翻译项id
+    string platform = 2;
+}
+
+message ReEnableTranslationResp{
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+
+message VariableTranslationUnit{
+    string variable_id = 1; //变量id
+    string page_id = 2; //页面id
+    string variable_code = 3; //变量码
+    string name_cn = 4; //变量中文内容
+    string name_en = 5; //变量英文内容
+    uint32 variable_length = 6; //变量长度
+    string translation = 7; //语言翻译内容
+    string language_code = 8; //语言简码
+    string create_time = 9; //创建时间
+    string update_time = 10; //修改时间
+    string variable_ref_id = 11; //翻译项id
+    string module_id = 12; //所属模块id
+    string module_name = 13; //模块名
+    string page_name = 14; //页面名
+    string platform = 15; //渠道 APP, SCS, WMS
+}
+
+//根据语言获取变量及翻译项列表
+message GetVariableListByLanguageReq{
+    common.base.Pagination page = 1;
+    string page_id = 2; //页面id
+    string language_code = 3; //语言简码
+    string name_cn_key = 4; //中文模糊搜索
+    string name_en_key = 5; //英文模糊搜索
+    string variable_code_key = 6; //变量名观模糊搜索
+    string translation_key = 7; //翻译项模糊搜索
+    string sort_field = 8;//排序字段
+    string sort_type = 9;//排序类型
+    string platform = 10; //
+}
+
+message GetVariableListByLanguageResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    common.base.Pagination page = 2;
+    repeated VariableTranslationUnit variable_translation = 3; //变量翻译列表
+    int32 total = 4;//总量
+}
+
+//导入翻译模板
+message ImportVariableTranslationTemplateReq{
+    string file_download_url = 1; //翻译模板文件下载地址
+//    string lan_code = 2; //语言码
+    bool is_update_all = 3; //false 仅更新翻译项, true 更新所有的
+    string platform = 4; //APP, SCS, WMS
+}
+
+message ImportVariableTranslationTemplateResp{
+    common.base.ErrorMessage ret = 1; //返回值
+}
+
+//获取失效的翻译项列表
+message GetDisabledTranslationListReq{
+    common.base.Pagination page = 1; //分页信息
+    string language_code = 3; //语言简码
+    string platform = 4; //渠道 APP, SCS, WMS
+}
+
+message GetDisabledTranslationListResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated VariableTranslationUnit variable_translation = 2; //变量翻译列表
+}
+
+message OneKeyTranslationUnit{
+    string from_language_code = 1; //来源语种语言简码
+    string to_language_code = 2;  //目标语种语言简码
+    string origin_content= 3; // 待翻译内容
+    string translation = 4;  // 翻译结果
+}
+
+message GetOneKeyTranslationReq{
+    repeated OneKeyTranslationUnit one_key_translation_unit = 1;//待翻译列表
+}
+
+message GetOneKeyTranslationResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated OneKeyTranslationUnit one_key_translation_unit = 2;//待翻译结果
+}
+
+message GetCountryDivisionReq {
+    string country_code = 1;
+}
+message GetCountryDivisionResp {
+    message AreaInfo {
+        string area_name = 1;
+        repeated string state_name = 2;
+    }
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated AreaInfo area = 2;
+}
+message GetAppCountryDivisionReq {
+    string country_code = 1;
+    string state_name = 2;
+}
+message GetAppCountryDivisionResp {
+    message CityInfo {
+        string city_name = 1;
+        string city_code = 2;
+        repeated string postcode = 3;
+    }
+    message StateInfo {
+        string state_name = 1;
+        string state_code = 2;
+        repeated CityInfo city = 3;
+    }
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated StateInfo stat = 2;
+}
+
+message ExportVariableTranslationTemplateReq {
+    string language_code = 1;//语言码
+    string platform = 2; //渠道 APP, SCS, WMS
+}
+
+message ExportVariableTranslationTemplateResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string file_url = 2; //下载文件地址
+}
+
+message ExportSelectedVariableTranslationTemplateReq {
+    repeated VariableTranslationUnit variable_translation = 1; //变量翻译列表
+}
+
+message ExportSelectedVariableTranslationTemplateResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string file_url = 2; //下载文件地址
+}
+
+
+message GetRemoteOneKeyTranslationReq{
+    repeated OneKeyTranslationUnit one_key_translation_unit = 1;//待翻译列表
+}
+
+message GetRemoteOneKeyTranslationResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    repeated OneKeyTranslationUnit one_key_translation_unit = 2;//待翻译结果
+}
+
+// 国家语言服务
+service I18nCountryLanguageService {
+    //获取国家列表
+    rpc GetCountryList(GetCountryListReq) returns (GetCountryListResp);
+
+    //获取语言列表
+    rpc GetLanguageList(GetLanguageListReq) returns (GetLanguageListResp);
+
+    //获取国家区划信信息,只到state级别
+    rpc GetCountryDivision (GetCountryDivisionReq) returns (GetCountryDivisionResp);
+    //获取国家区划信息,和app侧一样（后台修改收货地址时用到）
+    rpc GetAppCountryDivision (GetAppCountryDivisionReq) returns (GetAppCountryDivisionResp);
+}
+
+//message start I18nModulePageService
+
+service I18nModulePageService{
+    //添加模块
+    rpc ModuleAdd(ModuleAddReq) returns(ModuleAddResp);
+
+    //更新模块
+    rpc ModuleUpdate(ModuleUpdateReq) returns (ModuleUpdateResp);
+
+    //模块下添加页面
+    rpc ModulePageAdd(ModulePageAddReq) returns (ModulePageAddResp);
+
+    //更新模块下页面信息
+    rpc ModulePageUpdate(ModulePageUpdateReq) returns (ModulePageUpdateResp);
+
+    //获取模块页面列表
+    rpc GetModulePages(GetModulePagesReq) returns(GetModulePagesResp);
+
+    //添加页面变量
+    rpc PageVariableAdd(PageVariableAddReq) returns (PageVariableAddResp);
+
+    //更新页面变量
+    rpc PageVariableUpdate(PageVariableUpdateReq) returns(PageVariableUpdateResp);
+}
+// message end i18nTranslationService
+service I18nTranslationService{
+    //添加指定语言的翻译项
+    rpc LanguageTranslationAdd(LanguageTranslationAddReq) returns (LanguageTranslationAddResp);
+
+    //失效指定语言的翻译项
+    rpc DisableTranslation(DisableTranslationReq) returns (DisableTranslationResp);
+
+    //生效被失效的语言翻译项
+    rpc ReEnableTranslation(ReEnableTranslationReq) returns (ReEnableTranslationResp);
+
+    //根据语言获取变量及翻译项列表
+    rpc GetVariableListByLanguage(GetVariableListByLanguageReq) returns (GetVariableListByLanguageResp);
+
+    //导入翻译模板
+    rpc ImportVariableTranslationTemplate(ImportVariableTranslationTemplateReq) returns (ImportVariableTranslationTemplateResp);
+
+    //导出翻译模板
+    rpc ExportVariableTranslationTemplate(ExportVariableTranslationTemplateReq) returns (ExportVariableTranslationTemplateResp);
+
+    //导出选择的翻译模板
+    rpc ExportSelectedVariableTranslationTemplate( ExportSelectedVariableTranslationTemplateReq ) returns (ExportSelectedVariableTranslationTemplateResp);
+
+    //获取失效的翻译项列表
+    rpc GetDisabledTranslationList(GetDisabledTranslationListReq) returns (GetDisabledTranslationListResp);
+
+    //获取一键翻译结果
+    rpc GetOneKeyTranslation(GetOneKeyTranslationReq) returns (GetOneKeyTranslationResp);
+
+    //远程支持翻译接口--> cross the wall
+    rpc GetRemoteOneKeyTranslation(GetRemoteOneKeyTranslationReq) returns (GetRemoteOneKeyTranslationResp);
+
+}
+
+
+message SetDetailPageReq{
+    string config = 1;
+}
+
+message SetDetailPageResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+service I18nConfigService{
+    //设置详情页展示方式
+    rpc SetDetailPage (SetDetailPageReq) returns (SetDetailPageResp);
+}
+
+// message start  i18nTerminalService
+message TranslationUnit{
+    string variable_code = 1; //变量码
+    string name_cn = 2; //变量中文名
+    string name_en = 3; //变量英文名
+    string translation = 4; //翻译内容
+}
+
+//终端获取指定语言的翻译项列表
+message GetPlatformVariableListReq{
+    string language_code = 1; //语言编码
+    string platform = 3; //渠道 APP, SCS, WMS
+}
+
+message GetPlatformVariableListResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    map<string, TranslationUnit> variable_translation_map = 2; //翻译项map返回值
+    string language_code = 4; //语言编码
+    uint64 update_time = 5; //更新时间
+}
+
+//客户端判断是否需要更新语言包
+message GetPlatformVariableUpdateFlagReq{
+    string language_code = 1; //语言编码
+    uint64 last_update_time = 2; //上次更新时间戳
+    string platform = 3; //渠道 APP, SCS, WMS
+}
+
+message GetPlatformVariableUpdateFlagResp{
+    common.base.ErrorMessage ret = 1; //返回值
+    bool update_flag = 2; //是否需要更新
+}
+
+service I18nPlatformService{
+
+    //终端获取指定语言的翻译项列表
+    rpc GetPlatformVariableList(GetPlatformVariableListReq) returns (GetPlatformVariableListResp);
+
+    //客户端判断是否需要更新语言包
+    rpc GetPlatformVariableUpdateFlag(GetPlatformVariableUpdateFlagReq) returns (GetPlatformVariableUpdateFlagResp);
+
+}

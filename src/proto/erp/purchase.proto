@@ -1,0 +1,964 @@
+// 供应链 - 采购
+syntax = "proto3";
+package erp.purchase;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.erp.purchase";
+option java_outer_classname = "Purchase";
+
+//采购单请求体
+message PurchaseOrderReq {
+    common.base.Pagination page = 1;
+    string purchase_order_no = 2; //采购单号
+    string ref_purchase_order_no = 3; //关联采购单号
+    string supplier_id = 4; //供应商id
+    string tab_type = 5; // 查询的tab类型  ALL|UN_PURCHASE|HAS_PURCHASE|SHORTAGE|PARTIAL_DELIVER|ALL_DELIVER|HAS_INCOME|CANNEL|WARNING|UNGROUP
+//    string buyer_id = 6; // 采购员id
+    string purchase_order_status = 7; //采购单状态
+    string purchase_type = 8; //采购单来源
+    common.enum.PurchaseOrderEnum.UseFingoSystem is_use_fingo_system = 9; //是否使用fingo系统
+    string warehouse_no = 10; //仓库编号
+    common.enum.PurchaseOrderEnum.DeliveWay delive_way = 11; //发货方式
+    string start_time = 12; //创建时间的开始时间
+    string end_time = 13; //创建时间的结束时间
+    string order_no = 14; //订单号
+    string third_order_no = 15; //第三方订单号
+    string logi_code = 16; //物流单号
+    string product_name = 17; // 商品名称
+    string sku_code = 18; //skuCode
+    common.enum.ErpEnum.IncomeStatus income_status = 19; // 入库状态
+    string product_id = 20; //商品id
+    repeated string type = 21; //采购单类型
+    common.enum.ErpEnum.YesNo export_img = 22; // 导出是否带图
+    common.enum.ErpEnum.ExternalStatus external_status = 23; //
+    int32 cate_id = 24;//分类id
+}
+
+//采购单详情
+message PurchaseOrderDetailPb {
+    string product_name = 1; //商品名称
+    string product_cover = 2; //商品图片
+    string product_link = 3; //商品链接
+    string sku_desc = 4; //商品描述
+    string purchase_price = 5; //采购价格
+    string third_order_no = 6; //第三方订单号
+    int32 system_count = 7; //系统数量
+    int32 purchase_count = 8; //采购数量
+    int32 ship_count = 9; //发货数量
+    int32 stockout_num = 10; //缺货数量
+    int32 sign_num = 11; //签收数量
+    int32 unarrived_num = 12; //未到货数量
+    int32 income_num = 13; //入库数量
+    int32 income_abnormal_num = 14; //入库异常数量
+    int32 cancel_count = 15; //取消数量
+    string ship_time = 16; //发货时间
+    string sign_time = 17; //签收时间
+    string income_time = 18; //入库时间
+    string all_income_time = 19; //所有入库时间
+    string create_time = 20; //创建时间
+    string remark = 21; //备注
+    string sku_code = 22; //skuCode
+    string supplier_code = 23; // 供应商编码
+    string qr_code = 24; // 商品条码
+    repeated string order_no = 25; // 销售订单号
+    repeated LogiInfo logi = 26; // 物流信息
+    string total_price = 27; // 总金额
+    int32 available_ship_count = 28; //未发货数量
+    int32 available_stockout_count = 29; //可缺货数量
+
+}
+
+//采购单
+message PurchaseOrderPb {
+    string purchase_order_no = 1; //采购单号
+    string ref_purchase_order_no = 2; //关联采购单号
+    string supplier_id = 4; //供应商id
+    string supplier_name = 5; //供应商名称
+    string buyer_id = 6; //采购单号
+//    string buyer_name = 7; //采购员
+    string purchase_order_status = 8; //采购单状态
+    string purchase_type = 9; //采购单来源
+    common.enum.PurchaseOrderEnum.UseFingoSystem is_use_fingo_system = 10; //是否使用fingo系统
+    string warehouse_no = 11; //仓库编号
+    string warehouse_name = 12; //仓库名称
+    string purchase_amount = 13; //采购金额
+    string retain_time = 14; //剩余时间
+    string freight = 15; //运费
+    common.enum.PurchaseOrderEnum.DeliveWay delive_way = 16; //发货方式
+    string create_time = 17; //创建时间
+    string update_time = 18; //更新时间
+    repeated PurchaseOrderDetailPb details = 19;
+    bool is_abnormal_product = 20;
+    common.enum.ErpEnum.YesNo is_ship = 23; // 是否可发货
+
+    string income_time = 21; //入库时间
+    string all_income_time = 22; //全部入库时间
+    string transfer_name = 24; //中转仓名
+    string external_status = 25; //自动采购状态
+}
+
+//采购单响应体
+message PurchaseOrderResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    int32 total = 3;
+    repeated PurchaseOrderPb list = 4; //返回体
+}
+
+//采购单详情查询
+message PoDetailReq {
+    string purchase_order_no = 1; //采购单号
+}
+
+message PoDetailResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    PurchaseOrderPb order = 3;
+}
+
+//保存采购单信息，新增/编辑等
+message PurchaseOrderSavePbReq {
+    string purchase_order_no = 1; //采购单号
+    string warehouse_no = 2; //仓库编号
+    string supplier_id = 3; //供应商id
+    common.enum.PurchaseOrderEnum.UseFingoSystem is_use = 7; // 是否使用fingo系统
+    common.enum.PurchaseOrderEnum.DeliveWay delive_way = 4; //发货方式
+    string freight = 5; //费用
+    repeated PurchaseOrderDetailSave detailInfo = 6; //详情
+}
+
+//采购单详细信息
+message PurchaseOrderDetailSave {
+    string sku_code = 1;
+    int32 purchase_count = 2; //采购数量
+    string purchase_price = 3; //采购价
+    string third_order_no = 4; //第三方订单号
+}
+
+message PurchaseOrderSavePbResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+
+message PurchaseOrderSingleMakeupReq {
+    string purchase_order_no = 1; //采购单号
+    string sku_code = 2;
+    string supplier_id = 3; //供应商id
+    int32 purchase_count = 4; //采购数量
+    string purchase_price = 5; //采购价格
+    string third_order_no = 6; //第三方订单号
+    string freight = 7; //运费
+}
+
+message PurchaseOrderSingleMakeupResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message PurchaseOrderCancelReq {
+    string purchase_order_no = 1;
+}
+
+message PurchaseOrderCancelResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+//部分取消
+message PurchasePartCancelReq {
+    string purchase_order_no = 1;
+    string sku_code = 2;
+    int32 cancel_count = 3; //取消数量
+}
+
+//响应
+message PurchasePartCancelResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+//单个编辑
+message PoSingleEditReq {
+    string purchase_order_no = 1;
+    string sku_code = 2;
+    int32 purchase_count = 3;
+    string purchase_price = 4;
+    string third_order_no = 5;
+    string freight = 6;
+
+}
+
+message PoSingleEditResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message EnsurePurchaseReq {
+    string purchase_order_no = 1;
+    uint64 transfer_id = 2;
+}
+
+message EnsurePurchaseResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+//缺货请求
+message StockOutReq {
+    string purchase_order_no = 1;
+    string sku_code = 2;
+    string supplier_id = 3;
+}
+//缺货响应
+message StockOutResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+//
+message DeliverInfo {
+    string purchase_order_no = 1;
+    string sku_code = 2;
+    string supplier_id = 3;
+    repeated LogiInfo logi_list = 4;
+}
+
+message LogiInfo {
+    string logi_code = 1; // 物流号
+    string logi_company = 2; // 物流公司
+    int32 count = 3; // 实际发货数量
+}
+
+//采购单发货
+message DeliverReq {
+    repeated DeliverInfo delivers = 1;
+}
+
+//采购单发货响应
+message DeliverResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+//
+//message PurchaseOrderShipReq {
+//    string purchase_order_no = 2;
+//    string ref_purchase_order_no = 3;
+//    string supplier_id = 4;
+//    string supplier_name = 5;
+//    string buyer_id = 6;
+//    string purchase_type = 8;
+//    common.enum.PurchaseOrderEnum.UseFingoSystem is_use_fingo_system = 9;
+//    string warehouse_no = 10;
+//    common.enum.PurchaseOrderEnum.DeliveWay delive_way = 11;
+//    string start_time = 12;
+//    string end_time = 13;
+//}
+
+message ImportShipReq {
+    string file_url = 1; // 导入文件地址
+}
+
+message ImportShipResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message ExportPoResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    string file_url = 3; // 导出文件地址
+}
+
+message PoTrackReq {
+    string order_no = 1;
+}
+
+message PoTrackResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string order_no = 2;
+    message PoTrackInfo {
+        string poStatus = 1; //采购单状态
+        string time = 2; //采购单状态对应的时间
+        int32 normal_num = 3; //正常数量，入库数量,入库时有
+        int32 abnormal_num = 4; //异常数量，取消数量，入库状态才有
+        int32 curr = 5; //该状态是否是当前状态，1是当前状态，2、已过，3、未过
+        string status_name = 6; //采购单状态名称
+    }
+    message SkuInfo {
+        string sku_code = 1;
+        string count = 2;
+    }
+    message PoInfo {
+        string purchase_order_no = 1; //采购单号
+        repeated SkuInfo sku_codes = 2; //对应的skucode
+        repeated PoTrackInfo track_infos = 3; //追踪信息列表
+    }
+    repeated PoInfo po_infos = 3; //采购信息列表
+    string message = 4;
+}
+
+message RiskPoReq {
+    common.base.Pagination page = 1;
+    string order_no = 2;
+    int32 un_income_day = 3;
+}
+
+message RiskPoResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    int32 total = 3;
+    message RiskPoInfo {
+        string purchase_order_no = 1; //采购单号
+        string sku_code = 2; //对应的skucode
+        int32 num = 3; //数量
+        string create_time = 4; //创建时间
+        int32 warning = 5; // 1、预警 0、没预警
+    }
+    message RiskOrderInfo {
+        string order_no = 1;
+        repeated RiskPoInfo risk_po_infos = 2; //采购信息列表
+    }
+    repeated RiskOrderInfo risk_order_infos = 4; //风险订单信息
+}
+
+
+message PurchaseSkuOrderPageReq {
+    common.base.Pagination page = 1;
+    string purchase_order_no = 2;
+    string sku_code = 3;
+}
+
+message PurchaseSkuOrderPageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    int32 total = 2;
+    repeated SkuOrder order = 3; //风险订单信息
+    message SkuOrder {
+        string order_no = 1; //采购单号
+        int32 count = 2; //数量
+    }
+}
+
+message PurchaseSkuOrderExportReq {
+    string purchase_order_no = 1;
+    string sku_code = 2;
+}
+
+message PurchaseSkuOrderExportResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string file_url = 2; //生成的文件地址
+}
+
+
+message GetStockoutDataReq {
+    string purchase_order_no = 1;
+    string sku_code = 2;
+}
+
+message GetStockoutDataResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    int32 un_ship_count = 2; // 未发货数量
+    repeated DeliveryData delivery = 3; // 已发货订单数据
+    message DeliveryData {
+        string income_no = 1; // 入库单号
+        string logi_code = 2; // 物流单号
+        string logi_company = 3; // 物流公司
+        int32 sign_status = 4; // 签收状态
+        int32 totalCount = 5; // 发货数量
+        int32 income_count = 6; // 已入库数
+     }
+}
+
+message PurchaseStockoutReq {
+    string purchase_order_no = 1;
+    string sku_code = 2;
+    int32 count = 3; // 未发货缺货数量
+    repeated StockoutData stockout = 4; // 已发货订单数据
+    message StockoutData {
+        string income_no = 1;  // 入库单号
+        int32 count = 2; // 缺货数量
+    }
+    common.enum.ErpEnum.YesNo auto_cancel = 5; //标缺自动取消
+}
+
+message PurchaseStockoutResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message PurchaseStatusRateReq {
+    string purchase_order_no = 1;
+}
+message PurchaseStatusRateResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string push_time = 2; //推送采购单时间
+    int64 push_continue_time = 3;//推送采购单持续时间
+    string confirm_time = 4; //确认采购时间
+    int64 confirm_continue_time = 5;//确认采购持续时间
+    repeated RateDeliveryDetail detail = 6; // 各阶段数据
+    message RateDeliveryDetail {
+        string delivery_time = 1; //商家发货时间
+        int64 delivery_continue_time = 2;//商家发货持续时间
+        string sign_time = 3; //物流签收时间
+        int64 sign_continue_time = 4;//物流签收持续时间
+        string income_time = 5; //仓库入库时间
+        int64 income_continue_time = 6;//仓库入库持续时间
+    }
+}
+
+message SkuDeliveryDetailReq {
+    string purchase_order_no = 1;
+    string sku_code = 2;
+}
+message SkuDeliveryDetailResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated SkuDeliveryDetailPb item = 2;
+    message SkuDeliveryDetailPb {
+        string logi_code = 1; // 物流号
+        string logi_company = 2; // 物流公司
+        int32 delivery_count = 3; // 发货数量
+        int32 income_num = 4; //入库数量
+        int32 abnormal_num = 5; //异常数量
+        int32 sign_status = 6; // 签收状态
+        int32 income_status = 7; // 入库状态
+        string delivery_time = 8; //系统发货时间
+        int64 delivery_time_continue = 9;//系统发货时间持续时长(毫秒)
+        string sign_time = 10; //签收时间
+        int64 sign_time_continue = 11;//签收时间持续时长(毫秒)
+        string income_time = 12; //入库时间
+        int64 income_time_continue = 13;//入库时间持续时长(毫秒)
+    }
+}
+
+message SkuAbnormalDetailReq {
+    string purchase_order_no = 1;
+    string sku_code = 2;
+}
+message SkuAbnormalDetailResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated SkuAbnormalDetailPb item = 2;
+    message SkuAbnormalDetailPb {
+        string abnormal_no = 1; // 异常单号
+        string abnormal_type = 2; // 异常类型
+        int32 abnormal_num = 3; //异常数量
+        int32 abnormal_status = 4; // '1.处理中 2.待处理 8.已完结',
+        string abnormal_create_time = 5; //异常发起时间
+    }
+}
+
+message PurchaseRelationOrderReq {
+    common.base.Pagination page = 1;
+    string purchase_order_no = 2;
+}
+message PurchaseRelationOrderResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    int32 total = 2;
+    repeated PurchaseRelationOrderPb list = 3; //返回体
+}
+message PurchaseRelationOrderPb {
+    string order_no = 1;// 主订单号
+    string product_cover = 2; //商品图片
+    string sku_desc = 3; //商品描述
+    int32 buy_count = 4; //购买数量
+    string create_time = 5;// 创建时间
+    string pay_time = 6;// 支付时间
+    common.enum.OrderEnum.OrderStatus order_status = 7; //订单状态
+    int64 continue_time = 8; //持续时长
+    common.enum.OrderEnum.AfterStatus after_status = 9; //售后状态
+    repeated OutOrderInfo out_info = 10; // 关联出库单信息
+}
+message OutOrderInfo {
+    string out_no = 1;// 关联出库单号
+    common.enum.ErpEnum.OutOrderStatus out_status = 2; // 出库状态
+}
+
+message ImportBatchPurchaseReq {
+    string upload_url = 1;
+}
+message ImportBatchPurchaseResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message ExportPurEnsureTemplateReq {
+
+}
+
+message ExportPurEnsureTemplateResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    string file_url = 3; // 导出文件地址
+}
+
+message PurEnsureImportPageReq {
+    common.base.Pagination page = 1;
+    string begin_submit_time = 2; //提交时间-begin
+    string end_submit_time = 3; //提交时间-end
+    string begin_start_time = 4; //任务开始时间-begin
+    string end_start_time = 5; //任务开始时间-end
+    string begin_end_time = 6; //任务结束时间-begin
+    string end_end_time = 7; //任务结束时间-end
+    int32 import_type = 8;//任务类型。1:确认采购
+    string buyer_id = 9; // 提交人（采购员）id
+    int32 import_status = 10;//任务状态。1: "导入处理中",2:"导入失败",3:"导入成功"
+}
+message PurEnsureImportPageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    int32 total = 3;
+    repeated PurEnsureImportPb list = 4; //返回体
+}
+message PurEnsureImportPb {
+    string import_no = 1;//任务号
+    string submit_time = 2; //提交时间
+    string start_time = 3; //任务开始时间
+    string end_time = 4; //任务结束时间
+    int32 import_type = 5;//任务类型。1:确认采购
+    string buyer_id = 6; // 提交人（采购员）id
+    int32 import_status = 7;//任务状态。1: "导入处理中",2:"导入失败",3:"导入成功"
+    string error_url = 8;//错误记录地址
+    string submit_name = 9;//提交人姓名
+}
+
+message PurExportTaskPageReq {
+    common.base.Pagination page = 1;
+    string begin_submit_time = 2; //提交时间-begin
+    string end_submit_time = 3; //提交时间-end
+    string begin_start_time = 4; //任务开始时间-begin
+    string end_start_time = 5; //任务开始时间-end
+    string begin_end_time = 6; //任务结束时间-begin
+    string end_end_time = 7; //任务结束时间-end
+    int32 export_type = 8;//任务类型。1:采购单批量导出;2:采购单批量导出（不带图）
+    string buyer_name = 9; // 提交人（采购员）id
+    int32 export_status = 10;//任务状态。1: "导出处理中",2:"导出失败",3:"导出成功"
+}
+message PurExportTaskPageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    int32 total = 3;
+    repeated PurExportTaskPb list = 4; //返回体
+}
+message PurExportTaskPb {
+    string export_no = 1;//导出任务号
+    string submit_time = 2; //提交时间
+    string start_time = 3; //任务开始时间
+    string end_time = 4; //任务结束时间
+    int32 export_type = 5;//任务类型。1:采购单批量导出;2:采购单批量导出（不带图）
+    string buyer_id = 6; // 提交人（采购员）id
+    int32 export_status = 7;//任务状态。1: "导出处理中",2:"导出失败",3:"导出成功"
+    string export_file_url = 8;//文件地址
+    string submit_name = 9;//提交人姓名
+    string remark = 10;//备注
+}
+
+message PurEnsureImportDetailPageReq {
+    common.base.Pagination page = 1;
+    string import_no = 2;//任务号
+}
+message PurEnsureImportDetailPageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    int32 total = 3;
+    repeated PurEnsureImportDetailPb list = 4; //返回体
+}
+message PurEnsureImportDetailPb {
+    string import_no = 1;//任务单号
+    string execute_time = 2; //执行时间
+    string purchase_order_no = 3; //采购单号
+    string sku_code = 4; //skuCode
+    int32 import_status = 5;//处理结果。1: "导入处理中",2:"导入失败",3:"导入成功
+    string remark = 6; // 备注
+}
+message PurCateGroupQueryReq{
+    string buyer_name = 1;//用户名
+    string cate_id = 2;//类目Id
+    string group_name =3;//
+    common.base.Pagination page = 4;
+
+}
+message PurCateGroupBuyerListResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message =2;//
+    int32 total =4;//总数
+    repeated PurCateGroupBuyerPB groupPB= 3;//分组数据
+}
+message PurCateGroupBuyerPB{
+    string buyerId= 1;//用户ID
+    string buyerName = 2 ;//用户名称
+    string update_time =3;//修改时间
+    string create_time =4;//创建时间
+    string nick_name = 5;//昵称
+    string real_name = 6;//真实姓名
+    string permissionGroup = 9;//组织部门
+    repeated string role = 7;//角色
+    repeated PurCateGroupListPB group = 8;//分组信息
+}
+message PurCateGroupListPB{
+    string group_id = 1;//分组ID
+    string group_name =2;//分组名
+}
+message PurCateGroupListResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message =2;//
+    int32 total =4;//总数
+    repeated PurCateGroupPB groupPB= 3;//分组数据
+
+}
+message PurCateGroupPB{
+    string group_name =1;//分组名
+    repeated PurCateListPB cateList=2;//后台类目
+    string group_id =3;//分组id
+    string update_time =4;//修改时间
+    string create_time =5 ;//创建时间
+    repeated PurBuyerIdListPB buyerList = 6;//采购人员名单
+}
+message PurCateListPB{
+    string cate_id = 1;//类目ID
+    string cate_name = 2;//类目名称
+    repeated PurCateListPB cateList =7;//子集
+}
+message PurBuyerIdListPB{
+    string buyerId= 1;//用户ID
+    string buyerName = 2 ;//用户名称
+}
+message PurCateGroupAddReq{
+    repeated PurCateGroupAddPB pbList = 1;
+}
+message PurCateGroupAddPB{
+    string group_name = 1;//分组名
+    string group_id =4;//有groupId为编辑 没有为新增
+    repeated string cate_id = 2;//类目id
+    repeated string user_id = 3;//用户id
+}
+message PurCateGroupAddResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+message PurCateGroupEditBuyerReq{
+    string user_id = 1;//人员ID
+    repeated string groupId =2;//分组ID
+}
+message PurCateGroupEditBuyerResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+message PurCateGroupDetailReq{
+    string group_id = 1;//分组ID
+}
+message PurCateGroupDetailResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    string group_name = 2;//分组名
+    repeated PurBuyerIdListPB buyerIds = 3;//人员信息
+    repeated PurCateListPB cateIds = 4 ;//类目信息
+    repeated string cateIdList =5;//全部cateId
+    string message =6;
+
+}
+message PurCateGroupBuyerDetailReq{
+    string userId = 1;//人员ID
+}
+message PurCateGroupBuyerDetailResp{
+    string buyerId= 1;//用户ID
+    string buyerName = 2 ;//用户名称
+    string real_name = 3;//真实姓名
+    repeated PurCateGroupListPB group = 4;//分组信息
+    repeated PurCateListPB cateList =5;//分类信息
+    repeated string cateIdList =7;//全部cateId
+    common.base.ErrorMessage ret = 6; // 返回值
+    string message =8;//信息
+}
+message PurCateGroupSelectReq{
+    string group_name =1;
+}
+message PurCateGroupSelectResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated PurCateGroupListPB groupList=2;//下拉分组
+}
+message DeletePurCateGroupBuyerReq{
+    string userId = 1;//人员ID
+}
+message DeletePurCateGroupBuyerResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message =2;//信息
+}
+
+message AutoPayCheckReq{
+    string sku_code = 1;
+    string sku_id = 2;
+    string product_id = 3;
+    string purchase_no = 4;
+    string supplier_id = 5;
+    string cate_id = 6;
+    string order_no = 7;
+    string start_date = 8;
+    string end_date =9;
+    string product_name = 10;
+    string third_no = 11;
+    string tab_type = 12;//(1, "下单失败"),WAIT_PAY(2, "待付款"),WAIT_PAY_ERROR(3, "待付款异常"),HAD_PAY(4, "已付款")
+}
+
+message AutoPayCheckResp{
+    int32 success_sum =1;
+    repeated CheckContent check_content = 2;
+    message CheckContent {
+        string check_pay_no = 1; // 确认付款编号
+        int32 sum = 2; //校验通过数量
+        string purchase_amount = 3; // 合计采购总额
+        string freight = 4; //运费
+    }
+    common.base.ErrorMessage ret = 3; // 返回值
+}
+
+message CanPayBatchReq{
+    repeated string purchase_orders =1;//可付款采购单号
+}
+
+message CanPayBatchResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message GeneratePayUrlReq{
+    string check_pay_no =1;//确认付款编号
+}
+
+message GeneratePayUrlResp{
+    string pay_url =1;//付款链接
+    common.base.ErrorMessage ret = 2; // 返回值
+}
+message AutoPurchaseOrderListReq{
+    common.base.Pagination page = 15;
+    string create_fail_reason = 1;//下单失败原因
+    string sku_code = 2;//sku_code
+    string sku_id = 3;//sku_id
+    string product_id = 4;//productId
+    string purchase_order_no = 5;//采购单号
+    string supplier_id = 6;//商家ID
+    string cate_id = 7;//分类ID
+    string order_no = 8;//订单号
+    string start_date = 9;//开始时间
+    string end_date =10;//结束时间
+    string pay_fail_reason = 11;//支付失败原因
+    string product_name = 12;//商品名称
+    string third_no = 13;//第三方单号
+    string tab_type = 14;//CREATE_ERROR(1, "下单失败"),WAIT_PAY(2, "待付款"),WAIT_PAY_ERROR(3, "待付款异常"),PAY_SUCCESS(4, "已付款")
+}
+message AutoPurchaseOrderListResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated AutoPurchasePB pbList =2;
+    int32 total = 3;//总数
+}
+message AutoPurchasePB{
+    string purchase_order_no =1;//采购单号
+    string supplier_id = 2; //供应商id
+    string third_no =11;//第三方单号
+    string supplier_name = 3; //供应商名称
+    string purchase_order_status = 4; //采购单状态
+    string purchase_type = 5; //采购单来源
+    string purchase_amount =6;//采购金额
+    string freight =7;//运费
+    string create_time = 8;//创建时间
+    string fail_reason =9;//失败原因
+    string external_status = 10; //自动采购状态
+
+}
+message AutoPurchaseDetailReq{
+    string purchase_order_no = 1;
+}
+message AutoPurchaseDetailResp{
+    common.base.ErrorMessage ret =6; // 返回值
+    string supplier_id =1;//商家ID
+    string supplier_name =2;//商家名称
+    string purchase_amount =3;//采购金额
+    string freight =4;//运费
+    repeated AutoPurchaseDetailPB skuList =5;
+}
+message AutoPurchaseDetailPB{
+    string sku_name = 1;//sku
+    string sku_cover =2;//sku图片
+    string sku_code =3;//skucode
+    string sku_link =4;//链接
+    string sku_values =5;//规格信息
+    string supply_price =6;//采购价
+    int32 sys_count =7;//系统数量
+    int32 purchase_count =8;//采购数量
+    string fail_reason = 9;//下单失败原因
+    string third_no = 10;//第三方单号
+    string cancel_reason =11;//取消原因
+    int32 cancel_status =12;//取消状态 1已取消 2未取消
+    string product_id =13;//商品Id
+}
+message AutoPurchaseSkuPriceReq{
+    string purchase_order_no =1;
+    string sku_code =2;
+}
+message AutoPurchaseSkuPriceResp{
+    common.base.ErrorMessage ret =1; // 返回值
+    string price =2;//单价
+}
+message AutoPurchaseSkuCancelReq{
+    string purchase_order_no =1;
+    string sku_code =2;
+    string cancel_reason =3;
+}
+message AutoPurchaseSkuCancelResp{
+    common.base.ErrorMessage ret =1; // 返回值
+}
+message AutoPurchaseUpdateReq{
+    string supplier_id = 1;//商家ID
+    string purchase_order_no =4;//采购单
+    repeated AutoPurchaseUpdateSkuReq sku =2;
+    int32 isPurchase =3;//是否发起自动采购 1发起自动采购2不发起自动采购
+}
+message AutoPurchaseUpdateSkuReq{
+    string sku_code =1;
+    int32 purchase_count =2;
+    string third_no =3;
+    string cancel_status = 4;
+    string cancel_reason =5;
+}
+message AutoPurchaseUpdateResp{
+    common.base.ErrorMessage ret =1; // 返回值
+}
+message AutoBatchPurchaseReq{
+    repeated string purchaseNo =1;
+}
+message AutoBatchPurchaseResp{
+    common.base.ErrorMessage ret =1; // 返回值
+}
+service PurCateGroupService{
+    //类目分组列表
+    rpc GetPurCateGroupList (PurCateGroupQueryReq) returns (PurCateGroupListResp);
+    //类目权限分组列表
+    rpc GetPurCateGroupBuyerList (PurCateGroupQueryReq) returns (PurCateGroupBuyerListResp);
+    //类目分组新增编辑
+    rpc SaveAndUpdate (PurCateGroupAddReq) returns (PurCateGroupAddResp);
+    //类目权限编辑
+    rpc EditBuyerGroup (PurCateGroupEditBuyerReq) returns (PurCateGroupEditBuyerResp);
+    //类目分组详情
+    rpc PurCateGroupDetail (PurCateGroupDetailReq) returns (PurCateGroupDetailResp);
+    //类目权限详情
+    rpc PurCateGroupBuyerDetail (PurCateGroupBuyerDetailReq) returns (PurCateGroupBuyerDetailResp);
+    //类目分组下拉
+    rpc GetPurCateGroupSelect (PurCateGroupSelectReq) returns (PurCateGroupSelectResp);
+    //类目权限删除
+    rpc DeletePurCateGroupBuyer (DeletePurCateGroupBuyerReq) returns (DeletePurCateGroupBuyerResp);
+}
+service PurchaseOrderTrackService {
+    //根据订单追踪采购单信息
+    rpc GetPoTrackByOrderNo (PoTrackReq) returns (PoTrackResp);
+
+    //未入库追踪预警订单
+    rpc GetRiskPo (RiskPoReq) returns (RiskPoResp);
+}
+
+service PurchaseOrderService {
+    //分页查询功能
+    rpc PurchaseOrderPage (PurchaseOrderReq) returns (PurchaseOrderResp);
+
+    //采购单的sku-销售订单查询
+    rpc PurchaseSkuOrderPage (PurchaseSkuOrderPageReq) returns (PurchaseSkuOrderPageResp);
+
+    //采购单的sku销售订单导出
+    rpc PurchaseSkuOrderExport (PurchaseSkuOrderExportReq) returns (PurchaseSkuOrderExportResp);
+
+    // 查询缺货数据
+    rpc GetStockoutData (GetStockoutDataReq) returns (GetStockoutDataResp);
+
+    //单个详情查询
+    rpc GetPurchaseOrder (PoDetailReq) returns (PoDetailResp);
+
+    //导出列表功能
+    rpc ExportoPos (PurchaseOrderReq) returns (ExportPoResp);
+
+    //导出单个功能
+    rpc ExportoPo (PoDetailReq) returns (ExportPoResp);
+
+    //导出发货单，状态和分页数据不取
+    rpc ExportShipOrder (PurchaseOrderReq) returns (ExportPoResp);
+
+    // 采购单详情状态进度
+    rpc PurchaseStatusRate (PurchaseStatusRateReq) returns (PurchaseStatusRateResp);
+
+    // sku级别发货详情
+    rpc SkuDeliveryDetail (SkuDeliveryDetailReq) returns (SkuDeliveryDetailResp);
+
+    // 采购sku异常详情
+    rpc SkuAbnormalDetail (SkuAbnormalDetailReq) returns (SkuAbnormalDetailResp);
+
+    // 关联订单sku详情
+    rpc PurchaseRelationOrder (PurchaseRelationOrderReq) returns (PurchaseRelationOrderResp);
+
+    // 导出采购单批量确认采购模板
+    rpc ExportPurEnsureTemplate (ExportPurEnsureTemplateReq) returns (ExportPurEnsureTemplateResp);
+
+    // 导入任务分页列表
+    rpc PurEnsureImportPage (PurEnsureImportPageReq) returns (PurEnsureImportPageResp);
+
+    // 导入详情分页列表
+    rpc PurEnsureImportDetailPage (PurEnsureImportDetailPageReq) returns (PurEnsureImportDetailPageResp);
+
+    // 导出任务分页列表
+    rpc PurExportTaskPage (PurExportTaskPageReq) returns (PurExportTaskPageResp);
+
+}
+
+service PurchaseOrderHandleService {
+    //保存采购单和编辑采购单
+    rpc SavePo (PurchaseOrderSavePbReq) returns (PurchaseOrderSavePbResp);
+
+    //编辑单个采购单详情
+    rpc SinglePoEdit (PoSingleEditReq) returns (PoSingleEditResp);
+
+    //单个详情补单
+    rpc SingleMakeup (PurchaseOrderSingleMakeupReq) returns (PurchaseOrderSingleMakeupResp);
+
+    //整单取消
+    rpc AllCancel (PurchaseOrderCancelReq) returns (PurchaseOrderCancelResp);
+
+    //部分取消
+    rpc PartCancel (PurchasePartCancelReq) returns (PurchasePartCancelResp);
+
+    //确认采购
+    rpc EnsurePurchase (EnsurePurchaseReq) returns (EnsurePurchaseResp);
+
+    //缺货
+    rpc Stockout (StockOutReq) returns (StockOutResp);
+
+    // 采购单缺货，新的
+    rpc PurchaseStockout (PurchaseStockoutReq) returns (PurchaseStockoutResp);
+
+    //发货
+    rpc Deliver (DeliverReq) returns (DeliverResp);
+
+    //导入发货
+    rpc ImportShip (ImportShipReq) returns (ImportShipResp);
+
+    // 采购单批量导入确认采购
+    rpc ImportBatchPurchase (ImportBatchPurchaseReq) returns (ImportBatchPurchaseResp);
+
+}
+
+service PurchaseAutoService {
+
+    // 付款前校验
+    rpc AutoPayCheck(AutoPayCheckReq) returns (AutoPayCheckResp);
+
+    // 批量可付款
+    rpc CanPayBatch(CanPayBatchReq) returns (CanPayBatchResp);
+
+    // 生成支付链接
+    rpc GeneratePayUrl(GeneratePayUrlReq) returns (GeneratePayUrlResp);
+    //1688自动采购列表
+    rpc AutoPurchaseList (AutoPurchaseOrderListReq) returns (AutoPurchaseOrderListResp);
+    //sku详情
+    rpc AutoPurchaseDetail (AutoPurchaseDetailReq) returns (AutoPurchaseDetailResp);
+    //sku更新单价
+    rpc AutoPurchaseSkuPrice (AutoPurchaseSkuPriceReq) returns (AutoPurchaseSkuPriceResp);
+    //取消SKU
+    rpc AutoPurchaseSkuCancel(AutoPurchaseSkuCancelReq) returns (AutoPurchaseSkuCancelResp);
+    //修改1688采购单
+    rpc AutoPurchaseUpdate(AutoPurchaseUpdateReq) returns(AutoPurchaseUpdateResp);
+    //批量自动采购
+    rpc AutoBatchPurchase (AutoBatchPurchaseReq) returns (AutoBatchPurchaseResp);
+}

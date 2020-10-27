@@ -1,0 +1,41 @@
+//DESC BACK littlec-cart
+syntax = "proto3";
+package boss.collect;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.collect";
+option java_outer_classname = "Collect";
+
+//该功能放置于cart 服务, 请求时请确保向cart服务请求
+
+message CollectProductInfo {
+    string product_id = 1; //商品id
+    string cover = 4; //商品缩略图
+    string title = 5; //商品标题
+    string create_time = 7; //收藏时间
+}
+
+message ListUserProductCollectReq {
+    string user_id = 1; //用户id
+    //string country_code = 2; //国家码
+    common.base.Pagination page = 3;//分页信息
+}
+
+message ListUserProductCollectResp {
+    common.base.ErrorMessage ret = 1;
+    repeated CollectProductInfo collect_product_info = 2; // 商品信息集合
+    uint32 total = 3; //总数
+
+}
+// >>>>>message_end>>>>>>>>>>>>ProductCollectService 商品收藏模块>>>>>>>>
+
+// 商品收藏
+service CollectService {
+
+    // 根据用户id查询商品收藏
+    rpc ListUserProductCollect (ListUserProductCollectReq) returns (ListUserProductCollectResp);
+}

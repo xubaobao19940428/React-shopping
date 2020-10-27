@@ -1,0 +1,544 @@
+// 供应链 - 供应商
+syntax = "proto3";
+package erp.supplier;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.erp.supplier";
+option java_outer_classname = "Supplier";
+
+// ################################ 供应商信息 ################################
+message SupplierPB {
+    string supplier_id = 1;//供应商id
+    string supplier_name = 2;//供应商名称
+    string short_name = 3;//供应商简称
+    string country_code = 4;//国家
+    int32 type = 5; // '1个人 2企业',
+    int32 cooperative_status = 6; // '合作状态: 2-终止合作，1-正常合作，9-黑名单',
+    string buyer_user_id = 7; // '采购员id',
+    string supplier_contact = 8;//供应商联系人
+    string supplier_contact_mobile = 9;//供应商联系电话
+    string email = 10;//邮箱地址
+    int32 is_use_sticker = 11; // '是否使用贴码，2-不使用，1-使用',
+    int32 is_use_fingo_system = 12; // '是否使用fingo系统，2-不使用，1-使用',
+    string brand_ids = 13; // '经营品牌',
+    string business_category = 14; //'经营品类（多选）',
+    int32 retention_money = 15; // '质量保证金',
+    string retention_money_currency = 16;//质量保证金单位
+    int32 payment_way = 17; // '结算方式：1预付（比例） 2 到付 3账期（时间） 4其他',
+    string payment_way_desc = 18; // '结算方式详情',
+    string payment_way_currency = 19;//结算货币单位
+    string collection_info = 20; //'收款信息：银行名称，银行账号',
+    string contact_info = 21; // '结算信息-联系方式：联系人，电话，地址',
+    int32 payment_way_type = 22;//结算账户类型.1对公；2对私
+    string invoice_title = 23;//发票-抬头
+    string invoice_registration_number = 24;//发票-纳税人识别号
+    string invoice_bank_account = 25;//发票-银行账号
+    string invoice_bank_name = 26;//发票-银行名称
+    string invoice_mobile = 27;//发票-联系电话
+    string invoice_address = 28;//发票-地址
+    string supplier_short_code = 29; //供应商简码 不允许编辑，新增供应商时自动生成
+    string status = 30;//状态
+    string contract_begin_time = 31; //合同开始时间
+    string contract_end_time = 32; //合同结束时间
+}
+message SupplierInfoGallery {
+    string info_type = 1; // 类型。1, "经营资质"；2, "合作合同"
+    repeated string urls = 2;//链接地址s
+}
+
+message SupplierAddressPB {
+    string supplier_id = 2; // 供应商ID
+    int32 type = 3; // '1发货地址 2退货地址 3经营地址',
+    string country_name = 13; // '国家名',
+    string province_name = 5; // '省名',
+    string city_name = 7; // '市名',
+    string area_name = 9; // '区域名',
+    string address = 10; // '详细收货地址',
+    string longitude = 11; // 经度
+    string latitude = 12; // 纬度
+}
+
+message SupplierPageReq {
+    common.base.Pagination page = 1; // 分页结构体
+    string supplier_name = 2;
+    string short_name = 3;
+    int32 status = 4; // 供应商状态 1.有效 2.无效
+    string supplier_id = 5; // 供应商ID
+    int32 cooperative_status = 6; // '合作状态: 2-终止合作，1-正常合作，9-黑名单',
+}
+
+message SupplierPageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    int32 total = 3; //总数
+    repeated SupplierPB list = 4; //供应商列表信息
+}
+
+message SupplierDetailReq {
+    string supplier_id = 1; // 供应商ID
+}
+
+message SupplierDeleteReq {
+    string supplier_id = 1; // 供应商ID
+}
+message DeleteSupplierResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message SupplierDisableReq {
+    string supplier_id = 1; // 供应商ID
+}
+message DisableSupplierResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message SupplierDetailResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    SupplierPB supplier = 3;
+    repeated SupplierInfoGallery galleries = 4;//资质合同类信息
+    repeated string user_id = 5; // 供应商后台账号人员
+    repeated SupplierAddressPB address = 6;
+    common.enum.ErpEnum.YesNo can_modify_name = 7; //是否可以修改供应商名称
+}
+
+message SupplierSaveReq {
+    SupplierPB supplier = 1;
+    repeated SupplierInfoGallery galleries = 2;//资质合同类信息
+    repeated SupplierAddressPB address = 3;
+    repeated string user_id = 4; // 供应商后台账号人员
+}
+
+message SupplierSaveResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message SupplierEnableReq {
+    string supplier_id = 1; // 供应商ID
+}
+message SupplierEnableResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message SupplierBasePageReq {
+    common.base.Pagination page = 1; // 分页结构体
+    string supplier_name = 2;
+    string supplier_id = 3;
+}
+
+message SupplierBasePageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    int32 total = 3; //总数
+    repeated SupplierBasePB list = 4; //供应商列表信息
+}
+
+message SupplierBasePB {
+    string supplier_id = 1;
+    string supplier_name = 2;
+}
+
+
+// ################################ 供应商订单 ################################
+message SupplierOrderPB {
+    string supplier_order_no = 1; // 供应商订单号
+    string supplier_id = 2; // 供应商id
+    string purchase_order_no = 3; // 采购订单号
+    string warehouse_no = 4; // 仓库编号
+    string warehouse_name = 5; // 仓库名称
+    string freight = 6; // 运费
+    string supplier_order_status = 7; // 订单状态,SHIP-已发货|STOCKOUT-缺货|PURCHASED-待发货
+    string sku_code = 8;
+    string purchase_price = 9; // 采购单价
+    int32 purchase_count = 10; // 采购商品数量
+    int32 purchase_amount = 18; // 采购商金额
+    int32 ship_count = 11; // 实际发货数量
+    string ship_time = 12; // 发货时间
+    int32 stockout_count = 25; // 缺货数量
+
+    string ship_warning_time = 13; // 发货警告时间
+    string create_time = 14; // 创建时间
+
+    string name_cn = 15; // sku名称
+    string sku_cover = 16; // sku图片
+    string standard_attr = 17; // sku规格
+    string org_link = 19; // 商品链接
+    string supplier_code = 22; // 供应商编码
+    string qr_code = 23; // 商品条码
+
+    repeated DeliverLogi logi = 20; // 物流信息
+    string total_price = 21; // 总金额
+    string supplier_name = 24; // 供应商名称
+
+    int64 transfer_id = 26;//中转仓（地址）id
+
+}
+
+message SupplierOrderPageReq {
+    common.base.Pagination page = 1; // 分页结构体
+    string supplier_order_no = 2; // 供应商订单号
+    string purchase_order_no = 3; // 采购单号
+    string supplier_id = 4; // 供应商ID
+    string sku_code = 5; //sku代码
+    string logi_code = 6; //物流单号
+    string supplier_order_status = 7; // 订单状态,SHIP-已发货|STOCKOUT-缺货|PURCHASED-待发货
+
+    string start_time = 8; //创建时间 yyyy-MM-dd HH:mm:ss
+    string end_time = 9; //创建时间  yyyy-MM-dd HH:mm:ss
+    string warehouse_no = 10; // 仓库编码
+}
+
+message SupplierOrderPageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    int32 total = 3; //总数
+    repeated SupplierOrderPB list = 4;
+}
+
+message SupplierOrderStockoutReq {
+    string supplier_order_no = 1; // 供应商订单号
+}
+message SupplierOrderStockoutResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+
+message SupplierOrderDeliverReq {
+    repeated SupplierOrderDeliverPB deliver = 1;
+    string language_code = 2;
+}
+
+message SupplierOrderDeliverPB {
+    string supplier_order_no = 1; // 供应商订单号
+    repeated DeliverLogi logi = 2;
+}
+
+message SupplierOrderDeliverResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message DeliverLogi {
+    string logi_code = 1; // 物流号
+    string logi_company = 2; // 物流公司
+    int32 count = 3; // 实际发货数量
+}
+
+message ExportSupplierOrderResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    string file_url = 3; // 导出文件地址
+}
+message SupplierOrderCountNumPB{
+    int32 today = 1;//今日数据
+    int32 towDays = 2;//2-3天
+    int32 moreThreeDay=3;//超过三天
+    int32 countNumber = 4; //合计
+    int32 orderType = 5;//订单类型：1.采购订单 2，直邮订单
+}
+message SupplierOrderCountListRes{
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated SupplierOrderCountNumPB supplierCountList =2 ;//订单数据统计
+    string contact =3;//联系采购对接人
+    string email = 4;//邮箱
+    string phone = 5;//手机号
+    string message =6;
+}
+message SupplierOrderCountListReq{
+    string language_code =1;//语言码
+}
+
+message SupplierOrderDataListPB{
+    int32 orderNum = 1;//订单数
+    string date = 2;//日期
+}
+message SupplierOrderAmountListPB{
+    string amount = 1;//金额
+    string date = 2;//日期
+}
+message SupplierOrderDataTableRes{
+    common.base.ErrorMessage ret = 1; // 返回值
+    int32 jitOrderNum=2;//直邮订单总数
+    int32 purchaseOrderNum =3;//采购订单总数
+    string jitOrderAmount = 4;//直邮订单交易额
+    string purchaseOrderAmount =5;//采购订单交易额
+    repeated SupplierOrderDataListPB purchaseOrderNumberList = 6;//采购订单数据
+    repeated SupplierOrderDataListPB jitOrderNumberList = 7;//直邮订单数据
+    repeated SupplierOrderAmountListPB purchaseOrderAmountList = 8;//采购单销售金额
+    repeated SupplierOrderAmountListPB jitOrderAmountList = 9;//直邮订单销售金额
+    string message =10;
+}
+
+message SupplierOrderDateTableReq {
+    string language_code = 1;
+
+}
+
+// 供应商后台接口
+service SupplierBossService {
+    // 供应商列表，分页
+    rpc SupplierPage (SupplierPageReq) returns (SupplierPageResp);
+
+    // 供应商基础信息列表，分页
+    rpc SupplierBasePage (SupplierBasePageReq) returns (SupplierBasePageResp);
+
+    // 保存修改|新增
+    rpc SaveSupplier (SupplierSaveReq) returns (SupplierSaveResp);
+
+    // 获取供应商详情
+    rpc GetSupplierDetail (SupplierDetailReq) returns (SupplierDetailResp);
+
+    // 禁用供应商
+    rpc DisableSupplier (SupplierDisableReq) returns (DisableSupplierResp);
+
+    // 启用供应商
+    rpc EnableSupplier (SupplierEnableReq) returns (SupplierEnableResp);
+
+    // 删除供应商
+    rpc DeleteSupplier (SupplierDeleteReq) returns (DeleteSupplierResp);
+}
+
+// 供应商订单
+service SupplierOrderBossService {
+    // 供应商列表，分页
+    rpc SupplierOrderPage (SupplierOrderPageReq) returns (SupplierOrderPageResp);
+
+    // 订单缺货 - 供应商
+    rpc OrderStockout (SupplierOrderStockoutReq) returns (SupplierOrderStockoutResp);
+
+    // 订单发货 - 供应商
+    rpc OrderDeliver (SupplierOrderDeliverReq) returns (SupplierOrderDeliverResp);
+    // 导出订单
+    rpc ExportOrder (SupplierOrderPageReq) returns (ExportSupplierOrderResp);
+}
+
+// ################################ 商家平台 ################################
+// 商家平台 - 供应商订单
+service SupplierOrderBusinessService {
+    // 供应商列表，分页
+    rpc SupplierOrderPage (SupplierOrderBusinessPageReq) returns (SupplierOrderBusinessPageResp);
+
+    // 供应商详情
+    rpc GetSupplierOrderDetail (SupplierOrderDetailBusinessReq) returns (SupplierOrderDetailBusinessResp);
+
+    // 订单发货 - 供应商
+    rpc OrderDeliver (SupplierOrderDeliverReq) returns (SupplierOrderDeliverResp);
+
+    // 订单缺货 - 供应商
+    rpc OrderStockOut (SupplierOrderStockOutBusinessReq) returns (SupplierOrderStockoutResp);
+
+    // 物流公司列表查询
+    rpc GetLogiCompanyList (LogiCompanyListReq) returns (LogiCompanyListResp);
+
+    // 修改物流单号
+    rpc ModifyLogiCode (ModifyLogiCodeReq) returns (ModifyLogiCodeResp);
+
+    // 导出订单
+    rpc ExportOrder (SupplierOrderBusinessPageReq) returns (ExportSupplierOrderResp);
+
+    // 导入发货 - 供应商
+    rpc ImportOrderDeliver (ImportOrderDeliverReq) returns (ImportOrderDeliverResp);
+
+    // 获取列表页状态信息
+    rpc GetSupplierOrderPageTabList (GetSupplierOrderPageTabListReq) returns (GetSupplierOrderPageTabListResp);
+
+    // 物流公司列表查询
+    rpc QueryLogiCompanyList (QueryLogiCompanyListReq) returns (QueryLogiCompanyListResp);
+
+    //首页订单任务列表
+    rpc QueryOrderCountNumList(SupplierOrderCountListReq) returns (SupplierOrderCountListRes);
+
+    //首页数据报表
+    rpc QueryOrderDataTable(SupplierOrderDateTableReq) returns (SupplierOrderDataTableRes);
+
+
+}
+
+message SupplierOrderBusinessPageReq {
+    common.base.Pagination page = 1; // 分页结构体
+    string product_name = 2;// 商品名称
+    string start_time = 3; //创建时间 yyyy-MM-dd HH:mm:ss
+    string end_time = 4; //创建时间  yyyy-MM-dd HH:mm:ss
+    string supplier_order_no = 5; // 供应商订单号
+    string logi_code = 6;// 物流单号
+    string supplier_order_status = 7; // 订单状态,SHIP-已发货|STOCKOUT-缺货|PURCHASED-待发货
+    string country_code = 8; // 国家编码 //@todo 弃用
+
+    string sku_code = 9; // sku_code
+    string supplier_code = 10; //供应商商品编码
+    string qr_code = 11; //商品条形码
+
+    string ship_start_time = 12; //发货时间 yyyy-MM-dd HH:mm:ss
+    string ship_end_time = 13; //发货时间  yyyy-MM-dd HH:mm:ss
+
+    string language_code = 14; // 语言码
+}
+
+message SupplierOrderBusinessPageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    int32 total = 3; //总数
+    repeated SupplierOrderBusinessPB list = 4;
+}
+
+message SupplierOrderBusinessPB {
+    string supplier_order_no = 1; // 供应商订单号
+    string create_time = 2; // 创建时间
+    string sku_cover = 3; // sku图片
+    string sku_name = 4; // sku名称
+    string supplier_code = 5; // 供应商编码
+    string sku_code = 6;
+    string standard_attr = 7; // sku规格
+    int32 purchase_count = 8; // 采购商品数量
+    int32 ship_count = 9; // 实际发货数量
+    string purchase_price = 10; // 供货单价
+    string total_price = 11; // 商品金额
+    string org_link = 12; // 商品链接
+    string warehouse_name = 13; // 仓库名称
+    string freight = 14; // 运费
+    string supplier_order_status = 15; // 订单状态,SHIP-已发货|STOCKOUT-缺货|PURCHASED-待发货
+    string supplier_id = 16; // 供应商id
+    string transfer_country_code = 17; // 交货仓国家简码
+    string transfer_country_name = 18; // 交货仓国家名字
+    string transfer_user_name = 19; // 收货人
+    string transfer_mobile = 20; // 手机号
+    string transfer_address = 21; // 地址
+    int32 stockout_num = 22; // 缺货数量
+    string transfer_name = 23; // 交货仓名称
+    string qr_code =24;//二维码
+}
+
+message SupplierOrderDetailBusinessReq {
+    string supplier_order_no = 1; // 供应商订单号
+    string country_code = 2; // 国家编码 //@todo 弃用
+    string language_code = 14; // 语言码
+}
+
+message SupplierOrderDetailBusinessResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    SupplierOrderDetailBusinessPB order_detail = 3;
+    repeated SupplierOrderPackageBusinessPB order_package = 4;
+}
+
+message SupplierOrderDetailBusinessPB {
+    string purchase_order_no = 1; // 采购单号
+    string purchase_order_status = 2;// 采购单状态
+    string transfer_warehouse_name = 3; // 收货仓
+    string transfer_warehouse_user_name = 4; // 收货人姓名
+    string transfer_warehouse_mobile = 5;// 收货人电话
+    string transfer_warehouse_address  = 6;// 收货地址
+    string create_time = 7; // 创建时间
+    string sku_cover = 8; // sku图片
+    string sku_name = 9; // sku名称
+    string sku_code = 10; // sku_code
+    string supplier_code = 11; // 供应商编码
+    string standard_attr = 12; // sku规格
+    int32 purchase_count = 13; // 采购商品数量
+    int32 ship_count = 14; // 实际发货数量
+    int32 stockout_num = 15; // 缺货数量
+    string purchase_price = 16; // 供货单价
+    string product_total_price = 17; // 商品金额
+    string supplier_order_status = 18; // 订单状态,SHIP-已发货|STOCKOUT-缺货|PURCHASED-待发货
+    string total_price = 19; // 预计商品总价（含运费）
+    string freight = 20; // 运费
+    string transfer_country_code = 21; // 交货仓国家简码
+    string transfer_country_name = 22; // 交货仓国家名字
+}
+
+message SupplierOrderPackageBusinessPB {
+
+    message BusinessLogiPB {
+        string time = 1; // 当前操作时间 | 时间戳,毫秒
+        string type = 2; // 操作类型
+        string desc = 3; // 类型描述
+        int32 need_i18n =4; //是否需要i18，1-需要 其它不需要
+    }
+    int32 ship_count = 1; // 发货数量
+    string logi_code = 2; // 物流单号
+    string logi_company = 3; // 物流公司
+    string query_url = 4; // 查询url
+    repeated BusinessLogiPB logi = 5; // 物流详情
+    string income_no = 6; // 入库单号
+    string ship_time = 7; // 发货时间
+    string logi_company_name = 8; // 物流公司名称
+}
+
+message SupplierOrderStockOutBusinessReq {
+    message BusinessStockOutPB {
+        string supplier_order_no = 1; // 供应商订单号
+        int32 count = 2; // 缺货数量
+    }
+    repeated BusinessStockOutPB stock_out = 1;
+    string language_code = 14; // 语言码
+}
+
+message LogiCompanyListReq {
+    string country_code = 1; // 国家简码
+}
+message LogiCompanyListResp {
+    message LogiCompanyInfo {
+        string logi_company = 1;
+        string company_name = 2;
+    }
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    repeated LogiCompanyInfo logiCompanyInfo = 3;
+}
+
+message ModifyLogiCodeReq {
+    string income_no = 1; // 入库单号
+    string logi_company = 2; // 物流公司
+    string logi_code = 3; // 物流单号
+    string language_code = 14; // 语言码
+}
+message ModifyLogiCodeResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message ImportOrderDeliverReq {
+    string upload_url = 1;
+    string language_code = 14; // 语言码
+}
+message ImportOrderDeliverResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+message GetSupplierOrderPageTabListReq {
+    string language_code = 1;//语言码
+}
+message GetSupplierOrderPageTabListResp {
+    message TabInfo {
+        string name = 1;// 名称
+        string order_status = 2; // 状态码
+        uint64 count = 3; // 数量
+    }
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    repeated TabInfo tab_info = 3; // tab集合
+}
+
+message QueryLogiCompanyListReq {
+    common.base.Pagination page = 1; // 分页结构体
+    string country_code = 2; // 国家简码
+}
+
+message QueryLogiCompanyListResp {
+    message LogiCompanyPB {
+        string logi_company = 1;
+        string company_name = 2;
+    }
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    repeated LogiCompanyPB company = 3;
+}

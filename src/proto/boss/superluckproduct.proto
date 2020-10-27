@@ -1,0 +1,209 @@
+syntax = "proto3";
+package boss.market.product;
+
+import "common/base.proto";
+import "common/errcode.proto";
+import "common/enum.proto";
+
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.market.product";
+option java_outer_classname = "MarketingSuperLuckyProductBoss";
+
+
+
+//一元夺宝商品
+service SuperLuckyProductBossService {
+    //首页查询参与夺宝的商品基础信息
+    rpc ListSuperLuckProductWithPage (ListSuperLuckProductWithPageReq) returns (ListSuperLuckProductWithPageResp);
+
+    //商品sku页详细规则信息
+    rpc ListSuperLuckProductSkuRule (ListSuperLuckProductSkuRuleReq) returns (ListSuperLuckProductSkuRuleResp);
+
+    //修改商品sku页详细规则信息
+    rpc UpdateSuperLuckProductSkuRule (UpdateSuperLuckProductSkuRuleReq) returns (UpdateSuperLuckProductSkuRuleResp);
+
+    //删除夺宝商品
+    rpc DeleteSuperLuckProduct (DeleteSuperLuckProductReq) returns (DeleteSuperLuckProductResp);
+
+    //添加夺宝商品
+    rpc AddSuperLuckProduct (AddSuperLuckProductReq) returns (AddSuperLuckProductResp);
+
+    //排序
+    rpc ChangeSuperLuckProductSort (ChangeSuperLuckProductSortReq) returns (ChangeSuperLuckProductSortResp);
+
+    //批量增加夺宝商品
+    rpc BatchAddSuperLuckProduct(BatchAddSuperLuckProductReq) returns (BatchAddSuperLuckProductResp);
+
+    //查询商品通用设置
+    rpc QueryProductCommonSet(ProductCommonSetReq) returns (ProductCommonSetResp);
+
+    //添加商品通用设置
+    rpc AddProductCommonSet(AddProductCommonSetReq) returns (AddProductCommonSetResp);
+}
+
+message ListSuperLuckProductWithPageReq {
+    string product_id = 3; //商品ID
+    string product_name = 4; // 商品名称 模糊搜索
+    string country_code = 5; // 国家码
+    int64 start_time = 6; // 开始时间
+    int64 end_time = 7; //结束时间
+    common.base.Pagination page = 8; //分页信息
+}
+
+message SuperLuckProduct {
+    int32 id = 1;//主键ID
+    int32 subject_id = 2;//大奖ID
+    string product_id = 3; //商品ID
+    string product_name = 4; // 商品名称
+    string product_cover = 5; // 商品图片
+    string product_serial_id = 6;
+    int32 code_number = 7; // 所需码数
+    string start_time = 8;//开始时间
+    string end_time = 9;//结束时间
+    int32 period = 10;//开奖期次
+    string invite_total_new_user = 11;//累计拉新数
+    string invite_today_new_user = 12;//今日拉新数
+    string inew_user_percent = 13;//新用户占比
+    int32 sort = 14;//排序值
+    string price = 15;
+    string active_price = 16;//最低活动价
+}
+
+message ListSuperLuckProductWithPageResp {
+    common.base.ErrorMessage ret = 1;
+    repeated SuperLuckProduct superLuckProduct = 2;
+    int32 total = 3;
+}
+
+message ListSuperLuckProductSkuRuleReq {
+    string product_serial_id = 1;
+}
+
+message SkuInfo{
+    int32 id = 1;//主键ID
+    string product_id = 2; //商品ID
+    string sku_id = 3; // skuID
+    string sku_name = 4; // sku名称
+    string sku_cover = 5; // sku图片
+    string sku_price = 6; // sku原价
+    string sku_active_price = 7; // sku活动价
+}
+
+message ListSuperLuckProductSkuRuleResp {
+    string start_time = 1;//开始时间
+    string end_time = 2;//结束时间
+    string product_id = 3; //商品ID
+    int32 win_type = 8;//中奖对象 0-真实用户 1-机器人
+    int32 code_number = 9; // 所需码数
+    int32 code_old_user= 10; //邀请老用户可获码数
+    int32 code_new_user = 11; //邀请新用户可获码数
+    common.base.ErrorMessage ret = 12;
+    repeated SkuInfo skuInfos = 13;
+}
+
+
+message AddSkuInfo {
+    string product_id = 1; // 商品ID
+    string sku_id = 2; //skuId
+    string sku_code = 3; //sku code
+    string price = 4; //原价
+    string active_price = 6; //活动价
+}
+
+message AddSuperLuckProductReq {
+    string product_id = 1; //商品ID
+    string start_time = 2;//开始时间
+    string end_time = 3;//结束时间
+    int32 win_type = 4;//中奖对象 0-真实用户 1-机器人
+    int32 code_number = 5; // 所需码数
+    int32 code_old_user= 6; //邀请老用户可获码数
+    int32 code_new_user = 7; //邀请新用户可获码
+    repeated AddSkuInfo sku_info = 8; //sku信
+    string country_code = 9;
+}
+
+message AddSuperLuckProductResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+
+message ChangeSuperLuckProductSortReq {
+    string id = 1; //主键id
+    uint32 sort_no = 2; //排序
+}
+message ChangeSuperLuckProductSortResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+
+message UpdateSkuInfo{
+    int32 id = 1;//主键ID
+    string sku_active_price = 2; // 修改活动价
+    string sku_price = 3; // 修改划线价
+    string sku_id = 4;
+    string sku_code = 5;
+}
+
+message UpdateSuperLuckProductSkuRuleReq {
+    string product_serial_id = 1;
+    repeated UpdateSkuInfo updateSkuInfo = 2;
+    int32 win_type = 8;//中奖对象 0-真实用户 1-机器人
+    int32 code_number = 9; // 所需码数
+    int32 code_old_user= 10; //邀请老用户可获码数
+    int32 code_new_user = 11; //邀请新用户可获码数
+    string start_time = 12;
+    string end_time = 13;
+}
+
+message UpdateSuperLuckProductSkuRuleResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+
+message DeleteSuperLuckProductReq {
+    repeated int32 id = 1;//主键ID
+}
+
+message DeleteSuperLuckProductResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message BatchAddSuperLuckProductReq {
+    //国家码
+    string country_code = 1;
+    //商品id
+    repeated string product_id = 2;
+}
+
+message BatchAddSuperLuckProductResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message ProductCommonSetReq {
+    //国家码
+    string country_code = 1;
+}
+
+message AddProductCommonSetReq {
+    //国家码
+    string country_code = 1;
+    string start_time = 2;//开始时间
+    string end_time = 3;//结束时间
+    string active_price = 4;//活动价
+    int32 invitation_new = 5; //邀新可获得码数
+    int32 invitation_old = 6; //邀新可获得码数
+}
+
+message AddProductCommonSetResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message ProductCommonSetResp {
+    common.base.ErrorMessage ret = 1;
+    string start_time = 2;//开始时间
+    string end_time = 3;//结束时间
+    string active_price = 4;//活动价
+    int32 invitation_new = 5; //邀新可获得码数
+    int32 invitation_old = 6; //邀新可获得码数
+}

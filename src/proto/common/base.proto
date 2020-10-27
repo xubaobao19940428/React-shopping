@@ -1,0 +1,170 @@
+syntax = "proto3";
+package common.base;
+option java_multiple_files = false;
+option java_package = "com.fingo.littlec.proto.common";
+option java_outer_classname = "Base";
+
+// 分页
+message Pagination {
+    int32 page_size = 1;
+    int32 page_num = 2;
+    string order_str = 3;
+    bool paging_switch = 4;
+}
+
+//fingo导师信息
+message FingoMasterInfoPb {
+    // 导师类型枚举: V3_FINGO_MASTER1 Bo的fingo导师1 ,V3_FINGO_MASTER2 Bo的fingo导师2 ,V4_V5_FINGO_MASTER M和GM的Fingo导师 ,MERCHANTS_WILL_PICK_UP_PEOPLE 招商会对接人
+    string code = 1;
+    // 昵称
+    string nick_name = 2;
+    // 头像
+    string head_img = 3;
+    // 微信
+    string wechat_id = 4;
+    // WhatsApp
+    string whats_app = 5;
+    // line_id
+    string line_id = 6;
+    // 国家码
+    string country_code = 7;
+    // WhatsApp 分享链接
+    string whats_app_link = 8;
+    // line 分享链接
+    string line_link = 9;
+    // 导师ID
+    string id = 10;
+    // 等级阶梯描述
+    string code_desc = 11;
+}
+
+// 工单来源
+enum WorkOrderSourceEnumPb{
+    WorkOrderSourceEnumPb_NULL = 0;
+    Messenger = 1;
+    Whatsapp = 2;
+    WeChat = 3;
+    Email = 4;
+    Appstore = 5;
+    FingoApp = 6;
+    innerPayment = 7;
+    Others = 8;
+}
+
+// 工单小组类型
+enum WorkOrderGroupTypeEnumPb{
+    WorkOrderGroupTypeEnumPb_NULL = 0;
+    //创建小组
+    CreateTeam = 1;
+    //处理小组
+    ProcessTeam = 2;
+}
+
+// 工单状态
+enum WorkOrderStatusEnumPb{
+    WorkOrderStatusEnumPb_NULL = 0;
+    //未解决
+    Unresolved = 1;
+    //待关闭
+    Pending = 2;
+    //已关闭
+    closed = 3;
+}
+
+// 工单处理类型
+enum WorkOrderDealTypeEnumPb{
+    WorkOrderDealTypeEnumPb_NULL = 0;
+    //创建
+    CREARTED = 1;
+    //跟进补充
+    FollowUp = 2;
+    //关闭工单
+    Close = 3;
+    //转派
+    TurnToSend = 4;
+    //退单
+    SingleBack = 5;
+    //已解决
+    Resolved = 6;
+    //抄送
+    CopyTo = 7;
+}
+
+//工单评价
+enum WorkOrderEvaluationEnumPb {
+    WorkOrderEvaluationEnumPb_NULL = 0;
+    //标签有误
+    ErrorTag = 1;
+    //无需处理
+    NoNeadDeal = 2;
+    //非本人处理
+    NonPersonalTreatment = 3;
+    //其他
+    Other = 4;
+}
+
+//工单处理记录状态
+enum WorkOrderDealStatus {
+    WorkOrderDealStatus_NULL = 0;
+    //待处理
+    WaitProcess = 1;
+    //已处理
+    Processed = 2;
+    //无需处理
+    NoDeal = 3;
+}
+
+//工单日期搜索类型
+enum WorkOrderSelectDateEnumPb {
+    //创建时间
+    createDate = 0;
+    //处理日期
+    dealDate = 1;
+    //关闭日期
+    closeDate = 3;
+}
+
+//工单日期搜索排序类型
+enum WorkOrderSelectDateOrderEnumPb {
+    //创建时间
+    create = 0;
+    //收到时间
+    received = 1;
+    //处理时间
+    deal = 2;
+}
+
+//语言简码及内容结构体
+message NameAndCode {
+    string language_code = 1; //语言简码
+    string name = 2; //内容
+}
+
+// 通知格式
+message I18nmsg {
+    // 语言
+    string language = 1;
+    // 消息标题
+    string message_title = 2;
+    // 消息内容
+    string message_body = 3;
+    // 消息传入数据，客户端指令
+    string message_data = 4;
+}
+
+//通用id name 映射 列表
+message IdAndName{
+    string id = 1;
+    string name = 2;
+}
+
+
+message CoreProductInfo{
+
+}
+
+message ErrorMessage {
+    int32 errcode = 1;
+    string errname = 2;
+    string msg = 3;
+}

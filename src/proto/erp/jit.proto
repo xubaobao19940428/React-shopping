@@ -1,0 +1,283 @@
+// 供应链 - 直邮订单
+syntax = "proto3";
+package erp.jit;
+
+import "common/errcode.proto";
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.erp.jit";
+option java_outer_classname = "Jit";
+
+
+
+message JitOrderPageReq {
+    common.base.Pagination page = 1; // 分页结构体
+    string jit_no = 2; //jit订单号
+    string order_no = 3; // 主订单号
+    string logi_code = 4; // 物流单号
+    string sku_code = 5; // sku
+    int32 jit_status = 6; // jit订单状态
+    int64 supplier_id = 16;     //主单号
+    string sub_order_no = 17;  //子单号
+    string country_code = 18; // 国家码
+    common.enum.PurchaseOrderEnum.UseFingoSystem is_use_fingo_system = 20;  //是否使用fingo系统
+    common.enum.ErpEnum.QueryTimeType time_type = 7; // jit订单状态
+    string start_time = 8; //创建时间 yyyy-MM-dd HH:mm:ss
+    string end_time = 9;   //创建时间  yyyy-MM-dd HH:mm:ss
+
+    string productName = 10; //商品名称
+    string tabType = 11;     //tab页类型名
+
+    string receiver_name = 12;  //收件人
+    string receiver_phone = 13; //收件人手机号
+    string language_code = 14; //语言码
+
+    common.enum.ErpEnum.ReqSourceType req_type = 15; //请求来源系统
+    int32 cate_id = 21;//分组ID
+}
+
+message JitOrderPageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    int32 total = 3; //总数
+    repeated JitOrderPb list = 4;
+}
+
+message JitOrderPageTabReq {
+    string language_code = 1; //语言码
+    common.enum.ErpEnum.ReqSourceType req_type = 2; //请求来源系统
+}
+
+message JitOrderPageTabResp {
+    message TabInfo {
+        string name = 1;// tab名称
+        uint64 count = 2; // 数量
+    }
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    repeated TabInfo tab_info = 3; // tab集合
+}
+
+message JitOrderAddress {
+    string country = 1; // 收件国家
+    string receiver_name = 2; // 收件人姓名
+    string receiver_phone = 3; // 收件人手机号
+    string stateName = 4; // 收件人地址——省
+    string cityName = 5; // 收件人地址——市
+    string area = 6; // 收件人地址——区
+    string postcode = 7; // 收件人地址——邮编
+    string address = 8; // 收件人地址
+}
+
+//jit订单详情
+message JitOrderDetailPb {
+    string product_name = 1; //商品名称
+    string product_cover = 2; //商品图片
+    string product_link = 3; //商品链接
+    string sku_desc = 4; //商品描述
+    string purchase_price = 5; //采购价格
+    int32 count = 6; //订单数量
+    int32 ship_count = 7; //发货数量
+    int32 stockout_count = 8; //缺货数量
+    int32 cancel_count = 9; //取消数量
+    string sku_code = 10;  //skuCode
+    string currency = 11;  //币种
+}
+
+//jit订单
+message JitOrderPb {
+    string jit_no = 1; //jit订单号
+    string supplier_id = 2; //供应商id
+    string supplier_name = 3; //供应商名称
+    string jit_status = 4; //jit订单状态
+    string create_time = 5; //创建时间
+    string update_time = 6; //更新时间
+    string ship_time = 7; //发货时间
+    string pay_time = 8; //付款时间
+
+    repeated JitOrderDetailPb details = 9; //detail详情
+    JitOrderAddress address = 10;  //收件人信息
+    string order_no = 11;    //主单号
+    string sub_order_no = 12;  //子单号
+
+    common.enum.ErpEnum.YesNo is_ship = 13; // 是否可发货
+    string country_code = 14; //国家编码
+}
+
+
+message JitOrderShipReq {
+    repeated JitOrderShipPB deliver = 1;
+    string language_code = 2;
+    common.enum.ErpEnum.ReqSourceType req_type = 3; //请求来源系统
+}
+
+message JitOrderShipPB {
+    string jit_no = 1; // jit订单号
+    string sku_code = 2;
+    repeated ShipLogi logi = 3;
+}
+
+message JitOrderShipResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message ShipLogi {
+    string logi_code = 1; // 物流号
+    string logi_company = 2; // 物流公司
+    int32 count = 3; // 实际发货数量
+}
+
+
+message ImportJitShipReq {
+    string file_url = 1; // 导入文件地址
+    string language_code = 2;
+    common.enum.ErpEnum.ReqSourceType req_type = 3; //请求来源系统
+}
+
+message ImportJitShipResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message ExportJitResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    string file_url = 3; // 导出文件地址
+    string language_code = 4;
+    common.enum.ErpEnum.ReqSourceType req_type = 5; //请求来源系统
+}
+
+message QueryJitLogiReq {
+    string jit_no = 1; //jit订单号
+}
+
+message QueryJitLogiResp { // 订单物流号查询
+   common.base.ErrorMessage ret = 1; // 返回值
+   repeated JitLogiPB logi = 2; // 物流信息
+   message JitLogiPB {
+       string logi_code = 1;
+       string logi_company = 2;
+       repeated JitLogiSkuInfo sku_info = 3;
+   }
+
+   message JitLogiSkuInfo {
+       string product_name = 1;
+       string product_cover = 2;
+       string product_link = 3;
+       string sku_desc = 4;
+       int32 count = 5;
+   }
+}
+
+message QueryLogiTrackingReq {
+    string jit_no = 1; //jit订单号
+    string language_code = 2; //语种
+    common.enum.ErpEnum.YesNo refresh = 3; // 是否刷新缓存
+}
+
+message QueryLogiTrackingResp { // 订单物流号查询
+   common.base.ErrorMessage ret = 1; // 返回值
+   repeated JitLogiPB logi = 2; // 物流信息
+   message JitLogiPB {
+       string logi_code = 1;
+       string logi_company = 2;
+       string ship_time = 3;
+       string query_url = 4; // 查询url
+       repeated JitLogiSkuInfo sku_info = 5;
+       repeated JitLogiTrackPB track_info = 6;
+   }
+   message JitLogiTrackPB {
+       string time = 1; // 当前操作时间 | 时间戳,毫秒
+       string type = 2; // 操作类型 | 收件
+       string desc = 3; // 类型描述 | 深圳中转中心】的【黄主管】已收件\
+   }
+
+   message JitLogiSkuInfo {
+     string product_name = 1;
+     string product_cover = 2;
+     string product_link = 3;
+     string sku_desc = 4;
+     int32 count = 5;
+   }
+}
+
+message ExportJitOrderResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    string file_url = 3; // 导出文件地址
+}
+
+message ModifyJitOrderLogiReq {
+    string jit_no = 1; //jit订单号
+    string old_logi_code= 2; //原物流单号
+    string old_logi_company= 3; //原物流公司
+    string logi_code = 4;  //修改后的物流单号
+    string logi_company = 5;  //修改后的物流公司
+    string language_code = 6;
+    common.enum.ErpEnum.ReqSourceType req_type = 7; //请求来源系统
+}
+
+message ModifyJitOrderLogiResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message ExportTemplateReq {
+    string language_code = 1;
+    common.enum.ErpEnum.ReqSourceType req_type = 2; //请求来源系统
+}
+
+message CancelJitOrderReq {
+    string language_code = 1;
+    common.enum.ErpEnum.ReqSourceType req_type = 2; //请求来源系统
+    string jit_no = 3;    //jit订单号
+}
+
+message CancelJitOrderResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+
+service JitOrderBossService {
+    // jit订单分页查询
+    rpc JitOrderPage (JitOrderPageReq) returns (JitOrderPageResp);
+
+
+    //jit订单发货
+    rpc Ship(JitOrderShipReq) returns (JitOrderShipResp);
+
+
+    //导入发货
+    rpc ImportShip(ImportJitShipReq) returns (ImportJitShipResp);
+
+
+    //查询订单物流信息
+    rpc QueryJitLogi(QueryJitLogiReq) returns (QueryJitLogiResp);
+
+
+    //查询订单物流信息及物流跟踪信息
+    rpc QueryLogiTracking(QueryLogiTrackingReq) returns (QueryLogiTrackingResp);
+
+
+    //导出
+    rpc ExportJitOrder (JitOrderPageReq) returns (ExportJitOrderResp);
+
+    //导出模板
+    rpc ExportTemplate (ExportTemplateReq) returns (ExportJitOrderResp);
+
+
+    //修改物流单号
+    rpc ModifyLogi(ModifyJitOrderLogiReq) returns (ModifyJitOrderLogiResp);
+
+
+    //jit订单tab页数量查询
+    rpc JitOrderPageTab(JitOrderPageTabReq) returns (JitOrderPageTabResp);
+
+
+    //取消jit订单
+    rpc CancelOrder(CancelJitOrderReq) returns (CancelJitOrderResp);
+}

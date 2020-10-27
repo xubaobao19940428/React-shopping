@@ -1,0 +1,53 @@
+//DESC BACK littlec-datacenter
+syntax = "proto3";
+package mdc.screendata;
+
+import "common/errcode.proto";
+import "common/base.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.mdc.screendata";
+option java_outer_classname = "Screendata";
+
+message BigScreenDataReq {
+}
+message BigScreenDataResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string maximum_single_day_turnover = 4; // 最高单日成交额（双11）
+    string maximum_single_day_registrations = 5; // 最高单日注册量（12.9）
+    string totay_gift_turnover = 6; // 当日礼包成交额
+    string totay_gift_num = 7; // 当日礼包订单数
+    string totay_ordinary_turnover = 8; // 当日普通商品成交额
+    string totay_ordinary_num = 9; // 当日普通商品订单数
+    string today_registrations = 10; // 当日注册量
+    message FourHourRegistrations {
+        string user_total_num = 1; // 注册数
+        string ps_num = 2; // ps数
+        string time = 3; // 时间
+    }
+    message HourTurnover {
+        string time = 1; // 时间
+        string gift_turnover = 2; // 礼包交易额
+        string ordinary_turnover = 3; // 普通商品交易额
+    }
+    message CommissionTop10 {
+        string nick_name = 1; // 等级+昵称
+        string commission_amount = 2; // 返佣金额
+    }
+    message HourTurnover2 {
+        string time = 1; // 时间
+        string gift_turnover = 2; // 礼包交易额
+        string ordinary_turnover = 3; // 普通商品交易额
+        string total_turnover = 4; // 总交易额（礼包加普通）
+    }
+    repeated FourHourRegistrations four_hour_registrations = 12; // 每4h注册数
+    repeated HourTurnover hour_turnover = 13; // 按小时成交额（累计）
+    repeated CommissionTop10 commission_top_10 = 14; // 返佣 top10
+    repeated HourTurnover2 hour_turnover2 = 15; // 每小时成交额
+}
+
+// 大屏数据统计（双12当日）
+service ScreendataBossService {
+    // 双12当天数据大屏数据
+    rpc BigScreenData (BigScreenDataReq) returns (BigScreenDataResp);
+}

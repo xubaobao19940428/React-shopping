@@ -1,0 +1,568 @@
+//DESC BACK littlec-marketing
+syntax = "proto3";
+package boss.market;
+
+import "common/base.proto";
+import "common/enum.proto";
+import "common/errcode.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.market";
+option java_outer_classname = "Market";
+
+//-------------品质优选开始------------
+message MarketingProduct {
+    //商品id
+    string product_id = 1;
+    //商品名称
+    string name = 2;
+    //商品图片
+    string item_images = 3;
+    //排序
+    int32 sort = 4;
+    //主键
+    string id = 5;
+}
+message CategoryProductListReq {
+    //商品id
+    string product_id = 1;
+    //分类序号
+    string category_serial_no = 2;
+    //商品名称
+    string name = 3;
+    //分页
+    common.base.Pagination page = 4;
+}
+
+message CategoryProductListResp {
+    common.base.ErrorMessage ret = 1;
+    repeated MarketingProduct marketingProduct = 2;
+    int32 total = 3;
+}
+message CategoryProductParam {
+    //分类序号
+    string category_serial_no = 1;
+    //商品id
+    repeated string product_id = 2;
+}
+message BatchDelReq {
+    string ids = 1;
+}
+message SaveSortReq {
+    string id = 1; //主键
+    int32 sort = 2; //排序
+}
+
+message CategoryQueryParam {
+    common.base.Pagination page = 1;
+    string country_code = 2;
+}
+message CategorySaveOrUpdateParam {
+    string name = 1; //分类名称
+    string country_code = 2; //国家code
+    string language_code = 3; //语言code --> 不使用
+    string serial_no = 4; //序号no
+    repeated common.base.NameAndCode language_info = 5;
+}
+message CategoryInfo {
+    string name = 1; //分类名称
+    string country_code = 2; //国家code
+    string language_code = 3; //语言code --> 不使用
+    string serial_no = 4; //序号
+    string id = 5; //主键
+    repeated common.base.NameAndCode language_info = 6;
+    uint32 product_num = 7; //商品数量
+    common.enum.MarketingEnum.ItemShowStatus show_status = 8; //展示状态
+    string update_time = 9; //更新时间
+    uint32 cate_sort = 10; //排序
+}
+message CategoryListResp {
+    common.base.ErrorMessage ret = 1;
+    repeated CategoryInfo categoryInfos = 2;
+    int32 total = 3;
+}
+
+message QulityDelReq {
+    string serial_no = 1;
+}
+
+message MarketingCategoryHideShowReq {
+    string serial_no = 1;
+    common.enum.MarketingEnum.ItemShowStatus show_status = 2;
+}
+
+message MarketingCategoryHideShowResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message MarketingCategorySetSortReq {
+    string serial_no = 1;
+    uint32 sort = 2;
+}
+
+message MarketingCategorySetSortResp {
+    common.base.ErrorMessage ret = 1;
+}
+message SuccessResp {
+    //操作成功数
+    int32 success = 1;
+    common.base.ErrorMessage ret = 2;
+    string msg = 3; //返回提示
+}
+service MarketingCategoryService {
+    //查询品质优选分类列表 --> 实现转移至 product, 请求product 服务
+    rpc FindQualityPageList (CategoryQueryParam) returns (CategoryListResp);
+    //添加
+    rpc SaveQuality (CategorySaveOrUpdateParam) returns (SuccessResp);
+    //修改
+    rpc UpdateQuality (CategorySaveOrUpdateParam) returns (SuccessResp);
+    //删除接口
+    rpc DeleteQuality (QulityDelReq) returns (SuccessResp);
+    //隐藏接口
+    rpc MarketingCategoryHideShow (MarketingCategoryHideShowReq) returns (MarketingCategoryHideShowResp);
+    //设置排序接口
+    rpc MarketingCategorySetSort (MarketingCategorySetSortReq) returns (MarketingCategorySetSortResp);
+}
+service MarketingCategoryProductService {
+    //查询列表--> 实现转移至 product, 请求product 服务
+    rpc FindPageList (CategoryProductListReq) returns (CategoryProductListResp);
+    //批量添加
+    rpc BatchSave (CategoryProductParam) returns (SuccessResp);
+    //批量删除接口
+    rpc BatchDel (BatchDelReq) returns (SuccessResp);
+    //保存排序
+    rpc SaveSort (SaveSortReq) returns (SuccessResp);
+}
+//-------------品质优选结束------------
+
+
+
+//---------拼团结束----------------------
+message ConfigLadder {
+    int32 min_invite_num = 1;
+    int32 max_invite_num = 2;
+    string min_amount = 3;
+    string max_amount = 4;
+    int32 min_indicator = 5;
+    int32 max_indicator = 6;
+}
+
+message ConfigReq {
+    string country_code = 1;
+    string serial_id = 2;
+    string max_amount = 3;
+    repeated ConfigLadder configLadder = 4;
+}
+message ConfigResp {
+    string country_code = 1;
+    string serial_id = 2;
+    string max_amount = 3;
+    repeated ConfigLadder configLadder = 4;
+    common.base.ErrorMessage ret = 5;
+}
+
+message QueryByCountryCodeReq {
+    string country_code = 1;
+}
+
+message QueryByCountryCodeResp {
+    int32 success = 1;
+    common.base.ErrorMessage ret = 2;
+}
+
+message ListBackManageReq {
+    int32 status = 1; //状态(1:进行中,2:已成功,3:已失效,4:未到账)
+    string start_create_time = 2; //开始发起时间
+    string end_create_time = 3; //结束发起时间
+    string start_success_time = 4; //开始拆成时间
+    string end_success_time = 5; //结束拆成时间
+    string country_code = 6; //国家码
+    string user_id = 7; //发起人用户id
+    string serial_id = 8; //红包序号id
+    common.base.Pagination page = 9;
+}
+
+message DownloadResp {
+    string url = 1;
+    common.base.ErrorMessage ret = 2;
+}
+
+message BackManageInfo {
+    string id = 1;
+    string serial_id = 2; //序号
+    string user_id = 3; //用户id
+    string amount = 4; //总金额
+    string success_amount = 5; //已拆金额
+    string success_num = 6; //已拆人数
+    string invite_num = 7; //指标
+    int32 status = 8; //状态(1:进行中,2:已成功,3:已失效,4:未到账)
+    string create_time = 9; //创建时间
+    string success_time = 10; //拆红包成功时间
+    string income_time = 11; //到账时间
+    string nick_name = 12; //用户昵称
+    int32 old_user_num = 13; //老用户数量
+    int32 new_user_num = 14; //新用户数量
+    int32 share_num = 15;//分享人数（分享次数）
+    int32 this_player_has_successed_num = 16 ;//该玩家拆成功次数 包含本次
+}
+
+message ListBackManageResp {
+    common.base.ErrorMessage ret = 1;
+    repeated BackManageInfo backManageInfos = 2;
+    int32 total = 3;
+
+}
+
+message FindOpenRedbagInfoReq {
+    string serial_id = 1;
+}
+message OpenRedbagInfo {
+    string user_id = 1; //用户id
+    string nick_name = 2; //用户昵称
+    string amount = 3; //助力金额
+    string create_time = 4; //助力时间
+    bool new_user = 5; //是否新用户
+}
+message FindOpenRedbagInfoResp {
+    repeated OpenRedbagInfo openRedbagInfo = 1;
+    common.base.ErrorMessage ret = 2;
+}
+
+message GetRedbagStatisticsListReq {
+    string start_create_time = 1; //开始发起时间
+    string end_create_time = 2; //结束发起时间
+    string country_code = 3; //国家码
+}
+message StatisticsInfos {
+    message StatisticsInfo{
+        string scop = 1; //新用户数范围
+        int32 old_user_num_avg = 2; //平均老用户范围数
+        int32 share_num = 3; //分享次数
+        int32 count = 4; //红包团数
+    }
+    string amount = 1; //红包团类型(金额)
+    repeated StatisticsInfo statisticsInfo = 2; //统计详情
+}
+message GetRedbagStatisticsListResp {
+    repeated StatisticsInfos statisticsInfos = 1;
+    common.base.ErrorMessage ret = 2;
+}
+
+message RedBagSystemConfig {
+    message ShareOrFirstLevelUnit {
+        int32 number = 1;//第N次分享或者拉到第N人
+        string rate = 2;//比率
+    }
+
+    message OtherLevelUnit {
+        string min_hour = 1;//最小小时
+        string max_hour = 2;//最大小时
+        int32 invite_num = 3;//新增拉新指标
+    }
+
+    message LastLevelUnit {
+        int32 invite_num = 1;//拉新指标
+        string rate = 2;//比率
+    }
+
+    message NewPlayerConfig {
+        repeated ShareOrFirstLevelUnit share_level_unit = 1;//分享档配置
+
+        repeated ShareOrFirstLevelUnit first_level_unit = 2;//第一档配置
+
+        string second_level_total_rate = 3;//第二档所拆比例总和
+        repeated OtherLevelUnit second_level_unit = 4;//第二档配置
+
+        string third_level_total_rate = 5;//第三档所拆比例总和
+        repeated OtherLevelUnit third_level_unit = 6;//第三档配置
+
+        string fourth_level_total_rate = 7;//第四档所拆比例总和
+        repeated OtherLevelUnit fourth_level_unit = 8;//第四档配置
+
+        string complement_rate = 9;//补数档比率
+
+        LastLevelUnit last_level_unit = 10;//应急档
+    }
+
+    message OldPlayerConfig {
+        repeated ShareOrFirstLevelUnit share_level_unit = 1;//分享档配置
+
+        repeated ShareOrFirstLevelUnit first_level_unit = 2;//第一档配置
+
+        string second_level_total_rate = 3;//第二档所拆比例总和
+        repeated OtherLevelUnit second_level_unit = 4;//第二档配置
+
+        string third_level_total_rate = 5;//第三档所拆比例总和
+        repeated OtherLevelUnit third_level_unit = 6;//第三档配置
+
+        string fourth_level_total_rate = 7;//第四档所拆比例总和
+        repeated OtherLevelUnit fourth_level_unit = 8;//第四档配置
+
+        string complement_rate = 9;//补数档比率
+
+        LastLevelUnit last_level_unit = 10;//应急档
+    }
+
+    string country_code = 1;//国家码
+//    int32 new_user = 2;//0->老用户，1->新用户
+    int32 max_amount = 3;//金额上限
+    int32 red_bag_amount = 4;//红包金额
+    int32 add_invite_number = 5;//每拆成功一次加固定指标
+    int32 min_invite_number = 6;//最小指标
+    int32 max_invite_number = 7;//最大指标
+    int32 old_user_max_invite = 8;//老用户最高指标
+    string old_user_max_rate = 9;//老用户最高金额比率
+    string min_first_amount_rate = 10;//最小首拆金额比率
+    string max_first_amount_rate = 11;//最大首拆金额比率
+    NewPlayerConfig new_player_config = 12;//新用户配置
+    OldPlayerConfig old_player_config = 13;//老用户配置
+    string emergency_a_start_time = 14;//应急档时间a,开始时间，格式  16:00
+    string emergency_a_end_time = 15;//应急档时间a,结束时间，格式  20:00
+    string emergency_b_start_time = 16;//应急档时间b,开始时间，格式  16:00
+    string emergency_b_end_time = 17;//应急档时间b,结束时间，格式  20:00
+}
+
+message SaveRedBagSystemConfigReq {
+    RedBagSystemConfig red_bag_system_config = 1;
+}
+
+message SaveRedBagSystemConfigResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message SaveAheadSuccessConfigReq {
+    int32 invite_number = 1;//指标
+    string rate = 2;//比率
+    int32 max_success_number = 3;//成功上限人数
+    string country_code = 4;//国家码
+}
+
+message SaveAheadSuccessConfigResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message GetRedBagSystemConfigReq {
+    string country_code = 1;//国家码
+}
+
+message GetRedBagSystemConfigResp {
+    RedBagSystemConfig red_bag_system_config = 1;
+    common.base.ErrorMessage ret = 2;
+}
+
+message GetAheadSuccessConfigReq {
+    string country_code = 1;//国家码
+}
+
+message GetAheadSuccessConfigResp {
+    int32 invite_number = 1;//指标
+    string rate = 2;//比率
+    int32 max_success_number = 3;//成功上限人数
+    string country_code = 4;//国家码
+    common.base.ErrorMessage ret = 5;
+}
+
+service OpenRedbagBossService {
+    //根据国家码查询资金配置列表
+    rpc QueryByCountryCode (QueryByCountryCodeReq) returns (ConfigResp);
+    //保存资金配置表
+    rpc SaveConfig (ConfigReq) returns (SuccessResp);
+    //根据serialId查询助力列表
+    rpc FindOpenRedbagInfoList (FindOpenRedbagInfoReq) returns (FindOpenRedbagInfoResp);
+    //根据国家码查询今日拆成金额数
+    rpc GetRedbagAmount (RedbagAmountReq) returns (RedbagAmountResp);
+    //统计
+    rpc GetRedbagStatistics (RedbagAmountReq) returns (GetRedbagStatisticsResp);
+    //提供下载的接口
+    rpc Download (ListBackManageReq) returns (DownloadResp);
+    //查询管理后台列表
+    rpc ListManageBack (ListBackManageReq) returns (ListBackManageResp);
+    //统计拆红包数据
+    rpc GetRedbagStatisticsList (GetRedbagStatisticsListReq) returns (GetRedbagStatisticsListResp);
+    //保存拆红包2.0系统设置
+    rpc SaveRedBagSystemConfig (SaveRedBagSystemConfigReq) returns (SaveRedBagSystemConfigResp);
+    //获取拆红包2.0系统配置
+    rpc GetRedBagSystemConfig (GetRedBagSystemConfigReq) returns (GetRedBagSystemConfigResp);
+    //保存拆红包2.0提前成功设置
+    rpc SaveAheadSuccessConfig (SaveAheadSuccessConfigReq) returns (SaveAheadSuccessConfigResp);
+    //获取拆红包2.0提前成功设置
+    rpc GetAheadSuccessConfig(GetAheadSuccessConfigReq) returns (GetAheadSuccessConfigResp);
+}
+
+//查询今日支出（红包）
+message RedbagAmountReq {
+    string country_code = 1;
+}
+
+message RedbagAmountResp {
+    string amount = 1;
+    int32 invite = 2;
+    common.base.ErrorMessage ret = 3;
+}
+message GetRedbagStatisticsReq {
+    string country_code = 1;
+}
+message GetRedbagStatisticsResp {
+    string today_new_user_cost = 1; //今日新用户注册成本
+    string today_new_user_rate = 2; //今日拉新效率
+    int32 today_new_user_count = 3; //今日新增注册用户
+    string total_amount = 4; //累计支出
+    int32 total_new_user = 5; //累计拉新数
+
+    common.base.ErrorMessage ret = 7;
+
+}
+
+message ActiveFloatingInfo {
+    string id = 1; //id
+    string name = 2; //名称
+    string url = 3; //浮窗链接
+    int32 switch_status = 4; //浮窗开关状态 1-开启，2-关闭
+    repeated common.base.NameAndCode cover = 5; //浮窗图标多语言
+    string country_code = 6; //国家码
+    int64 start_time = 7; //开始时间
+    int64 end_time = 8; //结束时间
+    int64 create_time = 9; //创建时间
+    int64 update_time = 10; //创建时间
+    string operation_name = 11; //更新人名称
+}
+message AddActiveFloatingReq {
+    ActiveFloatingInfo active_floating_info = 1;
+    common.base.ErrorMessage ret = 2;
+}
+message AddActiveFloatingResp {
+    common.base.ErrorMessage ret = 2;
+}
+
+message UpdateActiveFloatingReq {
+    ActiveFloatingInfo active_floating_info = 1;
+    common.base.ErrorMessage ret = 2;
+}
+message UpdateActiveFloatingResp {
+    common.base.ErrorMessage ret = 2;
+}
+
+message ListActiveFloatingReq {
+    string country_code = 1; //国家码
+    common.base.Pagination page = 2; //分页信息
+    common.base.ErrorMessage ret = 3;
+}
+message ListActiveFloatingResp {
+    repeated ActiveFloatingInfo active_floating_info = 1;
+    int32 total = 2; //总数
+    common.base.ErrorMessage ret = 3;
+}
+
+message ChangeActiveFloatingStatusReq {
+    string id = 1; //id
+    int32 switch_status = 2; //浮窗开关状态 1-开启，2-关闭
+    common.base.ErrorMessage ret = 3;
+}
+message ChangeActiveFloatingStatusResp {
+    common.base.ErrorMessage ret = 2;
+}
+service ActiveFloatingBossService {
+    //添加浮窗
+    rpc AddActiveFloating (AddActiveFloatingReq) returns (AddActiveFloatingResp);
+
+    //修改浮窗
+    rpc UpdateActiveFloating (UpdateActiveFloatingReq) returns (UpdateActiveFloatingResp);
+
+    //查询浮窗
+    rpc ListActiveFloating (ListActiveFloatingReq) returns (ListActiveFloatingResp);
+
+    //更改浮窗状态
+    rpc ChangeActiveFloatingStatus (ChangeActiveFloatingStatusReq) returns (ChangeActiveFloatingStatusResp);
+}
+
+//---------品质优选广告位推荐开始----------------------
+message QualityRecommendInfo {
+    int32 id = 1; //id
+    string country_code = 2; //国家码
+    int32 type = 3; //类型：1-活动列表类型,2-活动图片类型
+    repeated common.base.NameAndCode title = 4; //主标题
+    repeated common.base.NameAndCode sub_title = 5; //副标题
+    int32 url_type = 6; //跳转类型
+    string url = 7; //跳转地址
+    repeated string product_id = 8; //商品ID
+    repeated common.base.NameAndCode cover = 9; //活动图片，多语言
+    int64 start_time = 10; //开始时间
+    int64 end_time = 11; //结束时间
+    int32 sort = 12; //穿插排序
+    int64 update_time = 13; //更新时间
+}
+
+message InsertQualityRecommendReq {
+    QualityRecommendInfo quality_recommend_info = 1; //品质优选广告位推荐信息
+}
+
+message InsertQualityRecommendResp {
+    common.base.ErrorMessage ret = 1;
+    int32 id = 2; //id
+}
+
+message UpdateQualityRecommendReq {
+    QualityRecommendInfo quality_recommend_info = 1; //品质优选广告位推荐信息
+}
+
+message UpdateQualityRecommendResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message DeleteQualityRecommendReq {
+    repeated int32 id = 1; //id
+}
+
+message DeleteQualityRecommendResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message ListQualityRecommendReq {
+    string country_code = 1; //国家码
+    common.base.Pagination page = 2; //分页信息
+}
+
+message ListQualityRecommendResp {
+    common.base.ErrorMessage ret = 1;
+    int32 total = 2; //总数
+    repeated QualityRecommendInfo quality_recommend_info = 3; //品质优选广告位推荐信息 列表
+}
+
+message SortQualityRecommendReq {
+    int32 id = 1; //id
+    int32 sort = 2; //排序值
+}
+
+message SortQualityRecommendResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+service QualityRecommendBossService {
+    //新增品质优选等运营类目 广告专区
+    rpc InsertQualityRecommend (InsertQualityRecommendReq) returns (InsertQualityRecommendResp);
+    //更新品质优选等运营类目 广告专区
+    rpc UpdateQualityRecommend (UpdateQualityRecommendReq) returns (UpdateQualityRecommendResp);
+    //批量删除品质优选等运营类目 广告专区
+    rpc DeleteQualityRecommend (DeleteQualityRecommendReq) returns (DeleteQualityRecommendResp);
+    //分页展示品质优选等运营类目 广告专区
+    rpc ListQualityRecommend (ListQualityRecommendReq) returns (ListQualityRecommendResp);
+    //排序品质优选等运营类目 广告专区
+    rpc SortQualityRecommend (SortQualityRecommendReq) returns (SortQualityRecommendResp);
+}
+
+//---------品质优选广告位推荐结束----------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

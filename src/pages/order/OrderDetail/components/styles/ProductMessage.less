@@ -1,0 +1,113 @@
+.product-info{
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    box-sizing: border-box;
+    padding: 10px 0;
+    .thumbnail{
+        width: 80px;
+    }
+    .preview-image{
+        width: 150px;
+    }
+    .product-detail{
+        flex: 1;
+        margin-left: 10px;
+        overflow: hidden;
+        line-height: 30px;
+        .product-id{
+            display: flex;
+            align-items: center;
+            img{
+                width: 30px;
+                display: flex;
+                margin-left: 10px;
+            }
+        }
+        .product-name{
+            width: 100%;
+            text-align: left;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .service-wrapper{
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #d9001bd8;
+            text-align: left;
+            span{
+                margin-right: 10px;
+            }
+        }
+        .promotion-coupon-wrapper{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 30px;
+            .mar{
+                margin-right: 10px;
+            }
+            .promotion, .coupon{
+                display: flex;
+                align-items: center;
+                flex: 1;
+                max-width: 150px;
+                height: 100%;
+                overflow: hidden;
+                em{
+                    background: #fd9a38;
+                    color: #fff;
+                    box-sizing: border-box;
+                    padding: 0 5px;
+                    height: 100%;
+                }
+                >div{
+                    flex: 1;
+                    height: 100%;
+                    display: inline-block;
+                    vertical-align: center;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    border: 1px solid #fd9a38;
+                    color: #fd9a38;
+                }
+                span{
+                    margin-left: 4px;
+                }
+            }
+            .coupon{
+                margin-left: 10px;
+                >div{
+                    border: 1px solid #e30326;
+                    color: #e30326;
+                }
+                em{
+                    background: #e30326;
+                }
+            }
+        }
+    }
+}
+.flex{
+    display: flex;
+}
+.product-footer{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    border: 1px solid #EBEEF5;
+    border-top: 0;
+    >div{
+        box-sizing: border-box;
+        padding: 20px 40px;
+        border-left: 1px solid #EBEEF5;
+    }
+}

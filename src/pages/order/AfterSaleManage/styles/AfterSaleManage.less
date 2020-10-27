@@ -1,0 +1,141 @@
+ß
+    .contain-form {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .contain-table {
+        flex: 1;
+        overflow: scroll;
+        width: auto;
+        height: 100%;
+    }
+
+    .ant-form-item {
+        margin-bottom: 10px!important;
+    }
+
+    .product-info {
+        display: flex;
+        text-align: left;
+
+        .imgBox {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+            flex-shrink: 0;
+
+            img {
+                max-width: 100%;
+            }
+        }
+    }
+
+    .fixed-tool {
+        display: -webkit-box;
+        overflow: hidden;
+        white-space: normal !important;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical
+    }
+
+    .list-img-box {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        cursor: pointer;
+
+        img {
+            width: 100%;
+        }
+
+        span {
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            background: rgba(0, 0, 0, .5);
+            color: #fff;
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            border: 1px solid #dad3d3;
+            border-radius: 100%;
+        }
+    }
+
+    .order-num {
+        display: flex;
+        align-items: center;
+
+        .order {
+            margin-right: 5px;
+        }
+
+        img {
+            height: 16px;
+        }
+    }
+
+    .produt {
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+
+        .product-pic {
+            position: relative;
+
+            img {
+                width: 100px;
+                height: 100px;
+            }
+
+            .img-mark {
+                position: absolute;
+                bottom: 0px;
+                width: 100%;
+                height: 30px;
+                background-color: rgb(246, 210, 215);
+                opacity: 0.8;
+            }
+
+            .img-mark-content {
+                position: absolute;
+                bottom: 4px;
+                width: 100%;
+                font-weight: 500;
+                color: red;
+            }
+        }
+
+        .product-content {
+            width: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .product-content-name {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .product-content-supplier {
+            text-align: left;
+            color: rgb(120, 120, 120)
+        }
+    }
+

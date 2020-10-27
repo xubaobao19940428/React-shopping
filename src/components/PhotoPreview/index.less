@@ -1,0 +1,77 @@
+.container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999999;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .8);
+    display: flex;
+    flex-direction: column;
+
+    .top {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+
+        .close {
+            margin-top: 20px;
+            font-size: 40px;
+            color: #fff;
+            margin-right: 30px;
+            cursor: pointer;
+        }
+    }
+
+    .bottom {
+        width: 100%;
+        height: 120px;
+        background-color: red;
+    }
+
+    .box {
+        position: relative;
+        width: 100%;
+        flex: 1;
+        overflow: hidden;
+
+        .list {
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            li {
+                display: none;
+
+                &.show {
+                    display: block;
+                }
+
+                img {
+                    max-width: 100%;
+                }
+            }
+        }
+
+        .changeSwipe {
+            position: absolute;
+            top: 50%;
+            transform: translate(0, -50%);
+            font-size: 50px;
+            color: #fff;
+            cursor: pointer;
+
+            &.prev {
+                left: 10px;
+            }
+
+            &.next {
+                right: 10px;
+            }
+        }
+    }
+}

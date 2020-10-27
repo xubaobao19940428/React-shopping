@@ -1,0 +1,163 @@
+//DESC BACK littlec-marketing
+syntax = "proto3";
+package boss.market;
+
+import "common/base.proto";
+import "common/errcode.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.market";
+option java_outer_classname = "MarketingPage";
+
+
+message MarketingPageInfo {
+    int64 page_id = 1; //页面id，对应数据库中自增id
+    int64 serial_id = 2; //序列号，唯一查询编号
+    string country_code = 3; //国家码
+    string invalid_time = 5; //失效时间
+    int32 status = 6; //状态 1、生效 2、失效 见PageStatus枚举
+    //    string title = 7; //标题
+    int64 operator_id = 8; //操作人id
+    string operator = 9; //操作人姓名（id）
+    repeated common.base.NameAndCode title = 10; //标题
+    repeated common.base.NameAndCode share_title = 11; //分享标题
+    repeated common.base.NameAndCode share_description = 12; //分享描述
+    string share_img = 13; //分享图片
+    string background = 14; //背景
+    int32 share = 15; //分享开关
+    int32 show_type = 16; //显示方式
+    string update_time = 17; //更新时间
+    int64 history_serial_id = 18; //历史id
+}
+
+message InsertHistoryInfo {
+    repeated common.base.NameAndCode title = 3; //标题
+    repeated common.base.NameAndCode share_title = 4; //分享标题
+    repeated common.base.NameAndCode share_description = 5; //分享描述
+    repeated common.base.NameAndCode share_img = 6; //分享图片
+    string background = 7; //背景
+    int32 share = 8; //分享开关
+    int32 show_type = 9; //显示方式
+    string invalid_time = 10; //失效时间
+}
+
+message MarketingPageHistoryInfo {
+    int64 id = 1;
+    int64 serial_id = 2; //序列号
+    int64 operator_id = 3; //操作人id
+    string operator = 4; //操作人姓名（id）
+    string update_time = 5; //更新时间
+    string create_time = 6; //创建时间
+    int32 status = 7; //状态 1已生效 2未生效 3已删除 见PageHistoryStatus
+    int64 page_serial_id = 8; //page的序列号
+    int64 start_time = 9; //定时开始时间
+}
+
+message MarketingPageLayout {
+    string basic_name = 2;
+    string module_id = 3; //模块id
+    repeated common.base.NameAndCode name = 4; //模块名称
+    int32 sort = 5; //排序
+    string info = 6; //json信息串
+}
+
+//插入page信息request
+message InsertPageLayoutReq {
+    InsertHistoryInfo info = 1; //page信息
+    repeated MarketingPageLayout layout = 2; //layout组成的list
+    string country_code = 3; //国家码
+    string serial_id = 4; //序列号
+}
+
+//插入page信息response
+message InsertPageLayoutResp {
+    common.base.ErrorMessage ret = 2;
+    string serial_id = 3;
+}
+
+message ListPageReq {
+    string title = 1; //页面标题
+    string country_code = 2; //国家码
+    common.base.Pagination page = 3; //分页信息
+}
+
+message ListPageResp {
+    repeated MarketingPageInfo marketingPageInfoList = 1;
+    int32 total = 2; //总量
+    common.base.ErrorMessage ret = 3;
+}
+
+message GetPageHistoryBySerialIdReq {
+    int64 serial_id = 1; //页面序列号
+    common.base.Pagination page = 2; //分页信息
+}
+
+message GetPageHistoryBySerialIdResp {
+    repeated MarketingPageHistoryInfo marketing_page_history_info_list = 1;
+    int32 total = 2; //总量
+    common.base.ErrorMessage ret = 3;
+}
+
+message DeletePageHistoryReq {
+    int64 serial_id = 1; //历史记录的序列号
+}
+
+message DeletePageHistoryResp {
+    common.base.ErrorMessage ret = 1;
+}
+message HistorySerialIdReq {
+    string history_serial_id = 1; //页面版本的serialId
+}
+message PageLayoutPb {
+    string module_id = 1; //模块id
+    string info = 2; //页面详情
+    int32 sort = 3; //排序
+    repeated common.base.NameAndCode name = 4; //模块的多语言名称
+    string basic_name = 5; //模块的基础名称
+}
+message ViewInfoResp {
+    common.base.ErrorMessage ret = 1;
+    repeated common.base.NameAndCode title = 2; //标题
+    int32 show_type = 3; //显示方式(1-显示在顶部,2-下滑时显示)
+    string background = 4; //背景
+    string end_time = 5; //失效时间
+    int32 share = 6; //分享状态(1-启用,2-停用)
+    repeated common.base.NameAndCode share_title = 7; //分享标题
+    repeated common.base.NameAndCode share_description = 8; //分享描述
+    repeated common.base.NameAndCode share_img = 9; //分享图片
+    string serial_id = 10; //页面序号id
+    repeated PageLayoutPb pageLayoutPb = 11; //页面布局
+    int32 status = 12; //状态(1->生效中,2->已失效)
+    string country_code = 13; //国家码
+}
+message PageSuccessResp {
+    //操作成功数
+    int32 success = 1;
+    common.base.ErrorMessage ret = 2;
+    string msg = 3; //返回提示
+}
+message UpdateVersionPageTimeReq {
+    int32 request_type = 1; //请求类型：1-设置生效，2-删除
+    string serial_id = 2; //页面的ID
+    string history_page_id = 3; //历史记录的序列号
+    int64 start_time = 4; //开始时间
+}
+
+message UpdateVersionPageTimeResp {
+    common.base.ErrorMessage ret = 1;
+}
+service MarketingPageBossService {
+    rpc InsertPageLayout (InsertPageLayoutReq) returns (InsertPageLayoutResp);
+    //列表展示
+    rpc ListPage (ListPageReq) returns (ListPageResp);
+    //根据页面序列号查询
+    rpc GetPageHistoryBySerialId (GetPageHistoryBySerialIdReq) returns (GetPageHistoryBySerialIdResp);
+    //删除历史版本
+    rpc DeletePageHistory (DeletePageHistoryReq) returns (DeletePageHistoryResp);
+    //立即生效
+    rpc Activating (HistorySerialIdReq) returns (PageSuccessResp);
+    //编辑时获取之前的页面信息
+    rpc GetPageAndLayouts (HistorySerialIdReq) returns (ViewInfoResp);
+    //设置或删除某页面版本的生效时间
+    rpc UpdateVersionPageTime (UpdateVersionPageTimeReq) returns (UpdateVersionPageTimeResp);
+}

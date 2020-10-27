@@ -1,0 +1,510 @@
+syntax = "proto3";
+package boss.polypay;
+
+
+import "common/base.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.polypay";
+option java_outer_classname = "Polypay";
+
+message BooleanResp {
+    common.base.ErrorMessage ret = 1;
+    bool success = 2;
+}
+
+message CashOutRecordDoPb {
+    //主键自增长
+    int32 id = 1;
+    //用户提现编号
+    string cash_out_code = 2;
+    //用户名称
+    string user_name = 3;
+    //银行卡号
+    string bank_no = 4;
+    //银行名称
+    string bank_name = 5;
+    //邮箱
+    string email = 6;
+    //用户id
+    string user_id = 7;
+    //手机号
+    string tel_no = 8;
+    //提现金额
+    string cash_amount = 9;
+    //手续费
+    string fee = 10;
+    //到账金额
+    string cash_account_amount = 11;
+    //提现状态
+    int32 cash_status = 12;
+    //状态0废弃1可用
+    int32 status = 13;
+    //备注
+    string remark = 14;
+    //创建时间
+    string create_time = 15;
+    //更新时间
+    string update_time = 16;
+    //银行编号
+    string bank_code = 17;
+    //国家编码
+    string country_code = 18;
+}
+
+message ListUserWithdrawalByPageResp {
+    common.base.ErrorMessage ret = 1;
+    int32 total = 2;
+    repeated CashOutRecordDoPb cash_out_record_do = 3;
+}
+
+message ListUserWithdrawalByPageReq {
+    common.base.Pagination page = 1;
+    //用户id
+    string user_id = 2;
+    //用户名称
+    string user_name = 3;
+    //银行卡号
+    string bank_no = 4;
+    //银行名称
+    string bank_name = 5;
+    //邮箱
+    string email = 6;
+    //手机号
+    string tel_no = 7;
+    //提现状态 UNPAYED(0,"未打款"),PAYED(1,"已打款"),FAILED(2,"打款失败");
+    int32 cash_status = 8;
+    //开始时间
+    string start_time = 9;
+    //结束时间
+    string end_time = 10;
+    //国家编码
+    string country_code = 11;
+}
+
+message ListUserWithdrawalExportReq {
+    common.base.Pagination page = 1;
+    //用户id
+    string user_id = 2;
+    //用户名称
+    string user_name = 3;
+    //银行卡号
+    string bank_no = 4;
+    //银行名称
+    string bank_name = 5;
+    //邮箱
+    string email = 6;
+    //手机号
+    string tel_no = 7;
+    //提现状态 UNPAYED(0,"未打款"),PAYED(1,"已打款"),FAILED(2,"打款失败");
+    int32 cash_status = 8;
+    //开始时间
+    string start_time = 9;
+    //结束时间
+    string end_time = 10;
+    //国家编码
+    string country_code = 11;
+}
+
+message ListUserWithdrawalExportResp {
+    common.base.ErrorMessage ret = 1;
+    string url = 2;
+}
+
+message ListBanksByCountryReq {
+    string country_code = 1;
+}
+
+message BankSimplePb {
+    string bankCode = 1;
+    string bankName = 2;
+}
+
+message ListBanksByCountryResp {
+    common.base.ErrorMessage ret = 1;
+    repeated BankSimplePb bank_simple = 2;
+}
+
+message ConfirmUserWithdrawalApplyReq {
+    string cash_out_code = 1;
+    //提现状态 UNPAYED(0,"未打款"),PAYED(1,"已打款"),FAILED(2,"打款失败");
+    int32 cash_status = 2;
+    //备注
+    string remark = 3;
+    repeated string withdrawal_code = 4; // 支持批量打款
+}
+
+
+message ListAccountDetailByPageReq {
+    // 类型 收入:income 支出:expense
+    string detail_type = 1;
+    // 订单号
+    string source_id = 2;
+    // 收益类型
+    int32 source_type = 3;
+    // 用户id
+    string user_id = 4;
+    // 筛选创建时间的开始时间
+    string start_time = 5;
+    // 筛选创建时间的结束时间
+    string end_time = 6;
+    common.base.Pagination page = 7;
+}
+
+message AccountDetailPb {
+    string account_id = 1;
+    // 用户id
+    string user_id = 2;
+    // 账户详情流水号
+    string account_detail_no = 3;
+    // 金额
+    string amount = 4;
+    // 流水类型 收入/支出 income/expense
+    string detail_type = 5;
+    // 来源类型
+    string source_type = 6;
+    // 来源id
+    string source_id = 7;
+    // 创建日期
+    string create_time = 8;
+    // 是否删除 (0：失效 1：有效)
+    int32 is_delete = 9;
+    // 备注
+    string memo = 10;
+    // 来源描述
+    string source_desc = 11;
+}
+
+message ListAccountDetailByPageResp {
+    common.base.ErrorMessage ret = 1;
+    int32 total = 2;
+    repeated AccountDetailPb data = 3;
+}
+
+message AccountDetailRollBackReq {
+    // 账户详情流水号
+    string account_detail_no = 1;
+}
+
+message AccountDetailRollBackResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message GetUserBankListReq {
+    string user_id = 1;
+}
+
+
+message UserBankAccountPb {
+    // 主键，银行账户的主键
+    string id = 1;
+    // 用户id
+    string user_id = 2;
+    // 账户姓名
+    string account_name = 3;
+    // 账户号码
+    string account_no = 4;
+    // 手机号
+    string mobile = 5;
+    // 邮箱
+    string email = 6;
+    // 银行id
+    string bank_id = 7;
+    // 银行名称
+    string bank_name = 8;
+    // 状态（0：正常；1:锁定)
+    int32 status = 9;
+    // 是否默认（0：否；1:是)
+    int32 is_default = 10;
+    // 是否删除（0：否；1:是)
+    int32 is_delete = 11;
+    //  银行编号
+    string bank_code = 12;
+    // 国家简码
+    string country_code = 14;
+}
+
+message GetUserBankListResp {
+    common.base.ErrorMessage ret = 1;
+    repeated UserBankAccountPb data = 2;
+}
+
+message AddUserBankReq {
+    string account_name = 1; //账户名(持卡人姓名)
+    string account_no = 2; //卡号
+    string mobile = 4; //手机号
+    string email = 5; //邮箱
+    string bank_name = 6; //银行名称
+    string user_id = 7; //用户ID
+    string user_name = 8; //用户姓名
+    string bank_code = 9; //银行编码
+}
+message AddUserBankResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message SearchPayInfoReq {
+    //支付业务编号
+    string bns_order_no = 1;
+    //支付流水号
+    string trans_order_no = 2;
+    //第三方支付流水号
+    string txn_id = 3;
+    //支付方式 整数
+    string pay_way = 4;
+    //支付状态 整数
+    string pay_status = 5;
+    //分页信息
+    common.base.Pagination page = 6;
+
+}
+
+message SearchPayInfoResp {
+    common.base.ErrorMessage ret = 1;
+    //支付信息
+    repeated SearchPayInfo searchPayInfos = 2;
+    //总数量
+    int32 total = 3;
+    //分页信息
+    common.base.Pagination page = 4;
+}
+
+message SearchPayInfo {
+    //支付业务编号
+    string bns_order_no = 1;
+    //支付流水号
+    string trans_order_no = 2;
+    //支付方式 1:molpay 2:积分支付 3:信用卡 4:Omise 5:OnlineBanking
+    uint32 pay_way = 3;
+    //支付状态  3:待支付 1:失败 2:支付中 0:成功 4:退款成功 5:退款失败 7:退款中 8:退款处理
+    uint32 pay_status = 4;
+    //国家编号
+    string country_code = 5;
+    //第三方支付流水号
+    string txn_id = 6;
+    //创建时间
+    uint64 create_time = 8;
+    //更新时间
+    uint64 update_time = 9;
+    //备注信息
+    string remark = 10;
+    //业务类型 1:订单
+    uint32 bns_type = 11;
+    //金额
+    string amount = 12;
+    //支付凭证图片
+    string payment_voucher_picture = 13;
+}
+
+message SynPayInfoReq {
+    //支付业务编号
+    string bns_order_no = 1;
+}
+
+message SynPayInfoResp {
+    common.base.ErrorMessage ret = 1;
+    //支付信息
+    repeated SearchPayInfo searchPayInfos = 2;
+}
+
+message ManualPaySuccessReq {
+    // 订单号
+    string bns_order_no = 1;
+    // 支付流水号
+    string trans_order_no = 2;
+    // 支付凭证图片
+    string payment_voucher_picture = 3;
+    // 支付流水号 银行编号_银行转账流水号
+    string txn_id = 4;
+}
+
+message ManualPaySuccessResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message PayRelatedInfoReq {
+
+}
+
+message PayRelatedInfoResp {
+    common.base.ErrorMessage ret = 1;
+    repeated PayStatusInfo payStatusInfo = 2;
+    repeated PayWayInfo payWayInfo = 3;
+    message PayStatusInfo {
+        string name = 1;
+        int32 code = 2;
+    }
+    message PayWayInfo {
+        string name = 1;
+        int32 code = 2;
+    }
+}
+
+message ManualPayFailReq {
+    // 订单号
+    string bns_order_no = 1;
+    // 支付流水号
+    string trans_order_no = 2;
+    //
+    string remark = 3;
+}
+
+message ManualPayFailResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message AuditFlowCheckListReq {
+    // 开始时间
+    string start_time = 1;
+    // 结束时间
+    string end_time = 2;
+    // 操作人ID
+    string operation_id = 3;
+    common.base.Pagination page = 4; //分页
+}
+
+message AuditFlowCheckListResp {
+    message AuditFlowCheckInfo {
+        // 操作人ID
+        int64 operation_id = 1;
+        // 昵称
+        string nick_name = 2;
+        // 真实名
+        string real_name = 3;
+        // 审核量
+        int32 check_num = 4;
+        // 审核量
+        string day = 5;
+    }
+    common.base.ErrorMessage ret = 1;
+    //审核列表信息
+    repeated AuditFlowCheckInfo check_info = 2;
+    int32 total = 3; //总数
+}
+message DownloadAuditFlowCheckListResp {
+    common.base.ErrorMessage ret = 1;
+    string url = 2;
+}
+
+service WithdrawalBossService {
+    //用户提现申请列表
+    rpc ListUserWithdrawalByPage (ListUserWithdrawalByPageReq) returns (ListUserWithdrawalByPageResp);
+    // 后台导出提现记录
+    rpc ListUserWithdrawalExport (ListUserWithdrawalExportReq) returns (ListUserWithdrawalExportResp);
+    //银行列表
+    rpc ListBanksByCountry (ListBanksByCountryReq) returns (ListBanksByCountryResp);
+    //后台确认提现
+    rpc ConfirmUserWithdrawalApply (ConfirmUserWithdrawalApplyReq) returns (BooleanResp);
+    // 获取用户银行账户-列表，一个用户有多个银行账户
+    rpc GetUserBankList (GetUserBankListReq) returns (GetUserBankListResp);
+    // 添加银行账户
+    rpc AddUserBank (AddUserBankReq) returns (AddUserBankResp);
+}
+
+service UserAccountBossService {
+    // 分页查询用户收支记录
+    rpc ListAccountDetailByPage (ListAccountDetailByPageReq) returns (ListAccountDetailByPageResp);
+    // 按积分记录回滚
+    rpc AccountDetailRollBack (AccountDetailRollBackReq) returns (AccountDetailRollBackResp);
+}
+
+service PayInfoService {
+    //支付信息查询
+    rpc SearchPayInfo (SearchPayInfoReq) returns (SearchPayInfoResp);
+    //支付信息同步
+    rpc SynPayInfo (SynPayInfoReq) returns (SynPayInfoResp);
+    //手动支付成功
+    rpc ManualPaySuccess (ManualPaySuccessReq) returns (ManualPaySuccessResp);
+    //手动支付失败
+    rpc ManualPayFail (ManualPayFailReq) returns (ManualPayFailResp);
+    //支付相关信息接口
+    rpc PayRelatedInfo (PayRelatedInfoReq) returns (PayRelatedInfoResp);
+    //管理员支付审核列表
+    rpc AuditFlowCheckList (AuditFlowCheckListReq) returns (AuditFlowCheckListResp);
+    //管理员支付审核列表下载
+    rpc DownloadAuditFlowCheckList (AuditFlowCheckListReq) returns (DownloadAuditFlowCheckListResp);
+}
+message GetChargeListReq {
+    // 开始时间
+    string start_time = 1;
+    // 结束时间
+    string end_time = 2;
+    // 用户ID
+    string user_id = 3;
+    // 订单ID
+    string order_id = 4;
+    // 状态
+    string status = 5;
+    common.base.Pagination page = 6; //分页
+}
+message GetChargeListResp {
+    message ChargeInfo {
+        int64 id = 1;
+        int64 user_id = 2;
+        string order_no = 3; //订单号
+        string order_pay_id = 4; //订单交易记录ID
+        int32 prod_id = 5; //充值商号ID
+        string prod_name = 6; //充值商名
+        string order_type = 7; //类型：14、Topup 15、bill
+        string order_amount = 8; //订单金额
+        string face_value = 9; //面值
+        int32 status = 10; //状态 0待发送 1已发送待同步结果 2充值成功 3充值失败 4已退款
+        string account = 11; //充值账号
+        string reload_id = 12; //Toop返回的充值交易记录ID
+        string send_time = 13; //最新充值发送时间
+        string msg = 14; //充值结果信息
+    }
+    common.base.ErrorMessage ret = 1;
+    int32 total = 2; //总条数
+    repeated ChargeInfo charge_info = 3; //充值记录信息
+}
+message ReChargeForOrderReq {
+    int64 id = 1; //充值记录ID
+    string order_no = 2; //订单号
+    string face_value = 3; //充值面额
+    string prod_name = 4; //商品名
+    string account = 5; //充值账号
+}
+message RefundForChargeReq {
+    int64 id = 1; //充值记录ID
+    string order_no = 2; //订单号
+}
+message ManualChargeInfoRecordReq {
+    string order_no = 1; //订单号
+    string face_amount = 2; //充值金额
+    string prod_id = 3; //商品名
+    string prod_name = 4; //充值渠道
+    string account = 5; //充值账号
+    string reload_id = 6; //toop充值渠道ID
+    string msg = 7; //充值信息记录
+}
+message GetChargeProdListReq {
+    string prod_name = 1; //渠道商名称
+    bool refresh = 2; //是否强制刷新
+}
+message GetChargeProdListResp {
+    message ProdInfo {
+        string prod_name = 1; //渠道商名称
+        int32 prod_id = 2; // 渠道商ID
+        string max_accept_amount = 3; //最大允许充值金额
+        string min_accept_amount = 4; //最大允许充值金额
+        string prod_type = 5; //充值类型
+        string all_charge_face_amount = 6; //所有接受充值面额
+        string image = 7; //图片
+    }
+    common.base.ErrorMessage ret = 1;
+    repeated ProdInfo prod_info = 2; //渠道商信息列表
+}
+
+service ChargeService {
+    //获取充值信息列表
+    rpc GetChargeRecordList (GetChargeListReq) returns (GetChargeListResp);
+    //充值失败重试
+    rpc ReChargeForOrder (ReChargeForOrderReq) returns (BooleanResp);
+    //充值退款
+    rpc RefundForCharge (RefundForChargeReq) returns (BooleanResp);
+    //人工充值成功,录入信息
+    rpc ManualChargeInfoRecord (ManualChargeInfoRecordReq) returns (BooleanResp);
+    //充值渠导商列表，不分页
+    rpc GetChargeProdList (GetChargeProdListReq) returns (GetChargeProdListResp);
+}

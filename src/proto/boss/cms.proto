@@ -1,0 +1,795 @@
+//DESC BACK littlec-cms
+syntax = "proto3";
+package boss.cms; // pb文件所在位置
+
+import "common/base.proto"; //  引入其他包的pb
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.cms"; // pb生成的接口和类所在的包名
+option java_outer_classname = "Cms";
+
+message CmsSearchTagRequest {
+    //标签名
+    string tag_name = 1;
+    //标签id
+    repeated string tag_id = 2;
+
+}
+message EditSpecialColumnReq {
+    string special_column_id = 1; // 专栏id
+    string special_column_name = 2; // 专栏名称（管理平台使用）
+    repeated SpecialColumnContent lang_content = 3; // 专栏多语言信息
+    repeated string special_column_banner = 4; // 专栏banner
+}
+
+//专栏多语言信息
+message SpecialColumnContent {
+    //语言
+    string language = 1;
+    //多语言名称
+    string content = 2;
+}
+
+message SpecialSubjectContent {
+    //语言
+    string language = 1;
+    //多语言名称
+    string content = 2;
+}
+
+message EditSpecialColumnResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message CmsSearchTagResponse {
+    common.base.ErrorMessage ret = 1;
+    repeated CmsTag tags = 2;
+}
+
+message CmsTag {
+    string id = 1;
+    string tag_name = 2;
+}
+
+message SearchSpecialColumnInfoReq {
+    string country = 1; // 多国家属性
+}
+
+message SearchSpecialColumnInfoResp {
+    common.base.ErrorMessage ret = 1;
+    repeated SpecialColumn special_column = 2; // 国家下所有专栏
+}
+
+message SpecialColumn {
+    string special_column_id = 1; // 专栏id
+    string special_column_name = 2; // 专栏名字
+    repeated SpecialColumnContent special_column_content = 3; // 专栏多语言，给用户侧
+    repeated SpecialSubject special_subject = 4; // 专栏下的所有专题
+    common.enum.CmsEnum.ArticleContentTypeEnum content_type = 5;
+    repeated string special_column_banner = 6; // 专栏的banner
+    //话题列表
+    repeated ArticleTopic topics = 7;
+    int32 order_index = 8; // 排序编号
+}
+
+message SpecialSubject {
+    string special_subject_id = 1; // 专题id
+    string special_subject_name = 2; // 专题名字
+    repeated SpecialSubjectContent special_subject_content = 3; // 专栏多语言，给用户侧
+    int32 order_index = 4; // 排序编号
+}
+
+message AddArticleRequest {
+    //文章链接
+    string articleUrl = 1;
+    //内容类型
+    common.enum.CmsEnum.ArticleContentTypeEnum contentType = 4;
+    //专栏id
+    string specialColumnId = 5;
+    //专题id
+    string specialSubjectId = 6;
+    //用户分级
+    repeated uint32 userLevel = 7;
+    //内容标签
+    repeated string contentTag = 8;
+    //商品ID集合
+    repeated string productIds = 9;
+    //浏览基数
+    string browserBaseNumber = 10;
+    //分享基数
+    string shareBaseNumber = 11;
+    //文章信息对象
+    repeated ArticleLangInfo articleLangInfos = 12;
+    //角色头像
+    string role_cover = 13;
+    //角色昵称
+    string role_name = 14;
+    //话题id
+    string article_topic_id = 15;
+    //收藏基数
+    string collectBaseNumber = 16;
+
+}
+
+message ArticleLangInfo {
+    //语言
+    string language = 1;
+    //标题
+    string articleTitle = 2;
+    //描述
+    string articleDescribe = 3;
+    //封面图片
+    repeated string coverPic = 4;
+    //分享标题
+    string shareTitle = 5;
+    //分享描述内容
+    string shareDescribe = 6;
+    //分享图片
+    string sharePic = 7;
+    //内容组件集合
+    repeated ArticleContentComponent contentComponents = 10;
+    //视频 2.7video修改为video_cover视频封面图片
+    string videoCover = 11;
+    // 视频url
+    string videoUrl = 12;
+}
+
+message ArticleContentComponent {
+    //组件类型
+    common.enum.CmsEnum.ArticleComponentTypeEnum componentType = 1;
+    //组件值
+    string componentValue = 2;
+    //组件位置信息
+    string componentLocation = 3;
+}
+
+message AddArticleResponse {
+    common.base.ErrorMessage ret = 1;
+    string articleCode = 2;
+}
+
+message AddSpecialSubjectReq {
+    string special_column_id = 1;
+    string special_subject_name = 2;
+    repeated SpecialSubjectContent special_subject_content = 4;
+}
+
+message AddSpecialSubjectResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message EditSpecialSubjectReq {
+    string special_subject_id = 1;
+    string special_subject_name = 2;
+    repeated SpecialSubjectContent special_subject_content = 3;
+}
+
+message EditSpecialSubjectResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message ViewArticleDetailReq {
+    string article_code = 1; // 文章编号
+}
+
+message  ViewArticleDetailResp {
+    common.base.ErrorMessage ret = 1;
+    string article_code = 2;
+    repeated ArticleLangInfo article_lang_info = 3;
+    string article_url = 4; // 文章url
+    common.enum.CmsEnum.ArticleContentTypeEnum content_type = 5;
+    string special_column_id = 6;
+    string special_subject_id = 7;
+    repeated string user_level = 8;
+    repeated ArticleTag content_tag = 9;
+    repeated string product_ids = 10;
+    string browser_base_number = 11;
+    string share_base_number = 12;
+    //角色头像
+    string role_cover = 13;
+    //角色昵称
+    string role_name = 14;
+    //话题id
+    string article_topic_id = 15;
+    //话题名称
+    string article_topic_name = 16;
+    //收藏基数
+    string collectBaseNumber = 17;
+}
+
+message SortArticleReq {
+    string article_code = 1; // 国家编号
+    uint32 order_index = 2; // 文章的目标排序
+}
+
+message SortArticleResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message AddSpecialColumnReq {
+    string special_column_name = 1;
+    repeated SpecialColumnContent special_column_content = 2;
+    string country = 3;
+    common.enum.CmsEnum.ArticleContentTypeEnum content_type = 4; // 专栏只能有一种类型的文章，专栏文章类型
+    repeated string special_column_banner = 5; // banner
+}
+
+message AddSpecialColumnResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message SortSpecialSubjectReq {
+    string special_subject_id = 1; // 专题id
+    uint32 order_index = 2; // 排序的目标位置
+}
+
+message SortSpecialSubjectResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message BatchGetArticleByArticleCodeReq {
+    repeated string article_code = 1;
+}
+
+message BatchGetArticleByArticleCodeResp {
+    common.base.ErrorMessage ret = 1;
+    repeated ArticleBaseInfo article_base_info = 2;
+}
+
+message ArticleBaseInfo {
+    string article_code = 1;
+    string article_url = 2;
+    string pic_url = 3;
+}
+
+message ArticleView {
+    //文章编号
+    string articleCode = 1;
+    //文章链接
+    string articleUrl = 2;
+    //语言
+    repeated string languages = 3;
+    //文章排序
+    uint32 orderIndex = 4;
+    //内容类型
+    string contentType = 5;
+    //标题
+    string articleTitle = 6;
+    //描述
+    string articleDescribe = 7;
+    //用户分级
+    repeated uint32 userLevel = 8;
+    //内容标签
+    repeated CmsTag contentTag = 9;
+    //创建人名称
+    string createName = 10;
+    //创建时间
+    string createTime = 11;
+    //实际浏览数
+    uint32 actualBrowseNumber = 12;
+    //实际分享数
+    uint32 actualShareNumber = 13;
+    //浏览基数
+    uint32 browserBaseNumber = 14;
+    //分享基数
+    uint32 shareBaseNumber = 15;
+    //文章状态
+    common.enum.CmsEnum.ArticleStatusEnum articleStatus = 16;
+    //创建人姓名
+    string createUserName = 17;
+    //创建人ID
+    string createUserId = 18;
+    //发送人姓名
+    string sendUserName = 19;
+    //发送人ID
+    string sendUserId = 20;
+    //发送时间
+    string sendTime = 21;
+    //2.7 修改video为video_cover 视频封面
+    string videoCover = 22;
+    // 视频url
+    string videoUrl = 23;
+
+    // 图片地址
+    //repeated string contentPicUrl = 23;
+
+    //商品id集合
+    repeated string productIds = 24;
+    //分享标题
+    string shareTitle = 25;
+    //分享描述内容
+    string shareDescribe = 26;
+    //封面图片
+    repeated string coverPic = 27;
+    //分享图片
+    string sharePic = 28;
+    //话题名称
+    string article_topic_name = 29;
+    //话题id
+    string article_topic_id = 30;
+    //收藏基数
+    string collectBaseNumber = 31;
+    //收藏数
+    string collectNum = 32;
+}
+
+   // 2.1下午 添加需求 默认按照文章index大小排序
+message SearchArticleListBySortReq {
+    //国家编号
+    string country = 1;
+    //专栏ID
+    string specialColumnId = 2;
+    //专题ID
+    string specialSubjectId = 3;
+    //语言
+    string language = 4;
+    //标题 模糊搜索
+    string articleTitle = 5;
+    //文章状态
+    common.enum.CmsEnum.ArticleStatusEnum articleStatus = 6;
+    //开始时间
+    string startTime = 7;
+    //结束时间
+    string endTime = 8;
+    //分页信息
+    common.base.Pagination pageInfo = 9;
+    //标签id集合
+    repeated string tags = 10;
+    /*
+        按照什么排序，默认orderIndex
+        orderIndex:文章序号排序
+        collectIndex:收藏数排序
+        browIndex:阅读数排序
+        为空：创建时间排序
+    */
+    string articleSortType = 11;
+    // 话题id
+    string article_topic_id = 12;
+    //正倒序  asc:正序  desc:倒序 默认desc
+    string sortType = 13;
+}
+message SearchArticleListBySortResp {
+    common.base.ErrorMessage ret = 1;
+    //分页信息
+    common.base.Pagination pageInfo = 2;
+    //文章信息列表
+    repeated ArticleView articleViewList = 3;
+    //总记录数
+    uint32 total = 4;
+}
+
+
+message EditArticleReq {
+    string article_code = 1;
+    //文章链接
+    string article_url = 2;
+    //用户分级
+    repeated uint32 userLevel = 3;
+    //内容标签
+    repeated string content_tag = 4;
+    //商品ID集合
+    repeated string product_ids = 5;
+    //浏览基数
+    string browser_base_number = 6;
+    //分享基数r
+    string share_base_number = 7;
+    //文章信息对象
+    repeated ArticleLangInfo article_lang_infos = 8;
+    //专题编号
+    string special_subject_id = 9;
+    //角色头像
+    string role_cover = 13;
+    //角色昵称
+    string role_name = 14;
+    //话题id
+    string article_topic_id = 15;
+    //收藏基数
+    string collectBaseNumber = 16;
+}
+
+message EditArticleResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message SendArticleReq {
+    repeated string article_code = 1;
+    // 上下文里传操作人id和名字
+}
+
+message SendArticleResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message DeleteArticleReq {
+    repeated string article_code = 1;
+    // 上下文里传操作人id
+}
+
+message DeleteArticleResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message WithdrawArticleReq {
+    repeated string article_code = 1;
+    // 操作人id放在上下文
+}
+
+message WithdrawArticleResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+// 2.4 添加商学院文章同步到其他国家
+message CopyArticleToOtherReq {
+    //国家编号
+    string country = 1;
+    //专栏ID
+    string specialColumnId = 2;
+    //专题ID
+    string specialSubjectId = 3;
+    // 要同步的文章
+    repeated string article_code = 4;
+}
+
+message CopyArticleToOtherResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+// 复制专栏内的一篇文章到数据库
+message CopyArticleByArticleCodeReq{
+    //国家编号
+    string country = 1;
+    //专栏ID
+    string specialColumnId = 2;
+    // 要复制的文章
+    string article_code = 4;
+}
+
+message CopyArticleByArticleCodeResp{
+    common.base.ErrorMessage ret = 1;
+}
+
+// 复制专栏内banner到其他国家专栏下
+message CopyBannerToOtherReq {
+    //国家编号
+    string country = 1;
+    //专栏ID
+    string specialColumnId = 2;
+    // 要复制的banner
+    repeated string bannerCode = 4;
+}
+
+message CopyBannerToOtherResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message SaveTagReq {
+    //标签信息
+    ArticleTag articleTag = 1;
+}
+
+message ArticleTag {
+    //标签id
+    string tag_id = 1;
+    //多语言信息
+    repeated TagName tagName = 2;
+    //创建时间
+    string create_time = 3;
+    //
+    message TagName {
+        //语言
+        string language = 1;
+        //内容
+        string content = 2;
+    }
+}
+
+message SaveTagResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message DelTagReq {
+    //标签id
+    string tag_id = 1;
+}
+
+message DelTagResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message SearchTagListReq {
+    //搜索参数
+    string select_param = 1;
+    //开始时间
+    string start_time = 2;
+    //结束时间
+    string end_time = 3;
+    //分页信息
+    common.base.Pagination pageInfo = 4;
+}
+
+message SearchTagListResp {
+    common.base.ErrorMessage ret = 1;
+    uint32 total = 2;
+    repeated ArticleTag articleTags = 3;
+}
+
+message SortSpecialColumnReq {
+    string special_column_id = 1; // 专栏id
+    uint32 order_index = 2; // 排序的目标位置
+}
+
+message SortSpecialColumnResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+service CmsSpecialColumnService {
+    // 编辑专栏
+    rpc EditSpecialColumn (EditSpecialColumnReq) returns (EditSpecialColumnResp);
+    // 专栏信息查询
+    rpc SearchSpecialColumnInfo (SearchSpecialColumnInfoReq) returns (SearchSpecialColumnInfoResp);
+    // 添加专栏
+    rpc AddSpecialColumn (AddSpecialColumnReq) returns (AddSpecialColumnResp);
+    // 同步文章到其他国家，专栏，专题内
+    rpc CopyArticleToOther (CopyArticleToOtherReq) returns (CopyArticleToOtherResp);
+    // 复制专栏内的一篇文章到数据库
+    rpc CopyArticleByArticleCode (CopyArticleByArticleCodeReq) returns (CopyArticleByArticleCodeResp);
+    // 复制banner到其他国家专栏下
+    rpc CopyBannerToOther (CopyBannerToOtherReq) returns (CopyBannerToOtherResp);
+    // 专栏排序
+    rpc SortSpecialColumn (SortSpecialColumnReq) returns (SortSpecialColumnResp);
+}
+
+service CmsSpecialSubjectService {
+    // 添加专题
+    rpc AddSpecialSubject (AddSpecialSubjectReq) returns (AddSpecialSubjectResp);
+    // 编辑专题
+    rpc EditSpecialSubject (EditSpecialSubjectReq) returns (EditSpecialSubjectResp);
+    // 专题排序
+    rpc SortSpecialSubject (SortSpecialSubjectReq) returns (SortSpecialSubjectResp);
+}
+
+service CmsTagService {
+    //查询Cms标签，最多返回10个
+    rpc SearchTag (CmsSearchTagRequest) returns (CmsSearchTagResponse);
+    //保存标签
+    rpc SaveTag(SaveTagReq) returns (SaveTagResp);
+    //删除标签
+    rpc DelTag(DelTagReq) returns (DelTagResp);
+    //标签列表搜索
+    rpc SearchTagList(SearchTagListReq) returns (SearchTagListResp);
+}
+
+message EditArticleTagReq {
+    string article_code = 1;
+    //内容标签
+    repeated string content_tag = 2;
+}
+
+message EditArticleTagResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//文章相关接口
+service CmsArticleService {
+    // 添加文章
+    rpc AddArticle (AddArticleRequest) returns (AddArticleResponse);
+    // 文章详情查询
+    rpc ViewArticleDetail (ViewArticleDetailReq) returns (ViewArticleDetailResp);
+    // 文章排序
+    rpc SortArticle (SortArticleReq) returns (SortArticleResp);
+    // 后台文章列表搜索
+    //rpc searchArticleList(SearchArticleListReq) returns (SearchArticleListResp);
+    // 批量通过文章编号查文章基础信息
+    rpc BatchGetArticleByArticleCode (BatchGetArticleByArticleCodeReq) returns (BatchGetArticleByArticleCodeResp);
+    // 编辑文章
+    rpc EditArticle (EditArticleReq) returns (EditArticleResp);
+    // 发送文章
+    rpc SendArticle (SendArticleReq) returns (SendArticleResp);
+    // 删除文章
+    rpc DeleteArticle (DeleteArticleReq) returns (DeleteArticleResp);
+    // 撤回文章
+    rpc WithdrawArticle (WithdrawArticleReq) returns (WithdrawArticleResp);
+    // 搜索文章根据传入类型进行排序，前端需传递"index"，表示默认是按照文章的orderIndex从小到大进行排序
+    rpc SearchArticleListBySort (SearchArticleListBySortReq) returns (SearchArticleListBySortResp);
+    // 修改文章标签
+    rpc EditArticleTag(EditArticleTagReq) returns(EditArticleTagResp);
+}
+
+// banner相关
+//添加banner
+message AddBannerReq {
+    string country = 1;
+    string special_column_id = 2;
+    string banner_name = 3;
+    string article_code = 4;
+    string banner_base_number = 5;
+    repeated common.base.NameAndCode bannerPicInfo = 6; // banner图片信息
+    //repeated BannerPicInfo bannerPicInfo = 6;
+}
+
+message AddBannerResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+////图片信息
+//message BannerPicInfo {
+//    string language = 1;
+//    string banner_pic_value = 2;
+//}
+
+
+//编辑
+message EditBannerReq {
+    string banner_code = 1;
+    string banner_name = 2;
+    string article_code = 3;
+    repeated common.base.NameAndCode bannerPicInfo = 4; // banner图片信息
+}
+
+message EditBannerResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//删除
+message DeleteBannerByBannerCodeReq {
+    string banner_code = 1;
+}
+message DeleteBannerByBannerCodeResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+// 分页查询
+message PageSearchBannerReq {
+    string country = 1;
+    string special_column_id = 2;
+    common.base.Pagination pageInfo = 3;
+}
+message PageSearchBannerResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    int32 total = 2; //总数
+    repeated BannerInfo data = 3; //banner列表
+}
+
+// 分页查询返回信息
+message BannerInfo {
+    string banner_code = 1;
+    string banner_name = 2;
+    repeated common.base.NameAndCode bannerPicInfo = 3; // banner图片信息
+    string banner_browser_number = 4;
+    string banner_base_number = 5;
+    string article_code = 6;
+    string article_url = 7;
+    string create_time = 8;
+    string start_time = 9; // 默认为start_time
+    string end_time = 10;
+}
+
+// 返回浏览次数
+message GetBannerWatchedReq {
+    string banner_code = 1;
+}
+
+message GetBannerWatchedResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string banner_browser_number = 2;
+    string banner_base_number = 3;
+}
+
+// 复制一个banner
+message CopyBannerByBannerCodeReq {
+    string country = 1;
+    string special_column_id = 2;
+    string banner_code = 3;
+}
+
+message CopyBannerByBannerCodeResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+service BannerService {
+    // 保存banner
+    rpc SaveBanner (AddBannerReq) returns (AddBannerResp);
+
+    // 编辑banner
+    rpc EditBanner (EditBannerReq) returns (EditBannerResp);
+
+    // 删除
+    rpc DeleteBannerByBannerCode (DeleteBannerByBannerCodeReq) returns (DeleteBannerByBannerCodeResp);
+
+    // 分页查询banner信息
+    rpc PageBanner (PageSearchBannerReq) returns (PageSearchBannerResp);
+
+    // 上报浏览次数
+    rpc GetBannerWatched (GetBannerWatchedReq) returns (GetBannerWatchedResp);
+
+    // 复制一个banner，到当前国家，专栏下
+    rpc CopyBannerByBannerCode (CopyBannerByBannerCodeReq) returns (CopyBannerByBannerCodeResp);
+
+}
+
+message AddTopicReq {
+    // 专栏id
+    string special_column_id = 1;
+    //话题图片
+    string topic_cover = 2;
+    //话题名称
+    repeated TopicName topicName = 3;
+}
+
+message TopicName {
+    //语言
+    string language = 1;
+    //内容
+    string content = 2;
+}
+
+message AddTopicResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message EditTopicReq {
+    //话题id
+    string topic_id = 1;
+    //话题图片
+    string topic_cover = 2;
+    //话题名称
+    repeated TopicName topicName = 3;
+}
+
+message EditTopicResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message ArticleTopic {
+    //话题id
+    string topic_id = 1;
+    //话题图片
+    string topic_cover = 2;
+    //话题名称
+    repeated TopicName topicName = 3;
+}
+
+
+// 话题
+service TopicService {
+    //添加话题
+    rpc AddTopic(AddTopicReq) returns(AddTopicResp);
+    //修改话题
+    rpc EditTopic(EditTopicReq) returns(EditTopicResp);
+}
+
+message Role {
+    //角色头像
+    string role_cover = 1;
+    //角色昵称
+    string role_name = 2;
+}
+
+message AddRoleReq {
+    Role role = 1;
+}
+
+message AddRoleResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message ShowRoleReq {
+    //分页信息
+    common.base.Pagination pageInfo = 1;
+}
+
+message ShowRoleResp {
+    repeated Role role = 1;//角色
+    int32 total = 2; //总数
+    common.base.ErrorMessage ret = 3; // 返回值
+}
+
+//角色
+service CmsRoleService {
+    //添加角色
+    rpc AddRole (AddRoleReq) returns (AddRoleResp);
+    //展示角色
+    rpc ShowRole (ShowRoleReq) returns (ShowRoleResp);
+
+}

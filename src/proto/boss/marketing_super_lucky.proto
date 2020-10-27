@@ -1,0 +1,173 @@
+syntax = "proto3";
+package boss.market;
+
+import "common/base.proto";
+import "common/errcode.proto";
+import "common/enum.proto";
+
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.market";
+option java_outer_classname = "MarketingSuperLuckyBoss";
+
+message BigPrizeSetting {
+    string country_code = 10;//国家码
+    int32 per_invite_new_user_num = 2;//每期可邀新人数
+    int32 per_invite_old_user_num = 1;//每期可邀老人数
+    int32 invite_new_user_get_code_num = 8;//邀新可获码数
+    int32 invite_old_user_get_code_num = 9;//邀老用户可获得码数
+    common.enum.MarketingEnum.SuperLuckRefundType super_luck_refund_type = 6;//未中奖退款
+}
+
+message FindBigPrizeSettingReq {
+    string country_code = 1;//国家码
+}
+
+message FindBigPrizeSettingResp {
+    BigPrizeSetting big_prize_setting = 1;
+    common.base.ErrorMessage ret = 2;
+}
+
+message SaveBigPrizeSettingReq {
+    BigPrizeSetting big_prize_setting = 1;
+}
+
+message SaveBigPrizeSettingResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message FindBigPrizeUserReq {
+    string country_code = 1;
+    common.base.Pagination page = 2;
+}
+
+message FindBigPrizeUserResp {
+    message BigPrizeUser {
+        string user_id = 1;//用户ID
+        string phone_num = 2;//手机号
+        common.enum.MarketingEnum.BigPrizeUserStatusType status = 3;//状态
+        string product_name = 4;//奖品商品名称
+        string operator_id = 5;//操作人ID
+        int32 can_disable = 6;//1,可以失效;2,不可以失效;
+        string operator_name = 7;//操作人名称
+    }
+    repeated BigPrizeUser big_prize_user = 1;
+    int32 total = 3;
+    common.base.ErrorMessage ret = 4;
+}
+
+message AddBigPrizeUserReq {
+    string user_id = 1;//用户ID
+    string max_amount = 2;//可获奖最高值
+    string country_code = 3;//国家码
+}
+
+message AddBigPrizeUserResp {
+    common.base.ErrorMessage ret = 4;
+}
+
+message DisableBigPrizeUserReq {
+    string user_id = 1;
+    string country_code = 2;//国家码
+}
+
+message DisableBigPrizeUserResp {
+    common.base.ErrorMessage ret = 4;
+}
+
+service SuperLuckyBigPrizeSettingBossService {
+    //查询大奖基础设置
+    rpc FindBigPrizeSetting(FindBigPrizeSettingReq) returns (FindBigPrizeSettingResp);
+    //保存大奖基础设置
+    rpc SaveBigPrizeSetting(SaveBigPrizeSettingReq) returns (SaveBigPrizeSettingResp);
+    //查询大奖中奖用户添加历史（分页）
+    rpc FindBigPrizeUser(FindBigPrizeUserReq) returns (FindBigPrizeUserResp);
+    //添加大奖中奖用户
+    rpc AddBigPrizeUser(AddBigPrizeUserReq) returns (AddBigPrizeUserResp);
+    //失效大奖中奖用户
+    rpc DisableBigPrizeUser(DisableBigPrizeUserReq) returns (DisableBigPrizeUserResp);
+}
+
+message SuperLuckyOrderUnit {
+    string user_id = 1;//用户ID
+    int32 pay_status = 2;//0->未支付，1->已支付，2->已退款
+    string product_cover = 3;//参与商品cover
+    string product_period = 4;//期号
+    string code = 5;//兑奖号
+    int32 invite_new_num = 6;//邀新数
+    string award_code = 7;//奖励兑奖ID
+    int32 win_status = 8;//1,待开奖;2,未中奖;3,已中奖
+    string win_code = 9;//该期大奖号
+}
+
+message FindOrderReq {
+    string product_period = 1;//大奖期号
+    string code = 2;//兑奖码
+    string user_id = 3;//用户id
+    string query_start_time = 4;//查询开始时间
+    string query_end_time = 5;//查询结束时间
+    string country_code = 6;//国家码
+    common.base.Pagination page = 7;
+}
+
+message FindOrderResp {
+    repeated SuperLuckyOrderUnit super_lucky_order_unit = 1;
+    int32 total = 2;
+    common.base.ErrorMessage ret = 3;
+}
+
+service SuperLuckyOrderBossService {
+    //查询订单
+    rpc FindOrder(FindOrderReq) returns (FindOrderResp);
+}
+
+message SuperLuckSubject {
+    string serial_id = 1;//专题 序号 ID
+    string name = 2;//专题的多语言名称，以JSON形式传递 key:语言 value:该语言版本名称
+    string country_code = 3;//国家码
+}
+
+message InsertSuperLuckSubjectReq {
+    SuperLuckSubject super_luck_subject = 1;//专题
+}
+
+message InsertSuperLuckSubjectResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message UpdateSuperLuckSubjectReq {
+    SuperLuckSubject super_luck_subject = 1;//专题
+}
+
+message UpdateSuperLuckSubjectResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+message FindAllSuperLuckSubjectReq {
+    string country_code = 1;//国家码
+}
+
+message FindAllSuperLuckSubjectResp {
+    repeated SuperLuckSubject super_luck_subject = 1;//专题数组
+    common.base.ErrorMessage ret = 2;
+}
+
+message DeleteSuperLuckSubjectReq {
+    string serial_id = 1;//专题序号 ID
+}
+
+message DeleteSuperLuckSubjectResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//一元夺宝专题
+service SuperLuckySubjectBossService {
+    //新增专题
+    rpc InsertSuperLuckSubject(InsertSuperLuckSubjectReq) returns (InsertSuperLuckSubjectResp);
+    //更新专题
+    rpc UpdateSuperLuckSubject(UpdateSuperLuckSubjectReq) returns (UpdateSuperLuckSubjectResp);
+    //获取专题列表
+    rpc FindAllSuperLuckSubject(FindAllSuperLuckSubjectReq) returns (FindAllSuperLuckSubjectResp);
+    //删除专题
+    rpc DeleteSuperLuckSubject(DeleteSuperLuckSubjectReq) returns (DeleteSuperLuckSubjectResp);
+}

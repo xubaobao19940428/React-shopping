@@ -1,0 +1,917 @@
+// 供应链 - 仓库
+syntax = "proto3";
+package erp.warehouse;
+
+
+import "common/base.proto";
+import "common/enum.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.erp.warehouse";
+option java_outer_classname = "Warehouse";
+
+// ======================== 仓库 ========================
+message WarehousePB {
+    string warehouse_no = 1; // 仓库代码
+    string warehouse_name = 2; // 仓库名称
+}
+
+message WarehousePageReq {
+    common.base.Pagination page = 1; // 分页结构体
+    repeated string warehouse_no = 2; // 仓库代码
+    string warehouse_name = 3; // 仓库名称
+}
+
+message WarehousePageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    int32 total = 2; //总数
+    repeated WarehousePB list = 3; //库存列表信息
+}
+
+
+// ======================== 出库单 ========================
+message OutOrderPB {
+    string out_no = 1; // 出库单号
+    string warehouse_no = 2; // 仓库编号
+    string warehouse_name = 3; // 仓库名称
+    string order_no = 4; // 订单号
+    string sub_order_no = 5; // 子单出号
+    string logi_code = 6; // 配送单号
+    string logi_company = 7; // 配送公司
+    common.enum.ErpEnum.OutOrderStatus out_status = 8; // 出库状态
+    common.enum.ErpEnum.SyncStatus sync_status = 9; // 同步状态
+    string ship_time = 10; // 出库发货时间
+    string sync_time = 11; // 出库同步时间
+    string create_time = 12; // 出库创建时间
+    OutOrderAddress address = 13; // 订单地址
+    string cannel_reason = 14; // 取消原因
+    string cannel_time = 15; // 取消时间
+    string ref_out_no = 16; // 关联出库单号
+    string out_type = 17; // 出库单类型
+    string user_id = 18; // 创建人ID
+    string user_name = 19; // 创建人名称
+    repeated OutOrderSku sku = 20; // 出库单sku
+    string country_code = 21; // 出库单国家码
+    string sync_remark = 22; // 同步备注
+    int32 order_type = 23; // 1.普通订单 2.预售订单
+    string pay_type = 24;// 支付类型。COD:COD
+    string pay_amount = 25;// 支付类型金额
+    string pay_currency = 26; //支付货币类型
+    string job_no =27;//货代工作号
+}
+
+message OutOrderSku {
+    string sku_code = 1; // sku
+    int32 count = 2; //数量
+    int32 match_count = 3; //已匹配数量
+    string name_cn = 4; // sku名称
+    string sku_cover = 5; //sku图片
+    string standard_attr = 6; // sku规格
+    repeated string cateName = 7; //类目信息
+}
+message OutOrderAddress {
+    string country = 1; // 收件国家
+    string receiver_name = 2; // 收件人姓名
+    string receiver_phone = 3; // 收件人手机号
+    string stateName = 4; // 收件人地址——省
+    string cityName = 5; // 收件人地址——市
+    string area = 6; // 收件人地址——区
+    string postcode = 7; // 收件人地址——邮编
+    string address = 8; // 收件人地址
+}
+
+message OutOrderPageReq {
+    common.base.Pagination page = 1; // 分页结构体
+    string out_no = 2; // 出库单号
+    string warehouse_no = 3; // 仓库编号
+    string order_no = 4; // 订单号
+    string sub_order_no = 5; // 子单出号
+    string logi_code = 6; // sku信息
+    string sku_code = 7; // sku
+    common.enum.ErpEnum.OutOrderStatus out_status = 8; // 出库状态
+    common.enum.ErpEnum.SyncStatus sync_status = 9; // 同步状态
+    string start_time = 10; //创建时间 yyyy-MM-dd HH:mm:ss
+    string end_time = 11; //创建时间  yyyy-MM-dd HH:mm:ss
+    string ref_out_no = 12; // 关联出库单号
+    string out_type = 14; // 出库单类型
+    string country_code = 15; // 国家码
+    string pay_type = 16;//支付类型.COD:COD;其他:OTHER
+}
+
+message OutOrderPageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    int32 total = 3; //总数
+    repeated OutOrderPB list = 4;
+}
+
+message OutOrderNewPB {
+    string out_no = 1; // 出库单号
+    string warehouse_no = 2; // 仓库编号
+    string warehouse_name = 3; // 出库仓
+    string order_no = 4; // 订单号
+    string logi_code = 6; // 宅配单号
+    string logi_company = 7; // 宅配公司
+    string cross_code = 8; // 跨境单号
+    string cross_company = 9; //跨境公司
+    string cross_status = 18; //跨境公司
+    common.enum.ErpEnum.BizType biz_type = 10; //业务类型
+    common.enum.ErpEnum.OutOrderStatus out_status = 11; // 出库状态
+    string aging = 12; //时效
+    common.enum.ErpEnum.SyncStatus sync_status = 13; // 同步状态
+    string out_type = 14; // 出库单类型
+    common.enum.ProductEnum.Nature product_type = 15; // 商品类型
+    string error_message = 16; //异常信息
+    string error_happen_time = 17; //异常发生时间
+    string system_time = 19; //当前系统时间
+    string country_code = 20; // 出库单国家码
+    string cancel_reason = 21; // 取消原因
+    string sync_remark = 22; // 同步备注
+}
+
+message OutOrderNewPageReq {
+    common.base.Pagination page = 1; // 分页结构体
+    string out_no = 2; // 出库单号
+    string warehouse_no = 3; // 仓库编号
+    string order_no = 4; // 订单号
+    common.enum.ErpEnum.BizType biz_type = 5; //业务类型
+    common.enum.ErpEnum.QueryTimeType query_type = 6; //时间类型
+    common.enum.ErpEnum.OutOrderStatus out_status = 7; // 出库状态
+    common.enum.ErpEnum.SyncStatus sync_status = 8; // 同步状态
+    string create_start_time = 9; //创建开始时间 yyyy-MM-dd HH:mm:ss
+    string create_end_time = 10; //创建结束时间 yyyy-MM-dd HH:mm:ss
+    string inventory_match_start_time = 11; //库存满足开始时间
+    string inventory_match_end_time = 12; //库存满足结束时间
+    string sync_start_time = 13; //同步成功开始时间
+    string sync_end_time = 14; //同步成功结束时间
+    string cancel_start_time = 15; //取消开始时间
+    string cancel_end_time = 16; //取消结束时间
+    string ship_start_time = 17; //出库开始时间
+    string ship_end_time = 18; //出库结束时间
+    string cross_out_no = 19; // 跨境单号
+    string logi_out_no = 20; // 宅配单号
+    string out_type = 21; // 出库单类型
+    common.enum.ProductEnum.Nature product_type = 22; // 商品类型
+    int32 error_type = 23; // 异常类型
+}
+
+message OutOrderNewPageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    int32 total = 2; //总数
+    repeated OutOrderNewPB list = 3;
+}
+
+// 出库单重推
+message RepushOutOrderReq {
+    string out_no = 1; // 出库单号
+}
+
+message RepushOutOrderResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+// 取消出库单
+message CancelOutOrderReq {
+    string out_no = 1; // 出库单号
+    string cancel_reason = 2; // 取消原因
+    common.enum.ErpEnum.YesNo is_release = 7; //是否释放预占库存。1:释放；2:不释放
+}
+
+message CancelOutOrderResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+// 创建出库单
+message CreateOutOrderReq {
+    string old_out_no = 1; // 原出库单号
+    string out_type = 2; // 出库单类型
+    repeated OutOrderSkuPB sku = 10;
+}
+message OutOrderSkuPB {
+    string sku_code = 1;
+    int32 count = 2;
+    string batch_no = 3; // 批次号，根据这个来确实是否是同一个出库单的，临时数据 后端不保存
+}
+message CreateOutOrderResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+// 创建出库单
+message OutOrderDetailReq {
+    string out_no = 1; // 出库单号
+}
+message OutOrderDetailResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    OutOrderPB outOrder = 3;
+}
+
+message OutOrderNewDetailReq {
+    string out_no = 1; // 出库单号
+    common.base.Pagination page = 2; // 分页结构体
+}
+
+message OutOrderNewDetailResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    int32 total = 3; //总数
+    repeated OutOrderSku sku = 2;
+}
+
+
+// ======================== 入库单 ========================
+message IncomeOrderPB {
+    string income_no = 1; // 入库单号
+    string warehouse_no = 2; // 仓库编号
+    string warehouse_name = 3; // 仓库名称
+    string logi_code = 6; // 入库物流单号
+    string logi_company = 7; // 入库物流公司
+    int32 sign_status = 8; // 签收状态 1-仓储签收 2-仓储未签收
+    string sign_time = 9; // 签收时间
+    int32 logi_sign_status = 13;// 物流签收状态 0、2-未签收 1-已签收
+
+    int32 income_status = 10; // 同步状态
+    string income_time = 11; // 入库时间
+    string create_time = 12; // 创建时间
+
+    repeated IncomeOrderSku sku = 20; // sku
+
+}
+
+message NewIncomeOrderPB {
+    string income_no = 1; // 入库单号
+    string logi_code = 2; // 入库物流单号
+    string logi_company = 3;// 入库物流编号
+    string logi_company_name = 4;// 物流公司名称
+    int32 income_order_status = 5;//入库单状态 1-待快递签收 2-仓储签收 3-已入库 4-已取消 5-完结
+    repeated string logi_detail_info = 6;// 物流信息
+    string warehouse_name = 8; // 仓库名称
+    int32 total_count = 9; // 预期数量
+    int32 income_count = 10; // 实际入库数
+    int32 cancel_count = 11; // 取消数量
+    int32 abnormal_count = 12; // 入库异常数
+    string logi_sign_time = 13; // 快递签收时间
+    string warehouse_sign_time = 14;// 仓储签收时间
+    string income_time = 15; // 入库时间
+    string over_time = 16;// 完结时间
+    IncomeExceptionInfo income_exception_info = 18;//异常信息
+    repeated SimplePurchaseOrderInfo simple_purchase_order_info = 19; //采购单简单信息
+    string count_down_end_time = 20; //倒计时结束时间
+}
+message SimplePurchaseOrderInfo {
+    string purchase_no = 1; // 采购单号
+    repeated string sku_code = 2;
+}
+// 入库异常信息
+message IncomeExceptionInfo {
+    int32 exception_type = 1;//异常类型
+    string exception_time = 2;//异常的发现时间
+}
+
+message IncomeOrderSku {
+    string sku_code = 1; // sku代码
+    string name_cn = 2; // 名称
+    string sku_cover = 3; //sku图片
+    string standard_attr = 4; // 规格
+    int32 totalCount = 5; // 预期数量
+    int32 incomeCount = 6; // 实际入库数
+    int32 abnormalCount = 7; // 入库异常数
+    string remark = 8; // 入库备注
+    repeated string purchase_order_no = 9; // 采购单
+}
+
+message IncomeOrderPageReq {
+    common.base.Pagination page = 1; // 分页结构体
+    string income_no = 2; // 出库单号
+    string logi_code = 3; // 入库物流单号
+    common.enum.ErpEnum.SignStatus sign_status = 4; // 出库状态
+    common.enum.ErpEnum.IncomeStatus income_status = 5; // 同步状态
+    string sku_code = 6; // sku
+    string warehouse_no = 7; // 仓库编号
+    string purchase_order_no = 8; // 采购单号
+    int64 supplier_id = 9; // 供应商ID
+    string start_time = 10; //创建时间 yyyy-MM-dd HH:mm:ss
+    string end_time = 11; //创建时间  yyyy-MM-dd HH:mm:ss
+}
+
+message NewIncomeOrderPageReq {
+    common.base.Pagination page = 1; // 分页结构体
+    string income_no = 2; // 出库单号
+    string logi_code = 3; // 入库物流单号
+    int32 income_order_status = 4; // 入库单状态 0-所有 1-待快递签收 2-待仓储签收 3-待入库 4-已入库 5-已取消 6-已完结
+    string logi_company = 5;// 物流公司
+    string warehouse_no = 6; // 仓库编号
+    string purchase_order_no = 7; // 采购单号
+    int32 income_order_time_type = 8; // 入库单时间类型 0-所有 1-快递签收时间 2-仓储签收时间 3-入库时间
+    string start_time = 9; // yyyy-MM-dd HH:mm:ss
+    string end_time = 10; // yyyy-MM-dd HH:mm:ss
+    int32 income_exception_type = 11;//异常类型 0-所有 1-全部异常 2-仓储签收超时 3-入库超时
+}
+message NewIncomeOrderPageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    int32 total = 3; //总数
+    repeated NewIncomeOrderPB list = 4;
+}
+message NewIncomeOrderExportResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    string file_url = 3;// 文件路径
+}
+message SyncLogicDetailReq {
+    string purchase_no = 1;// 采购单号
+    string logi_code = 2;//物流单号
+    string logi_company = 3;//物流公司编号
+}
+message SyncLogicDetailResp{
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+message SyncIncomeReq {
+    string income_no = 1; // 入库单号
+}
+message SyncIncomeResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+message IncomeProductDetailReq {
+    string income_no = 1;
+    common.base.Pagination page = 2; // 分页结构体
+}
+message IncomeProductDetailResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    repeated IncomeOrderProductDetailPb income_order_product_detail = 3;// 入库单商品详情
+}
+//类目信息
+message CategoryUnit {
+    string back_cate_first_id = 1;
+    string back_cate_first_name = 2;
+    string back_cate_second_id = 3;
+    string back_cate_second_name = 4;
+    string back_cate_third_id = 5;
+    string back_cate_third_name = 6;
+}
+
+//商品详情
+message IncomeOrderProductDetailPb {
+    string product_name = 1; //商品名称
+    string product_cover = 2; //商品图片
+    string sku_code = 3; //skuCode
+    string standard_attr = 4; // 规格
+    CategoryUnit category_unit = 5;//类目
+    int32 total_count = 6; // 预期数量
+    int32 income_count = 7; // 实际入库数
+    int32 cancel_count = 8; // 入库取消数
+}
+message IncomeOrderPageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    int32 total = 3; //总数
+    repeated IncomeOrderPB list = 4;
+}
+
+message IncomeOrderSignReq {
+    string logi_code = 1; //物流单号
+}
+message IncomeOrderSignResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message OrderIncomeReq {
+    string logi_code = 1; //物流单号
+    repeated IncomeSku sku = 2;
+}
+message OrderIncomeResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+message IncomeSku {
+    string sku_code = 1; // 入库sku
+    int32 count = 2; // 实际入库数量
+    int32 abnormal_count = 3; // 异常数量
+    string abnormal_type = 4; // 异常类型
+    string remark = 6; // 入库备注
+    string imgs = 7; // 异常图片
+}
+
+message ModifyIncomeOrderLogiReq {
+    string income_no = 1; // 入库单号
+    string logi_code = 2; // 物流单号
+    string logi_company = 3; // 物流公司
+    repeated string sku_code = 4; // 修改sku
+}
+message ModifyIncomeOrderLogiResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message PurchaseLogiPB {
+    string income_no = 1; // 入库单号
+    string logi_code = 2; // 物流单号
+    string logi_company = 3; // 物流公司
+    string sign_time = 4; // 收货时间
+    string create_time = 5; // 发货时间
+    string income_time = 6; // 入库时间
+    int32 is_abnormal = 7; // 是否存在异常 1.有异常 2.无异常
+}
+message PurchaseLogiListReq {
+    string purchase_order_no = 1; // 采购单号
+}
+message PurchaseLogiListResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    repeated PurchaseLogiPB logi = 3;
+}
+
+
+// ======================== 异常 ========================
+message AbnormalSkuPB {
+    string abnormal_no = 1;// '异常编号',
+    string warehouse_no = 2; //'仓库编号',
+    string logi_code = 3; // '物流单号',
+    string sku_code = 4; // '入库异常的sku',
+    int32 abnormal_count = 5 ;//'异常数量',
+    string abnormal_reason = 6; // '异常原因类型',
+    string content = 7; //'原因描述',
+    string imgs = 8; // '异常图片',
+    int32 abnormal_status = 9; // '1.处理中 2.待处理 8.已完结',
+    string accept_time = 10; // '受理时间',
+    string finish_time = 11; // '完结时间',
+    string user_id = 12; // '创建人',
+    string user_name = 13; // '创建人名称',
+    string create_time = 14; // '创建时间',
+    string name_cn = 15; //
+    string sku_cover = 16; //sku代码
+    string standard_attr = 17;
+    string remark = 18;
+    repeated AbnormalProcessPB process = 20;
+    string buyer_name = 19; // 采购员
+    string supplier_name = 21; // 供应商
+}
+message AbnormalLogiPB {
+    string abnormal_no = 1;// '异常编号',
+    string warehouse_no = 2; //'仓库编号',
+    string logi_code = 3; // '物流单号',
+    string abnormal_count = 5 ;//'异常数量',
+    string abnormal_reason = 6; // '异常原因类型',
+    string content = 7; //'原因描述',
+    string imgs = 8; // '异常图片',
+    int32 abnormal_status = 9; // '1.处理中 2.待处理 8.已完结',
+    string accept_time = 10; // '受理时间',
+    string finish_time = 11; // '完结时间',
+    string user_id = 12; // '创建人',
+    string user_name = 13; // '创建人名称',
+    string create_time = 14; // '创建时间',
+    string remark = 15;
+    string deal_user_id = 16; // 第一次处理人ID
+    string deal_user_name = 17; // 第一次处理人名称
+    string pur_group_name =18;//类目分组
+
+    repeated AbnormalProcessPB process = 20;
+}
+
+message AbnormalProcessPB {
+    string abnormal_no = 1;// '异常编号',
+    int32 type = 2; // 处理类型  '1.采购 2.仓库',
+    string user_id = 3; // '处理人ID',
+    string user_name = 4; //'处理人名称名称',
+    string content = 5; // 处理内容
+    string imgs = 6; // 图片
+    string create_time = 7; // '创建时间',
+}
+
+message AbnormalLogiPageReq {
+    common.base.Pagination page = 1; // 分页结构体
+    string warehouse_no = 2; // 仓库编号
+    string abnormal_no = 3; // 异常编号
+    string logi_code = 4; // 物流单号
+    int32 abnormal_status = 5; // '1.处理中 2.待处理 8.已完结',
+    string abnormal_reason = 6; // 异常原因
+    string start_time = 10; //创建时间 yyyy-MM-dd HH:mm:ss
+    string end_time = 11; //创建时间  yyyy-MM-dd HH:mm:ss
+    string group_id = 8;//类目分组id
+    string deal_user_id = 7; // 第一次处理人
+}
+message AbnormalLogiPageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    int32 total = 3; //总数
+    repeated AbnormalLogiPB list = 4;
+}
+
+
+message AbnormalSkuPageReq {
+    common.base.Pagination page = 1; // 分页结构体
+    string warehouse_no = 2; // 仓库编号
+    string abnormal_no = 3; // 异常编号
+    string logi_code = 4; // 物流单号
+    int32 abnormal_status = 5; // '1.处理中 2.待处理 8.已完结',
+    repeated int32 status = 12; // 异常状态，多选  '1.处理中 2.待处理 8.已完结',
+    string abnormal_reason = 6; // 异常原因
+    string sku_code = 7; // skuCode
+    string buyer_id = 8; // 采购员ID
+    string supplier_id = 9; // 供应商ID
+    string start_time = 10; //创建时间 yyyy-MM-dd HH:mm:ss
+    string end_time = 11; //创建时间  yyyy-MM-dd HH:mm:ss
+    string cate_id =13;//类目ID
+}
+message AbnormalSkuPageResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    int32 total = 3; //总数
+    repeated AbnormalSkuPB list = 4;
+}
+
+message PurchaseDealAbnormalReq {
+    string abnormal_no = 1; // 异常编号
+    string content = 2; // 回复内容
+    string imgs = 3; // 图片
+}
+message PurchaseDealAbnormalResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message AddSignAbnormalReq {
+    string logi_code = 1; // 异常单号
+    string abnormal_reason = 2; // 异常原因
+    string content = 3; // 异常内容
+    string imgs = 4;
+    string group_name =5;//分组名称
+}
+message AddSignAbnormalResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+
+message AbnormalType {
+    string type = 1;
+    string remark = 2;
+}
+
+message SignAbnormalTypeReq {
+}
+
+message SignAbnormalTypeResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated AbnormalType type = 2;
+}
+
+message SkuAbnormalTypeReq {
+}
+
+message SkuAbnormalTypeResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated AbnormalType type = 2;
+}
+
+message AbnormalIncomeSku {
+    string sku_code = 1; // 入库sku
+    int32 abnormal_count = 3; // 异常数量
+    string abnormal_type = 4; // 异常类型
+    string remark = 6; // 入库备注
+    string imgs = 7; // 异常图片
+}
+
+message IncomeOrderAbnormalFeedbackReq {
+    string logi_code = 1;// 物流单号
+}
+message EnterAbnormalProductReq {
+    string logi_code = 1; //物流单号
+    repeated AbnormalIncomeSku abnormal_income_sku = 2;//不正常的sku信息
+}
+message EnterAbnormalProductResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+}
+message LogiCompanyReq {
+}
+message LogiCompanyResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated LogiCompany company = 2;
+    message LogiCompany {
+        string code = 1;
+        string name = 2;
+    }
+}
+
+
+message AbnormalMakeupReq {
+    string abnormal_no = 1; //异常编号
+    repeated AbnormalPurchasePB purchase = 2;
+}
+message AbnormalMakeupResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message OverAbnormalReq {
+    string abnormal_no = 1; //异常单号
+    int32 type = 2; // 1.采购 2.仓库
+}
+message OverAbnormalResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message AbnormalProcessReq {
+    string abnormal_no = 1; //异常单号
+}
+message AbnormalProcessResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated AbnormalProcessPB process = 2;
+}
+
+message AbnormalPurchaseOrderReq {
+    string abnormal_no = 1; //异常单号
+}
+message AbnormalPurchaseOrderResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated AbnormalPurchasePB purchase = 2;
+}
+message AbnormalPurchasePB {
+    string purchase_order_no = 1;
+    int32 count = 2; // 异常数量
+    string supplier_id = 3; // 供应商ID
+    string purchase_price = 4; //采购价格
+    string third_order_no = 5; //第三方订单号
+    string freight = 6; //运费
+    string logi_code = 7; //物流单号
+    string logi_company = 8; //物流公司名称
+}
+
+message GetTransferWarehouseReq {
+    string out_no = 1;
+}
+message GetTransferWarehouseResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated WarehousePB warehouse = 2;
+}
+
+message TransferOutOrderReq {
+    string out_no = 1;
+    string warehouse_no = 2;
+    common.enum.ErpEnum.BizType biz_type = 3;
+}
+message TransferOutOrderResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message GetSkuBarCodeReq {
+    repeated string sku_code = 1; // sku代码
+}
+message GetSkuBarCodeResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated SkuBarCode bar_code = 2;
+    message SkuBarCode {
+        string sku_code = 1; // skuCode
+        string barcode = 2; // 条码地址
+    }
+}
+
+message GetTransferAddressReq {
+
+}
+message GetTransferAddressResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated TransferWareHouse twh_list = 2;
+    message TransferWareHouse {
+        string name = 1; //中转仓名称
+        string country = 2; //国家
+        string address = 3; //地址
+        string user_name = 4; //收货人名字
+        string mobile = 5; //手机号
+        uint64 transfer_id = 6; //中转仓id
+        common.enum.ErpEnum.YesNo is_default = 7; //是否默认
+        common.enum.PurchaseOrderEnum.DeliveWay delive_way = 8; //1-海运,2-空运
+    }
+}
+
+message SpiltOutOrderReq {
+    string out_no = 1; // 原出库单号
+    repeated OutOrderSkuPB sku = 2;
+}
+message SpiltOutOrderResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message RevokeSpiltOutOrderReq {
+    string out_no = 1; // 出库单号
+}
+message RevokeSpiltOutOrderResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message ReissueOutOrderReq {
+    string out_no = 1; // 原出库单号
+    string warehouse_no = 2; // 发货仓
+    repeated OutOrderSkuPB sku = 3;
+    string phone = 8;//手机号
+    string country_code = 4;//国家
+    string province = 9;//省
+    string city = 10;//市
+    string name = 5;//名称
+    string address = 6;//地址
+    string postcode= 7;//邮编
+}
+message ReissueOutOrderResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message GetReissueWarehouseReq {
+    string out_no = 1;
+}
+message GetReissueWarehouseResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    repeated WarehousePB warehouse = 2;
+}
+
+message BarterOutOrderReq {
+    string out_no = 1; // 原出库单号
+    repeated OutOrderSkuPB sku = 2;
+}
+message BarterOutOrderResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message EditOutOrderReq {
+    string out_no = 1; // 原出库单号
+    repeated OutOrderSkuPB sku = 2;
+    string phone = 3;//手机号
+    string country_code = 4;//国家
+    string province = 5;//省
+    string city = 6;//市
+    string name = 7;//名称
+    string address = 8;//地址
+    string postcode= 9;//邮编
+}
+message EditOutOrderResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+}
+
+message ExportAbnormalLogiResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string file_url = 2; // 导出文件地址
+}
+
+message ExportAbnormalSkuResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string file_url = 2; // 导出文件地址
+
+}
+
+message ExportPoResp {
+    common.base.ErrorMessage ret = 1; // 返回值
+    string message = 2;
+    string file_url = 3; // 导出文件地址
+}
+
+// 仓库列表
+service WarehouseBossService {
+    // 仓库列表分页
+    rpc WarehousePage (WarehousePageReq) returns (WarehousePageResp);
+
+    // 物流公司列表
+    rpc LogiCompany (LogiCompanyReq) returns (LogiCompanyResp);
+
+    // 获取sku条码
+    rpc GetSkuBarCode (GetSkuBarCodeReq) returns (GetSkuBarCodeResp);
+
+    // 获取中转仓库
+    rpc GetTransferAddress (GetTransferAddressReq) returns (GetTransferAddressResp);
+
+}
+
+// 出库单
+service OutOrderBossService {
+    // 仓库出库单分页
+    rpc OutOrderPage (OutOrderPageReq) returns (OutOrderPageResp);
+    // 出库单页面改造
+    rpc OutOrderNewPage (OutOrderNewPageReq) returns (OutOrderNewPageResp);
+    // 出库单详情
+    rpc OutOrderDetail (OutOrderDetailReq) returns (OutOrderDetailResp);
+    // 出库单页面改造后的详情
+    rpc OutOrderNewDetail (OutOrderNewDetailReq) returns (OutOrderNewDetailResp);
+    // 导出出库单
+    rpc ExportList(OutOrderNewPageReq) returns (ExportPoResp);
+    // 出库单重推
+    rpc RepushOutOrder (RepushOutOrderReq) returns (RepushOutOrderResp);
+
+    // 取消出库单
+    rpc CancelOutOrder (CancelOutOrderReq) returns (CancelOutOrderResp);
+
+    // 创建出库单
+    rpc CreateOutOrder (CreateOutOrderReq) returns (CreateOutOrderResp);
+
+    // 获取出库单可调的仓库
+    rpc GetTransferWarehouse (GetTransferWarehouseReq) returns (GetTransferWarehouseResp);
+
+    // 出库单调仓
+    rpc TransferOutOrder (TransferOutOrderReq) returns (TransferOutOrderResp);
+
+    // 拆单
+    rpc SpiltOutOrder (SpiltOutOrderReq) returns (SpiltOutOrderResp);
+
+    // 撤销拆单
+    rpc RevokeSpiltOutOrder (RevokeSpiltOutOrderReq) returns (RevokeSpiltOutOrderResp);
+
+    // 获取补发的仓库列表
+    rpc GetReissueWarehouse (GetReissueWarehouseReq) returns (GetReissueWarehouseResp);
+
+    // 补发
+    rpc ReissueOutOrder (ReissueOutOrderReq) returns (ReissueOutOrderResp);
+
+    // 换货
+    rpc BarterOutOrder (BarterOutOrderReq) returns (BarterOutOrderResp);
+
+    // 编辑出库单 （m目前只支持编辑未出库的 补发、换货 出库单）
+    rpc EditOutOrder (EditOutOrderReq) returns (EditOutOrderResp);
+
+}
+
+// 入库单
+service IncomeOrderBossService {
+    // 云仓入库单列表
+    rpc IncomeOrderPage (IncomeOrderPageReq) returns (IncomeOrderPageResp);
+
+    // 采购入库单列表
+    rpc LogiOrderPage (IncomeOrderPageReq) returns (IncomeOrderPageResp);
+
+    // 入库单签收
+    rpc IncomeOrderSign (IncomeOrderSignReq) returns (IncomeOrderSignResp);
+
+    // 入库
+    rpc OrderIncome (OrderIncomeReq) returns (OrderIncomeResp);
+
+    // 修改物流单
+    rpc ModifyIncomeOrderLogi (ModifyIncomeOrderLogiReq) returns (ModifyIncomeOrderLogiResp);
+
+    // 云仓入库单列表
+    rpc PurchaseLogiList (PurchaseLogiListReq) returns (PurchaseLogiListResp);
+
+    // -- 入库改版新接口 --
+    // 新版入库单列表
+    rpc NewIncomeOrderPage (NewIncomeOrderPageReq) returns (NewIncomeOrderPageResp);
+
+    // 新版入库单导出
+    rpc NewIncomeOrderExport (NewIncomeOrderPageReq) returns (NewIncomeOrderExportResp);
+
+    // 同步物流信息
+    rpc SyncLogicDetail (SyncLogicDetailReq) returns (SyncLogicDetailResp);
+
+    // 同步入库信息
+    rpc SyncIncome (SyncIncomeReq) returns (SyncIncomeResp);
+
+    // 入库单详情
+    rpc IncomeProductDetail (IncomeProductDetailReq) returns (IncomeProductDetailResp);
+
+}
+
+
+// 异常
+service AbnormalBossService {
+    //导出异常包裹
+    rpc ExportAbnormalLogi (AbnormalLogiPageReq) returns (ExportAbnormalLogiResp);
+
+    //导出异常sku
+    rpc ExportAbnormalSku (AbnormalSkuPageReq) returns (ExportAbnormalSkuResp);
+
+    // 包裹异常列表
+    rpc AbnormalLogiPage (AbnormalLogiPageReq) returns (AbnormalLogiPageResp);
+
+    // 包裹异常列表
+    rpc AbnormalSkuPage (AbnormalSkuPageReq) returns (AbnormalSkuPageResp);
+
+    // 采购处理
+    rpc PurchaseDealAbnormal (PurchaseDealAbnormalReq) returns (PurchaseDealAbnormalResp);
+
+    // 获取异常单采购单列表
+    rpc AbnormalPurchaseOrder ( AbnormalPurchaseOrderReq ) returns (AbnormalPurchaseOrderResp);
+
+    // 异常补单
+    rpc AbnormalMakeup (AbnormalMakeupReq) returns (AbnormalMakeupResp);
+
+    // 异常完结
+    rpc OverAbnormal (OverAbnormalReq) returns (OverAbnormalResp);
+
+    // 异常处理列表
+    rpc AbnormalProcess (AbnormalProcessReq) returns (AbnormalProcessResp);
+
+    // 添加签收异常
+    rpc AddSignAbnormal (AddSignAbnormalReq) returns (AddSignAbnormalResp);
+
+    // sku异常类型列表
+    rpc SkuAbnormalType (SkuAbnormalTypeReq) returns (SkuAbnormalTypeResp);
+
+    // 签收异常类型列表
+    rpc SignAbnormalType (SignAbnormalTypeReq) returns (SignAbnormalTypeResp);
+
+    // 入库异常反馈
+    rpc IncomeOrderAbnormalFeedback (IncomeOrderAbnormalFeedbackReq) returns (IncomeProductDetailResp);
+
+    // 录入异常商品
+    rpc EnterAbnormalProduct (EnterAbnormalProductReq) returns (EnterAbnormalProductResp);
+}
+

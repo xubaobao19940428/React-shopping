@@ -1,0 +1,72 @@
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    :global {
+        .ant-select {
+            width: 180px;
+        }
+        .ant-select-dropdown {
+            overflow: auto;
+        }
+    }
+}
+
+.expand-select-container {
+    position: relative;
+    margin-top: 5px;
+}
+
+.expand-select-wrap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    overflow: hidden;
+    line-height: 1.5715;
+    box-sizing: border-box;
+    font-size: 14px;
+    background-color: #fff;
+    border-radius: 2px;
+    outline: none;
+    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+
+    .expand-select-box {
+        box-sizing: border-box;
+        border-right: 1px solid #e4e7ed;
+        min-width: 180px;
+        height: 200px;
+        overflow-y: scroll;
+        
+        li {
+            padding: 7px 15px;
+            border: none;
+            &:hover {
+                background-color: #f5f7fa;
+            }
+        }
+
+        &:last-child {
+            border-right: none;
+        }
+
+        .checkbox-label {
+            flex: 1;
+            padding-left: 5px;
+            cursor: pointer;
+
+            &.cur {
+                color: #409eff;
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+:global {
+    .expand-select {
+        overflow: visible;
+        box-shadow: none;
+    }
+}

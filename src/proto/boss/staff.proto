@@ -1,0 +1,346 @@
+syntax = "proto3";
+package boss.staff;
+
+
+import "common/base.proto";
+
+option java_multiple_files = true;
+option java_package = "com.fingo.littlec.proto.boss.staff";
+option java_outer_classname = "Staff";
+
+message BooleanResp {
+    common.base.ErrorMessage ret = 1;
+    bool success = 2;
+}
+
+message DeleteSysUserReq {
+    string account = 1;
+}
+
+message SysUserAddOrUpdateReq {
+    //登录用户名（必传），（update时不能被修改）
+    string account = 2;
+    //姓名（必传）
+    string nick_name = 4;
+    //组织id（必传）
+    int32 group_id = 5;
+    string mobile = 9;
+    string email = 10;
+    // 1男 2女
+    int32 gender = 12;
+    //生日，时间戳utc
+    string birthday = 13;
+    string wechat_id = 14;
+    string wechat_qr = 15;
+    string head_img = 16;
+    //国家编码
+    string country_code = 17;
+    string real_name = 18; // 真实姓名
+    string ding_user_id = 19; //钉钉userId
+    bool self_update = 20; // 自己更新
+}
+
+message ListSysUserByPageReq {
+    common.base.Pagination page = 1;
+    // 搜索 真实姓名，昵称，用户名 精准匹配
+    string nick_name = 2;
+    int32 group_id = 3;
+//    repeated int32 role_ids = 4; // 角色id数组
+    repeated int32 group_ids = 5;
+}
+
+message SysUserPb {
+    //userId
+    int32 id = 1;
+    //商家账号
+    string account = 2;
+    //姓名
+    string nick_name = 3;
+    //角色ID
+    int32 group_id = 4;
+    //创建时间
+    string create_time = 6;
+    //更新时间（默认与创建时间一致）
+    string update_time = 7;
+    //角色名称
+    string group_name = 8;
+    string mobile = 9;
+    string email = 10;
+    string gender = 12;
+    //生日
+    string birthday = 13;
+    string wechat_id = 14;
+    string wechat_qr = 15;
+    string head_img = 16;
+    string country_code = 17;
+    string real_name = 18; // 真实姓名
+    repeated string role_name = 19; //角色名
+    string ding_user_id = 20; //钉钉userId
+    string sys_user_id = 21; // 后台用户id
+}
+
+message ListSysUserByPageResp {
+    common.base.ErrorMessage ret = 1;
+    int32 total = 2;
+    repeated SysUserPb sys_user_pb = 3;
+}
+
+message SysLoginReq {
+    //后台登录账号
+    string account = 1;
+    //密码（必传）
+    string password = 2;
+    //设备号
+    string device_id = 3;
+}
+
+message SysLoginResp {
+    common.base.ErrorMessage ret = 1;
+    //userId
+    int32 id = 2;
+    //商家账号
+    string account = 3;
+    //姓名
+    string nick_name = 4;
+    //角色ID
+    int32 group_id = 5;
+    //token
+    string token = 6;
+    //权限key集合
+    map<string, int32> permission_key_map = 7;
+    string head_img = 8;
+    string email = 9;
+    string mobile = 10;
+}
+message ResetPasswordReq {
+    //后台登录账号
+    string account = 1;
+}
+
+message ResetPasswordResp {
+    common.base.ErrorMessage ret = 1;
+}
+message UpdatePasswordReq {
+    //后台登录账号
+    string account = 1;
+    string old_password = 2; // 原密码
+    string new_password = 3; // 新密码
+
+}
+
+message UpdatePasswordResp {
+    common.base.ErrorMessage ret = 1;
+}
+
+//>>>>>>>>>SysUserBossService message end>>>>>>>>>>>>>>>>>
+
+message SysRoleIdReq {
+    int32 role_id = 1;
+}
+
+message SysRoleAddOrUpdateReq {
+    //角色id
+    int32 role_id = 1;
+    //角色名
+    string role_name = 2;
+    //权限key集合
+    repeated string permission_key = 7;
+}
+
+message ListSysRoleByPageReq {
+    common.base.Pagination page = 1;
+    //角色名
+    string role_name = 2;
+}
+
+message SysRolePb {
+    //角色id
+    int32 id = 1;
+    //角色名
+    string role_name = 2;
+    //创建时间
+    string create_time = 3;
+    //更新时间
+    string update_time = 4;
+    //1可用，0废弃
+    int32 status = 5;
+    //权限key值，数组
+    repeated string permission_key = 6;
+    repeated string group_name = 7; //组织名称数组
+}
+
+message ListSysRoleByPageResp {
+    common.base.ErrorMessage ret = 1;
+    int32 total = 2;
+    repeated SysRolePb sys_role_pb = 3;
+}
+
+message ListAllSysRoleResp {
+    common.base.ErrorMessage ret = 1;
+    repeated SysRoleSimplePb sys_role_simple_pb = 2;
+}
+
+message ListAllSysRoleReq {
+
+}
+
+message SysRoleSimplePb {
+    //角色id
+    int32 role_id = 1;
+    //角色名
+    string role_name = 2;
+}
+
+//>>>>>>>>>SysRoleBossService message end>>>>>>>>>>>>>>>>>
+
+message SysGroupIdReq {
+    int32 group_id = 1;
+}
+
+message AddSysGroupReq {
+    //组织名称 必填
+    string group_name = 1;
+    repeated int32 role_ids = 2;
+    //上层组织id
+    int32 fid = 3;
+}
+
+message AddSysGroupResp {
+    common.base.ErrorMessage ret = 1;
+    //上层组织id
+    int32 group_id = 2;
+    //组织名称
+    string group_name = 3;
+    repeated int32 role_ids = 4;
+    //上层组织id
+    int32 fid = 5;
+}
+
+message UpdateSysGroupReq {
+    //组织id
+    int32 group_id = 1;
+    //组织名称
+    string group_name = 2;
+    //角色ids
+    repeated int32 role_ids = 3;
+}
+
+message SysGroupPb {
+    //组织id
+    int32 group_id = 1;
+    //组织名称
+    string group_name = 2;
+    repeated SysRoleSimplePb role_simple_pb = 3;
+}
+
+message SysGroupSimplePb {
+    //组织id
+    int32 group_id = 1;
+    //组织名称
+    string group_name = 2;
+}
+
+message ListAllGroupByFidReq {
+    // 父id = -1 表示第一层
+    int32 fid = 1;
+}
+
+message ListAllGroupByFidResp {
+    common.base.ErrorMessage ret = 1;
+    repeated SysGroupPb group_pb = 2;
+}
+
+message ListGroupSimpleByFidReq {
+    // 父id = -1 表示第一层
+    int32 fid = 1;
+}
+
+message ListGroupSimpleByFidResp {
+    common.base.ErrorMessage ret = 1;
+    repeated SysGroupSimplePb group_simple = 2;
+}
+
+message GetPermissionKeysByGroupIdResp {
+    common.base.ErrorMessage ret = 1;
+    map<string, int32> permission_key_map = 2;
+}
+
+message FetchDDingIdReq {
+    string userName = 1;
+}
+
+message FetchDDingIdResp {
+    common.base.ErrorMessage ret = 1;
+    repeated DDingUserPb userInfo = 2;
+}
+
+message DDingUserPb {
+    string DDingUserId = 1;
+
+    string dept = 2;
+
+    string position = 3;
+
+    string realName = 4;
+}
+
+message GetPermissionKeysReq {
+}
+
+message GetPermissionKeysResp {
+    common.base.ErrorMessage ret = 1;
+    map<string, int32> permission_key_map = 2;
+}
+
+
+//>>>>>>>>>SysGroupBossService message end>>>>>>>>>>>>>>>>>
+
+service SysUserBossService {
+    //添加后台用户
+    rpc AddSysUser (SysUserAddOrUpdateReq) returns (BooleanResp);
+    //修改后台用户
+    rpc UpdateSysUser (SysUserAddOrUpdateReq) returns (BooleanResp);
+    //删除后台用户
+    rpc DeleteSysUser (DeleteSysUserReq) returns (BooleanResp);
+    //分页查询后台用户
+    rpc ListSysUserByPage (ListSysUserByPageReq) returns (ListSysUserByPageResp);
+    //后台用户登录
+    rpc SysLogin (SysLoginReq) returns (SysLoginResp);
+    //后台用户重置密码
+    rpc ResetPassword (ResetPasswordReq) returns (ResetPasswordResp);
+    //修改密码
+    rpc UpdatePassword (UpdatePasswordReq) returns (UpdatePasswordResp);
+    //以真实姓名获取钉钉ID
+    rpc FetchDDingUserId (FetchDDingIdReq) returns (FetchDDingIdResp);
+    //查用户所有权限key
+    rpc GetPermissionKeys (GetPermissionKeysReq) returns (GetPermissionKeysResp);
+}
+
+service SysRoleBossService {
+    //添加角色
+    rpc AddSysRole (SysRoleAddOrUpdateReq) returns (BooleanResp);
+    //修改角色
+    rpc UpdateSysRole (SysRoleAddOrUpdateReq) returns (BooleanResp);
+    //删除角色
+    rpc DeleteSysRole (SysRoleIdReq) returns (BooleanResp);
+    //分页查询角色
+    rpc ListSysRoleByPage (ListSysRoleByPageReq) returns (ListSysRoleByPageResp);
+    //查询所有角色
+    rpc ListAllSysRole (ListAllSysRoleReq) returns (ListAllSysRoleResp);
+}
+
+//后台组织架构管理
+service SysGroupBossService {
+    //添加组织
+    rpc AddSysGroup (AddSysGroupReq) returns (AddSysGroupResp);
+    //修改组织
+    rpc UpdateSysGroup (UpdateSysGroupReq) returns (BooleanResp);
+    //删除组织
+    rpc DeleteSysGroup (SysGroupIdReq) returns (BooleanResp);
+    //根据上级组织id查找下级组织id（包含角色信息，用户组织管理页数据列表）
+    rpc ListAllGroupByFid (ListAllGroupByFidReq) returns (ListAllGroupByFidResp);
+    //根据上级组织id查找下级组织id（用于下拉选择框数据）
+    rpc ListGroupSimpleByFid (ListGroupSimpleByFidReq) returns (ListGroupSimpleByFidResp);
+    //查询组织所有权限key（用户关联组织id，用户——组织一对一，组织——角色一对多）
+    rpc GetPermissionKeysByGroupId (SysGroupIdReq) returns (GetPermissionKeysByGroupIdResp);
+}
